@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Devora Nissenbaum — Boutique de Perruques Premium</title>
+  <meta name="description" content="Boutique de perruques premium et service d'entretien professionnel. Collections naturelles, synthétiques, mi-longues et courtes." />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* Inline extras specific to vitrine */
+    .nav-placeholder { height: 80px; }
+    .hero { background: #0A0A0A; }
+
+    /* Announcement bar */
+    .announce-bar {
+      background: var(--gold);
+      color: var(--dark);
+      text-align: center;
+      padding: 0.6rem 1rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    /* Numbers strip */
+    .numbers-strip {
+      background: var(--dark);
+      padding: 3rem 0;
+      border-top: 1px solid rgba(201,168,76,0.15);
+      border-bottom: 1px solid rgba(201,168,76,0.15);
+    }
+    .numbers-grid { display: grid; grid-template-columns: repeat(4,1fr); text-align: center; gap: 2rem; }
+    .num-value { font-family: var(--font-h); font-size: 3rem; color: var(--gold); display: block; line-height: 1; margin-bottom: 0.5rem; }
+    .num-label { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.4); }
+
+    /* Marquee */
+    .marquee-wrap { overflow: hidden; background: var(--gold); padding: 0.9rem 0; }
+    .marquee-track { display: flex; gap: 0; white-space: nowrap; animation: marquee 20s linear infinite; }
+    .marquee-item { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--white); padding: 0 2.5rem; opacity: 0.9; }
+    .marquee-dot { color: rgba(255,255,255,0.5); }
+    @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    /* Featured banner */
+    .featured-banner {
+      background: var(--cream-2);
+      padding: 5rem 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      min-height: 420px;
+    }
+    .feat-visual {
+      background: linear-gradient(135deg, #1a0f0a 0%, #3d2314 40%, #C9A84C 100%);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .feat-visual-icon { font-size: 8rem; opacity: 0.35; }
+    .feat-content { display: flex; flex-direction: column; justify-content: center; padding: 4rem; }
+    .feat-content .label-tag { display: block; margin-bottom: 1.5rem; }
+    .feat-content h2 { color: var(--dark); margin-bottom: 1rem; font-size: 2.5rem; }
+    .feat-content p { color: var(--text-light); line-height: 1.9; margin-bottom: 2rem; font-size: 0.95rem; }
+
+    /* Badge */
+    .badge { display: inline-flex; align-items: center; gap: 0.4rem; background: var(--gold); color: var(--white); padding: 0.25rem 0.75rem; border-radius: 50px; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+    .col-badge { position: absolute; top: 1rem; right: 1rem; }
+
+    @media (max-width: 768px) {
+      .numbers-grid { grid-template-columns: repeat(2,1fr); }
+      .featured-banner { grid-template-columns: 1fr; }
+      .feat-visual { height: 250px; }
+      .feat-content { padding: 2.5rem 1.5rem; }
+    }
+    @media (max-width: 480px) {
+      .numbers-grid { grid-template-columns: repeat(2,1fr); gap: 1.5rem; }
+      .num-value { font-size: 2.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Announcement Bar -->
+<div class="announce-bar">✦ Livraison offerte dès 200€ d'achat &nbsp;·&nbsp; Service nettoyage disponible &nbsp;·&nbsp; Prise de RDV sur WhatsApp ✦</div>
+
+<!-- Navbar -->
+<nav class="navbar" id="navbar">
+  <a href="index.html" class="navbar-logo">Devora <span>Nissenbaum</span></a>
+  <div class="navbar-links">
+    <a href="#collections">Collections</a>
+    <a href="#services">Services</a>
+    <a href="#promesses">Notre Promesse</a>
+    <a href="#avis">Avis</a>
+    <a href="commande.html" class="navbar-cta">Commander</a>
+  </div>
+  <button class="hamburger" id="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobile-menu">
+  <button class="mobile-close" id="mobile-close">✕</button>
+  <a href="#collections" onclick="closeMobileMenu()">Collections</a>
+  <a href="#services" onclick="closeMobileMenu()">Services</a>
+  <a href="#promesses" onclick="closeMobileMenu()">Notre Promesse</a>
+  <a href="#avis" onclick="closeMobileMenu()">Avis Clients</a>
+  <a href="commande.html" class="btn btn-gold" style="margin-top:1rem;border-radius:3px;">Commander</a>
+</div>
+
+<!-- Hero -->
+<section class="hero" id="hero" style="background-image:url('https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=1920&q=80');background-size:cover;background-position:center top;">
+  <div class="hero-bg"></div>
+  <div class="hero-pattern"></div>
+  <div class="hero-content">
+    <span class="label-tag">Boutique Premium · Depuis 2020</span>
+    <h1>L'Art de la<br><em>Transformation</em></h1>
+    <p class="hero-subtitle">Des perruques d'exception, sélectionnées avec soin pour sublimer votre beauté et révéler la version la plus confiante de vous-même.</p>
+    <div class="hero-actions">
+      <a href="#collections" class="btn btn-gold">Découvrir la Collection</a>
+      <a href="commande.html" class="btn btn-outline-white">Commander en ligne</a>
+    </div>
+  </div>
+  <div class="hero-scroll">Défiler<span></span></div>
+</section>
+
+<!-- Numbers Strip -->
+<div class="numbers-strip">
+  <div class="container">
+    <div class="numbers-grid">
+      <div><span class="num-value">500+</span><span class="num-label">Clientes satisfaites</span></div>
+      <div><span class="num-value">4</span><span class="num-label">Collections exclusives</span></div>
+      <div><span class="num-value">48h</span><span class="num-label">Délai de traitement</span></div>
+      <div><span class="num-value">100%</span><span class="num-label">Satisfaction garantie</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- Collections -->
+<section class="section collections" id="collections">
+  <div class="container">
+    <div class="section-header">
+      <span class="label-tag">Nos Collections</span>
+      <div class="divider"></div>
+      <h2>Une sélection<br><em>d'exception</em></h2>
+      <p>Chaque perruque est soigneusement choisie pour sa qualité, son naturel et son style. Trouvez celle qui vous ressemble.</p>
+    </div>
+    <div class="collections-grid">
+      <!-- Card 1 -->
+      <div class="collection-card">
+        <div class="col-img-wrap">
+          <div class="col-img-inner" style="background-image:url('https://images.unsplash.com/photo-1522337315785-f49b07ee0330?auto=format&fit=crop&w=600&h=280&q=80');background-size:cover;background-position:center top;position:relative;">
+            <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,0.05),rgba(0,0,0,0.35))"></div>
+          </div>
+          <span class="badge col-badge">Bestseller</span>
+        </div>
+        <div class="col-body">
+          <h3>Perruques Naturelles</h3>
+          <p>Cheveux 100% naturels, d'une légèreté et d'un naturel incomparables. L'excellence à l'état pur.</p>
+          <span class="col-price">À partir de 150€</span>
+        </div>
+      </div>
+      <!-- Card 2 -->
+      <div class="collection-card">
+        <div class="col-img-wrap">
+          <div class="col-img-inner" style="background-image:url('https://images.unsplash.com/photo-1519699047748-de8e457a634e?auto=format&fit=crop&w=600&h=280&q=80');background-size:cover;background-position:center top;position:relative;">
+            <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,0.05),rgba(0,0,0,0.35))"></div>
+          </div>
+        </div>
+        <div class="col-body">
+          <h3>Perruques Synthétiques</h3>
+          <p>Haute technologie, résistance et facilité d'entretien. Un rendu naturel au quotidien.</p>
+          <span class="col-price">À partir de 80€</span>
+        </div>
+      </div>
+      <!-- Card 3 -->
+      <div class="collection-card">
+        <div class="col-img-wrap">
+          <div class="col-img-inner" style="background-image:url('https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=600&h=280&q=80');background-size:cover;background-position:center top;position:relative;">
+            <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,0.05),rgba(0,0,0,0.35))"></div>
+          </div>
+          <span class="badge col-badge" style="background:var(--dark)">Nouveau</span>
+        </div>
+        <div class="col-body">
+          <h3>Perruques Mi-Longues</h3>
+          <p>La longueur idéale, entre élégance et praticité. Un choix polyvalent et raffiné.</p>
+          <span class="col-price">À partir de 100€</span>
+        </div>
+      </div>
+      <!-- Card 4 -->
+      <div class="collection-card">
+        <div class="col-img-wrap">
+          <div class="col-img-inner" style="background-image:url('https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&h=280&q=80');background-size:cover;background-position:center top;position:relative;">
+            <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,0.05),rgba(0,0,0,0.35))"></div>
+          </div>
+        </div>
+        <div class="col-body">
+          <h3>Perruques Courtes</h3>
+          <p>Audace et modernité. Ces coupes courtes subliment avec caractère et sophistication.</p>
+          <span class="col-price">À partir de 90€</span>
+        </div>
+      </div>
+    </div>
+    <div class="text-center mt-3">
+      <a href="commande.html" class="btn btn-dark">Passer une commande &nbsp;→</a>
+    </div>
+  </div>
+</section>
+
+<!-- Marquee -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span class="marquee-item">Perruques Naturelles</span><span class="marquee-dot">✦</span>
+    <span class="marquee-item">Perruques Synthétiques</span><span class="marquee-dot">✦</span>
+    <span class="marquee-item">Service Nettoyage</span><span class="marquee-dot">✦</span>
+    <span class="marquee-item">Livraison Express</span><span class="marquee-dot">✦</span>
+    <span class="marquee-item">Qualité Premium</span><span class="marquee-dot">✦</span>
+    <span class="marquee-item">Style Sur Mesure</span><span class="marquee-dot">✦</span>
+    <!-- repeat for seamless loop -->
+    <span class="marquee-item">Perruques Naturelles</span><span class="marquee-dot">✦</span>
+    <span class="marquee-item">Perruques Synthétiques</span><span class="marquee-dot">✦</span>
+    <span class="marquee-item">Service Nettoyage</span><span class="marquee-dot">✦</span>
+    <span class="marquee-item">Livraison Express</span><span class="marquee-dot">✦</span>
+    <span class="marquee-item">Qualité Premium</span><span class="marquee-dot">✦</span>
+    <span class="marquee-item">Style Sur Mesure</span><span class="marquee-dot">✦</span>
+  </div>
+</div>
+
+<!-- Featured Banner -->
+<div class="featured-banner">
+  <div class="feat-visual" style="background-image:url('https://images.unsplash.com/photo-1529139574466-a303027efa74?auto=format&fit=crop&w=900&h=500&q=80');background-size:cover;background-position:center top;padding:0;">
+    <div style="position:absolute;inset:0;background:linear-gradient(to right,rgba(0,0,0,0.25),rgba(0,0,0,0.05))"></div>
+  </div>
+  <div class="feat-content">
+    <span class="label-tag">Exclusivité</span>
+    <h2>Perruques<br><em>sur mesure</em></h2>
+    <p>Vous ne trouvez pas exactement ce que vous cherchez ? Contactez-nous pour une commande personnalisée. Coloris, longueur, texture — nous adaptons tout à votre vision.</p>
+    <a href="commande.html" class="btn btn-gold" style="align-self:flex-start">Demander un devis</a>
+  </div>
+</div>
+
+<!-- Services -->
+<section class="section" id="services">
+  <div class="container">
+    <div class="services-split">
+      <div class="service-visual" style="padding:0;background:transparent;">
+        <div class="service-visual-inner" style="inset:0;padding:0;overflow:hidden;border-radius:var(--radius);">
+          <img src="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=800&h=520&q=80"
+               alt="Service nettoyage perruques"
+               style="width:100%;height:100%;object-fit:cover;object-position:center;"
+               onerror="this.style.display='none';document.getElementById('svc-fallback').style.display='flex'" />
+          <div id="svc-fallback" style="display:none;flex-direction:column;align-items:center;justify-content:center;gap:1rem;height:100%;">
+            <span style="font-size:5rem">🫧</span>
+            <span style="font-family:var(--font-h);font-size:1.4rem;color:var(--gold)">Entretien & Soin</span>
+          </div>
+        </div>
+      </div>
+      <div class="service-content">
+        <span class="label-tag">Nos Services</span>
+        <div class="divider-left"></div>
+        <h2>Nettoyage &<br><em>Entretien</em> professionnel</h2>
+        <p>Confiez vos précieuses perruques à nos mains expertes. Notre service d'entretien redonne vie à vos coiffures et prolonge leur durée de vie.</p>
+        <div class="service-features">
+          <div class="sf-item">
+            <div class="sf-icon">🌊</div>
+            <div class="sf-text"><strong>Nettoyage en profondeur</strong><span>Élimination des résidus et impuretés</span></div>
+          </div>
+          <div class="sf-item">
+            <div class="sf-icon">✨</div>
+            <div class="sf-text"><strong>Brushing & mise en forme</strong><span>Restitution du volume et de la brillance</span></div>
+          </div>
+          <div class="sf-item">
+            <div class="sf-icon">🧴</div>
+            <div class="sf-text"><strong>Traitement nourrissant</strong><span>Soins spéciaux pour cheveux naturels</span></div>
+          </div>
+          <div class="sf-item">
+            <div class="sf-icon">📦</div>
+            <div class="sf-text"><strong>Remise en état complète</strong><span>Résultat comme neuf garanti</span></div>
+          </div>
+        </div>
+        <a href="commande.html" class="btn btn-gold">Réserver un entretien</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Promises -->
+<section class="section promises" id="promesses">
+  <div class="container">
+    <div class="section-header">
+      <span class="label-tag" style="color:var(--gold)">Notre Engagement</span>
+      <div class="divider"></div>
+      <h2 style="color:var(--white)">La Promesse<br><em>Devora</em></h2>
+      <p style="color:rgba(255,255,255,0.45)">Chaque détail compte. De la sélection à la livraison, nous nous engageons pour une expérience d'exception.</p>
+    </div>
+    <div class="promises-grid">
+      <div class="promise-card">
+        <span class="promise-icon">👑</span>
+        <h3>Qualité Premium</h3>
+        <p>Chaque perruque est rigoureusement sélectionnée selon des critères d'excellence. Seul le meilleur intègre notre collection.</p>
+      </div>
+      <div class="promise-card">
+        <span class="promise-icon">🎨</span>
+        <h3>Style Sur Mesure</h3>
+        <p>Votre personnalité est unique. Nous vous accompagnons pour trouver la perruque qui vous ressemble et sublimera votre beauté.</p>
+      </div>
+      <div class="promise-card">
+        <span class="promise-icon">💛</span>
+        <h3>Service Exclusif</h3>
+        <p>Un suivi personnalisé, de la commande à la livraison. Votre satisfaction est notre priorité absolue, avant et après l'achat.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials -->
+<section class="section testimonials" id="avis">
+  <div class="container">
+    <div class="section-header">
+      <span class="label-tag">Témoignages</span>
+      <div class="divider"></div>
+      <h2>Ce que disent<br><em>nos clientes</em></h2>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"Qualité exceptionnelle. Ma perruque naturelle est absolument magnifique, personne ne voit la différence. Je suis conquise !"</p>
+        <div style="display:flex;align-items:center;gap:0.75rem;margin-top:1.25rem">
+          <img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=48&h=48&q=80" alt="Sarah M." style="width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid var(--gold)" onerror="this.style.display='none'" />
+          <span class="testimonial-author">Sarah M. — Paris</span>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"Service client irréprochable et livraison rapide. La perruque mi-longue est exactement comme sur les photos. Merci !"</p>
+        <div style="display:flex;align-items:center;gap:0.75rem;margin-top:1.25rem">
+          <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=48&h=48&q=80" alt="Nadia K." style="width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid var(--gold)" onerror="this.style.display='none'" />
+          <span class="testimonial-author">Nadia K. — Lyon</span>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"Le service de nettoyage a transformé ma perruque ! Elle est comme neuve. Je recommande vivement cette boutique à toutes."</p>
+        <div style="display:flex;align-items:center;gap:0.75rem;margin-top:1.25rem">
+          <img src="https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?auto=format&fit=crop&w=48&h=48&q=80" alt="Fatima B." style="width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid var(--gold)" onerror="this.style.display='none'" />
+          <span class="testimonial-author">Fatima B. — Marseille</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-sec">
+  <div class="container">
+    <span class="label-tag">Prête à vous transformer ?</span>
+    <div class="divider"></div>
+    <h2>Votre nouvelle<br>coiffure vous attend</h2>
+    <p>Commandez en quelques clics. Livraison rapide, paiement sécurisé.</p>
+    <div class="cta-actions">
+      <a href="commande.html" class="btn btn-white">Passer une commande</a>
+      <a href="https://wa.me/VOTRE_NUMERO" class="btn btn-outline-white" id="whatsapp-btn">Contacter sur WhatsApp</a>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="navbar-logo">Devora <span>Nissenbaum</span></a>
+        <p>Boutique de perruques premium et service d'entretien professionnel. Sublimez votre beauté avec des pièces d'exception.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Instagram">📷</a>
+          <a href="#" aria-label="Facebook">👍</a>
+          <a href="#" aria-label="TikTok">🎵</a>
+          <a href="#" aria-label="WhatsApp">💬</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Collections</h4>
+        <ul>
+          <li><a href="#collections">Perruques Naturelles</a></li>
+          <li><a href="#collections">Perruques Synthétiques</a></li>
+          <li><a href="#collections">Perruques Mi-Longues</a></li>
+          <li><a href="#collections">Perruques Courtes</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Services</h4>
+        <ul>
+          <li><a href="#services">Nettoyage</a></li>
+          <li><a href="#services">Brushing</a></li>
+          <li><a href="#services">Traitement</a></li>
+          <li><a href="commande.html">Commander</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Informations</h4>
+        <ul>
+          <li><a href="#promesses">Notre promesse</a></li>
+          <li><a href="#avis">Témoignages</a></li>
+          <li><a href="commande.html">Formulaire de commande</a></li>
+          <li><a href="crm.html">Espace Pro</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Devora Nissenbaum. Tous droits réservés.</p>
+      <p>Créé avec soin &nbsp;·&nbsp; <a href="crm.html" style="color:rgba(255,255,255,0.25);transition:.3s" onmouseover="this.style.color='rgba(255,255,255,0.6)'" onmouseout="this.style.color='rgba(255,255,255,0.25)'">Admin</a></p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Navbar scroll
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // Mobile menu
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const mobileClose = document.getElementById('mobile-close');
+  hamburger.addEventListener('click', () => mobileMenu.classList.add('open'));
+  mobileClose.addEventListener('click', () => mobileMenu.classList.remove('open'));
+  function closeMobileMenu() { mobileMenu.classList.remove('open'); }
+
+  // WhatsApp button — update with real number from settings
+  const whatsappBtn = document.getElementById('whatsapp-btn');
+  const stored = localStorage.getItem('devora_crm');
+  if (stored) {
+    try {
+      const db = JSON.parse(stored);
+      if (db.parametres && db.parametres.whatsapp) {
+        const num = db.parametres.whatsapp.replace(/\D/g,'');
+        whatsappBtn.href = `https://wa.me/${num}`;
+      }
+    } catch(e) {}
+  }
+
+  // Intersection observer for fade-in
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if(e.isIntersecting) { e.target.style.opacity='1'; e.target.style.transform='translateY(0)'; } });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.collection-card, .promise-card, .testimonial-card, .sf-item').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>

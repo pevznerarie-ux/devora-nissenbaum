@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Passer une commande — Devora Nissenbaum</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body { background: var(--cream); }
+    .add-product-row { display: grid; grid-template-columns: 1fr 1fr auto; gap: 1rem; align-items: end; margin-bottom: 1.5rem; }
+    .btn-add { background: var(--cream-2); border: 1.5px dashed var(--border); color: var(--text-light); font-size: 0.8rem; padding: 0.75rem 1.5rem; cursor: pointer; border-radius: var(--radius); transition: var(--transition); width: 100%; text-align: center; font-family: var(--font-b); font-weight: 500; }
+    .btn-add:hover { border-color: var(--gold); color: var(--gold); }
+    .btn-remove { width: 36px; height: 36px; border-radius: 50%; background: none; border: 1.5px solid var(--border); color: var(--text-light); cursor: pointer; font-size: 1rem; transition: var(--transition); display: flex; align-items: center; justify-content: center; flex-shrink: 0; align-self: flex-end; margin-bottom: 0; }
+    .btn-remove:hover { border-color: var(--error); color: var(--error); background: rgba(155,35,53,0.05); }
+    .product-line { display: grid; grid-template-columns: 1fr 1fr 80px auto; gap: 1rem; align-items: end; margin-bottom: 1rem; }
+    .empty-cart { text-align: center; padding: 2rem; color: var(--text-light); font-size: 0.85rem; background: var(--cream); border-radius: var(--radius); border: 1.5px dashed var(--border); }
+    .summary-row { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+    .summary-row:last-child { border-bottom: none; }
+    .summary-row strong { font-family: var(--font-h); font-size: 1.1rem; color: var(--dark); }
+    .summary-row span { color: var(--text-light); }
+    .summary-total { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem; background: var(--dark); border-radius: var(--radius); margin-top: 1.5rem; }
+    .summary-total-label { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.55); }
+    .summary-total-amount { font-family: var(--font-h); font-size: 2rem; color: var(--gold); }
+    .step-panel { display: none; }
+    .step-panel.active { display: block; }
+    .info-box { background: rgba(201,168,76,0.08); border-left: 3px solid var(--gold); padding: 1rem 1.25rem; border-radius: var(--radius); margin-bottom: 1.5rem; }
+    .info-box p { font-size: 0.82rem; color: var(--text-light); line-height: 1.7; }
+    .info-box strong { color: var(--gold); }
+    @media (max-width: 600px) {
+      .product-line { grid-template-columns: 1fr auto; gap: 0.75rem; }
+      .product-line .form-group:nth-child(2) { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navbar (light version) -->
+<nav class="navbar scrolled" style="position:relative;background:rgba(10,10,10,0.97) !important;">
+  <a href="index.html" class="navbar-logo">Devora <span>Nissenbaum</span></a>
+  <div class="navbar-links">
+    <a href="index.html">← Retour au site</a>
+  </div>
+</nav>
+
+<div class="form-page">
+  <div class="form-wrap">
+
+    <div class="form-header">
+      <span class="label-tag">Commander en ligne</span>
+      <div class="divider"></div>
+      <h1>Votre Commande</h1>
+      <p>Remplissez le formulaire ci-dessous. Votre commande sera traitée sous 24h après validation.</p>
+    </div>
+
+    <!-- Stepper -->
+    <div class="stepper" id="stepper">
+      <div class="step active" id="step-indicator-1">
+        <span class="step-num">1</span>
+        <span class="step-label">Vos infos</span>
+      </div>
+      <div class="step-line"></div>
+      <div class="step" id="step-indicator-2">
+        <span class="step-num">2</span>
+        <span class="step-label">Votre commande</span>
+      </div>
+      <div class="step-line"></div>
+      <div class="step" id="step-indicator-3">
+        <span class="step-num">3</span>
+        <span class="step-label">Récapitulatif</span>
+      </div>
+    </div>
+
+    <!-- Step 1: Client Info -->
+    <div class="step-panel active" id="panel-1">
+      <div class="form-card">
+        <div class="form-card-title">Vos informations</div>
+        <div class="form-card-subtitle">Ces informations nous permettront de vous contacter et de livrer votre commande.</div>
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label for="prenom">Prénom *</label>
+            <input type="text" id="prenom" placeholder="Votre prénom" required />
+          </div>
+          <div class="form-group">
+            <label for="nom">Nom *</label>
+            <input type="text" id="nom" placeholder="Votre nom" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="email">Adresse email *</label>
+          <input type="email" id="email" placeholder="votre@email.com" required />
+        </div>
+        <div class="form-group">
+          <label for="telephone">Numéro de téléphone *</label>
+          <input type="tel" id="telephone" placeholder="+33 6 XX XX XX XX" required />
+        </div>
+        <div class="form-group">
+          <label for="adresse">Adresse postale *</label>
+          <input type="text" id="adresse" placeholder="Numéro, rue" required />
+        </div>
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label for="ville">Ville *</label>
+            <input type="text" id="ville" placeholder="Votre ville" required />
+          </div>
+          <div class="form-group">
+            <label for="codePostal">Code postal *</label>
+            <input type="text" id="codePostal" placeholder="75000" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="pays">Pays</label>
+          <select id="pays">
+            <option value="France">France</option>
+            <option value="Belgique">Belgique</option>
+            <option value="Suisse">Suisse</option>
+            <option value="Luxembourg">Luxembourg</option>
+            <option value="Canada">Canada</option>
+            <option value="Autre">Autre</option>
+          </select>
+        </div>
+        <button class="btn btn-gold" style="width:100%;justify-content:center;margin-top:1rem;" onclick="goToStep2()">Continuer → Choisir les produits</button>
+      </div>
+    </div>
+
+    <!-- Step 2: Products -->
+    <div class="step-panel" id="panel-2">
+      <div class="form-card">
+        <div class="form-card-title">Votre sélection</div>
+        <div class="form-card-subtitle">Ajoutez les articles souhaités. Vous pouvez en ajouter plusieurs.</div>
+
+        <div class="info-box">
+          <p><strong>Comment ça marche :</strong> Sélectionnez une catégorie, puis un produit, indiquez la quantité et cliquez sur <strong>Ajouter</strong>. Répétez pour chaque article souhaité.</p>
+        </div>
+
+        <!-- Add product row -->
+        <div style="background:var(--cream);padding:1.5rem;border-radius:var(--radius);margin-bottom:1.5rem;">
+          <div class="add-product-row">
+            <div class="form-group" style="margin:0">
+              <label>Catégorie</label>
+              <select id="selectCategorie" onchange="updateProduitOptions()">
+                <option value="">— Choisir —</option>
+                <option value="naturelle">Perruques Naturelles</option>
+                <option value="synthetique">Perruques Synthétiques</option>
+                <option value="mi_longue">Perruques Mi-Longues</option>
+                <option value="courte">Perruques Courtes</option>
+                <option value="service">Services (Nettoyage)</option>
+              </select>
+            </div>
+            <div class="form-group" style="margin:0">
+              <label>Produit</label>
+              <select id="selectProduit">
+                <option value="">— D'abord choisir une catégorie —</option>
+              </select>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:end">
+            <div class="form-group" style="margin:0">
+              <label>Notes / Précisions (couleur, taille…)</label>
+              <input type="text" id="productNote" placeholder="Ex: couleur noire, taille M..." />
+            </div>
+            <div class="form-group" style="margin:0">
+              <label>Qté</label>
+              <input type="number" id="selectQty" value="1" min="1" max="10" style="width:70px;text-align:center" />
+            </div>
+          </div>
+          <button class="btn btn-gold" style="width:100%;justify-content:center;margin-top:1rem;" onclick="addProductToCart()">+ Ajouter à la commande</button>
+        </div>
+
+        <!-- Cart -->
+        <div id="cart-items">
+          <div class="empty-cart" id="empty-cart">Aucun article ajouté. Utilisez le formulaire ci-dessus pour ajouter des produits.</div>
+        </div>
+
+        <div id="cart-total" style="display:none" class="summary-total">
+          <span class="summary-total-label">Total estimé</span>
+          <span class="summary-total-amount" id="total-amount">0€</span>
+        </div>
+
+        <div class="form-group mt-2">
+          <label>Notes pour la commande</label>
+          <textarea id="notesCommande" placeholder="Instructions spéciales, questions, précisions sur la livraison..."></textarea>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:1rem">
+        <button class="btn btn-dark" style="flex:1;justify-content:center" onclick="goToStep(1)">← Retour</button>
+        <button class="btn btn-gold" style="flex:2;justify-content:center" onclick="goToStep3()">Continuer → Récapitulatif</button>
+      </div>
+    </div>
+
+    <!-- Step 3: Summary -->
+    <div class="step-panel" id="panel-3">
+      <div class="form-card" id="recap-card">
+        <div class="form-card-title">Récapitulatif</div>
+        <div class="form-card-subtitle">Vérifiez votre commande avant de confirmer.</div>
+        <!-- Filled by JS -->
+      </div>
+
+      <div style="display:flex;gap:1rem;margin-top:0">
+        <button class="btn btn-dark" style="flex:1;justify-content:center" onclick="goToStep(2)">← Modifier</button>
+        <button class="btn btn-gold" style="flex:2;justify-content:center" onclick="submitCommande()">✓ Confirmer ma commande</button>
+      </div>
+    </div>
+
+    <!-- Step 4: Success -->
+    <div class="step-panel" id="panel-success">
+      <div class="form-card">
+        <div class="success-state">
+          <div class="success-icon">✓</div>
+          <h2>Commande envoyée !</h2>
+          <p>Votre commande a bien été reçue. Nous la traitons dans les plus brefs délais.<br>Vous recevrez une confirmation dès validation par notre équipe.</p>
+          <div class="order-number-badge" id="order-number-display">N° CMD-2026-001</div>
+          <p style="font-size:0.85rem;color:var(--text-light)">📋 Statut : <strong style="color:var(--warning)">En attente de validation</strong></p>
+          <br>
+          <a href="index.html" class="btn btn-dark">← Retour à la boutique</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ===== Catalogue produits =====
+const PRODUITS_CATALOGUE = {
+  naturelle: [
+    { id: 'nat-1', nom: 'Perruque Naturelle Lisse', prix: 250 },
+    { id: 'nat-2', nom: 'Perruque Naturelle Bouclée', prix: 280 },
+    { id: 'nat-3', nom: 'Perruque Naturelle Ondulée', prix: 260 },
+    { id: 'nat-4', nom: 'Perruque Naturelle Longue', prix: 320 },
+  ],
+  synthetique: [
+    { id: 'syn-1', nom: 'Perruque Synthétique Longue', prix: 120 },
+    { id: 'syn-2', nom: 'Perruque Synthétique Mi-Longue', prix: 95 },
+    { id: 'syn-3', nom: 'Perruque Synthétique Lisse', prix: 85 },
+  ],
+  mi_longue: [
+    { id: 'mil-1', nom: 'Perruque Mi-Longue Ondulée', prix: 175 },
+    { id: 'mil-2', nom: 'Perruque Mi-Longue Lisse', prix: 155 },
+    { id: 'mil-3', nom: 'Perruque Mi-Longue Bouclée', prix: 185 },
+  ],
+  courte: [
+    { id: 'cou-1', nom: 'Perruque Courte Chic', prix: 150 },
+    { id: 'cou-2', nom: 'Perruque Courte Pixie', prix: 135 },
+    { id: 'cou-3', nom: 'Perruque Courte Bouclée', prix: 145 },
+  ],
+  service: [
+    { id: 'svc-1', nom: 'Nettoyage Simple', prix: 25 },
+    { id: 'svc-2', nom: 'Nettoyage + Brushing', prix: 45 },
+    { id: 'svc-3', nom: 'Nettoyage + Traitement Complet', prix: 65 },
+  ]
+};
+
+// Also sync catalogue into CRM DB
+function syncCatalogueToDb() {
+  try {
+    const raw = localStorage.getItem('devora_crm');
+    const db = raw ? JSON.parse(raw) : { clients:[], commandes:[], produits:[], parametres:{}, lastCommandeNum:0 };
+    if (!db.produits || db.produits.length === 0) {
+      const all = [];
+      Object.entries(PRODUITS_CATALOGUE).forEach(([cat, items]) => {
+        items.forEach(p => all.push({ ...p, categorie: cat, actif: true }));
+      });
+      db.produits = all;
+      localStorage.setItem('devora_crm', JSON.stringify(db));
+    }
+  } catch(e) {}
+}
+syncCatalogueToDb();
+
+let cart = [];
+let currentStep = 1;
+
+function updateProduitOptions() {
+  const cat = document.getElementById('selectCategorie').value;
+  const sel = document.getElementById('selectProduit');
+  sel.innerHTML = '';
+  if (!cat) { sel.innerHTML = '<option>— D\'abord choisir une catégorie —</option>'; return; }
+  const items = PRODUITS_CATALOGUE[cat] || [];
+  if (items.length === 0) { sel.innerHTML = '<option>Aucun produit disponible</option>'; return; }
+  sel.innerHTML = '<option value="">— Choisir un produit —</option>';
+  items.forEach(p => {
+    const opt = document.createElement('option');
+    opt.value = p.id;
+    opt.textContent = `${p.nom} — ${p.prix}€`;
+    opt.dataset.nom = p.nom;
+    opt.dataset.prix = p.prix;
+    opt.dataset.cat = cat;
+    sel.appendChild(opt);
+  });
+}
+
+function addProductToCart() {
+  const cat = document.getElementById('selectCategorie').value;
+  const prodSel = document.getElementById('selectProduit');
+  const selectedOpt = prodSel.options[prodSel.selectedIndex];
+  const qty = parseInt(document.getElementById('selectQty').value) || 1;
+  const note = document.getElementById('productNote').value.trim();
+
+  if (!cat || !prodSel.value) { alert('Veuillez sélectionner une catégorie et un produit.'); return; }
+
+  const produit = {
+    id: prodSel.value,
+    nom: selectedOpt.dataset.nom,
+    prix: parseFloat(selectedOpt.dataset.prix),
+    categorie: selectedOpt.dataset.cat,
+    quantite: qty,
+    note: note,
+    lineId: Date.now()
+  };
+  cart.push(produit);
+  renderCart();
+  // Reset
+  document.getElementById('selectCategorie').value = '';
+  document.getElementById('selectProduit').innerHTML = '<option>— D\'abord choisir une catégorie —</option>';
+  document.getElementById('selectQty').value = 1;
+  document.getElementById('productNote').value = '';
+}
+
+function removeFromCart(lineId) {
+  cart = cart.filter(p => p.lineId !== lineId);
+  renderCart();
+}
+
+function renderCart() {
+  const container = document.getElementById('cart-items');
+  const emptyMsg = document.getElementById('empty-cart');
+  const totalBlock = document.getElementById('cart-total');
+  const totalAmount = document.getElementById('total-amount');
+
+  const items = cart;
+  if (items.length === 0) {
+    container.innerHTML = '';
+    container.appendChild(emptyMsg || createEmptyMsg());
+    document.getElementById('empty-cart').style.display = 'block';
+    totalBlock.style.display = 'none';
+    return;
+  }
+
+  const catLabels = { naturelle:'Naturelle', synthetique:'Synthétique', mi_longue:'Mi-longue', courte:'Courte', service:'Service' };
+  let html = '';
+  items.forEach(p => {
+    html += `
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:1rem;background:var(--cream);border-radius:var(--radius);margin-bottom:0.75rem;gap:1rem">
+        <div style="flex:1">
+          <div style="font-weight:600;font-size:0.9rem;color:var(--dark)">${p.nom}</div>
+          <div style="font-size:0.75rem;color:var(--text-light);margin-top:2px">${catLabels[p.categorie]||p.categorie} · Qté: ${p.quantite}${p.note ? ' · '+p.note : ''}</div>
+        </div>
+        <div style="font-family:var(--font-h);font-size:1.1rem;color:var(--gold);white-space:nowrap">${(p.prix * p.quantite).toFixed(0)}€</div>
+        <button onclick="removeFromCart(${p.lineId})" style="width:30px;height:30px;border-radius:50%;background:none;border:1px solid var(--border);color:var(--text-light);cursor:pointer;font-size:0.9rem;display:flex;align-items:center;justify-content:center;flex-shrink:0" onmouseover="this.style.borderColor='var(--error)';this.style.color='var(--error)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-light)'">✕</button>
+      </div>`;
+  });
+
+  const total = items.reduce((s, p) => s + p.prix * p.quantite, 0);
+  container.innerHTML = html;
+  totalBlock.style.display = 'flex';
+  totalAmount.textContent = total.toFixed(0) + '€';
+}
+
+function goToStep(n) {
+  document.getElementById(`panel-${currentStep}`).classList.remove('active');
+  document.getElementById(`step-indicator-${currentStep}`)?.classList.remove('active');
+  document.getElementById(`step-indicator-${currentStep}`)?.classList.add('done');
+  currentStep = n;
+  document.getElementById(`panel-${n}`).classList.add('active');
+  document.getElementById(`step-indicator-${n}`)?.classList.add('active');
+  document.getElementById(`step-indicator-${n}`)?.classList.remove('done');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function goToStep2() {
+  const required = ['prenom','nom','email','telephone','adresse','ville','codePostal'];
+  for (const id of required) {
+    const el = document.getElementById(id);
+    if (!el.value.trim()) {
+      el.focus();
+      el.style.borderColor = 'var(--error)';
+      el.addEventListener('input', () => el.style.borderColor = '', { once: true });
+      alert('Veuillez remplir tous les champs obligatoires (*)');
+      return;
+    }
+  }
+  goToStep(2);
+}
+
+function goToStep3() {
+  if (cart.length === 0) { alert('Veuillez ajouter au moins un produit à votre commande.'); return; }
+  renderRecap();
+  goToStep(3);
+}
+
+function renderRecap() {
+  const prenom = document.getElementById('prenom').value;
+  const nom = document.getElementById('nom').value;
+  const email = document.getElementById('email').value;
+  const telephone = document.getElementById('telephone').value;
+  const adresse = document.getElementById('adresse').value;
+  const ville = document.getElementById('ville').value;
+  const codePostal = document.getElementById('codePostal').value;
+  const pays = document.getElementById('pays').value;
+  const notes = document.getElementById('notesCommande').value;
+  const total = cart.reduce((s,p) => s + p.prix * p.quantite, 0);
+  const catLabels = { naturelle:'Naturelle', synthetique:'Synthétique', mi_longue:'Mi-longue', courte:'Courte', service:'Service' };
+
+  let itemsHtml = cart.map(p => `
+    <div class="summary-row">
+      <span>${p.nom} ×${p.quantite}${p.note ? '<br><small style="color:var(--text-light)">${p.note}</small>' : ''}</span>
+      <strong>${(p.prix * p.quantite).toFixed(0)}€</strong>
+    </div>`).join('');
+
+  document.getElementById('recap-card').innerHTML = `
+    <div class="form-card-title">Récapitulatif</div>
+    <div class="form-card-subtitle">Vérifiez les informations avant de confirmer.</div>
+
+    <h4 style="font-family:var(--font-b);font-size:0.72rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-light);margin-bottom:1rem;margin-top:1.5rem">Vos coordonnées</h4>
+    <div style="background:var(--cream);padding:1.25rem;border-radius:var(--radius);font-size:0.9rem;line-height:2">
+      <div><strong>${prenom} ${nom}</strong></div>
+      <div style="color:var(--text-light)">${email} · ${telephone}</div>
+      <div style="color:var(--text-light)">${adresse}, ${codePostal} ${ville}, ${pays}</div>
+    </div>
+
+    <h4 style="font-family:var(--font-b);font-size:0.72rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-light);margin-bottom:1rem;margin-top:1.5rem">Votre commande</h4>
+    <div>${itemsHtml}</div>
+    <div class="summary-total">
+      <span class="summary-total-label">Total estimé</span>
+      <span class="summary-total-amount">${total.toFixed(0)}€</span>
+    </div>
+    ${notes ? `<div style="margin-top:1rem;font-size:0.85rem;color:var(--text-light)"><strong>Notes :</strong> ${notes}</div>` : ''}
+
+    <div class="info-box" style="margin-top:1.5rem;margin-bottom:0">
+      <p>⏳ Votre commande sera <strong>en attente de validation</strong> jusqu'à confirmation de notre équipe. Vous serez contactée sous 24h.</p>
+    </div>
+  `;
+}
+
+function generateId() {
+  return Math.random().toString(36).substr(2,9).toUpperCase();
+}
+
+function submitCommande() {
+  const prenom = document.getElementById('prenom').value.trim();
+  const nom = document.getElementById('nom').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const telephone = document.getElementById('telephone').value.trim();
+  const adresse = document.getElementById('adresse').value.trim();
+  const ville = document.getElementById('ville').value.trim();
+  const codePostal = document.getElementById('codePostal').value.trim();
+  const pays = document.getElementById('pays').value;
+  const notes = document.getElementById('notesCommande').value.trim();
+  const total = cart.reduce((s,p) => s + p.prix * p.quantite, 0);
+
+  // Load or init DB
+  let db;
+  try {
+    const raw = localStorage.getItem('devora_crm');
+    db = raw ? JSON.parse(raw) : { clients:[], commandes:[], produits:[], parametres:{}, lastCommandeNum:0 };
+  } catch(e) {
+    db = { clients:[], commandes:[], produits:[], parametres:{}, lastCommandeNum:0 };
+  }
+
+  db.lastCommandeNum = (db.lastCommandeNum || 0) + 1;
+  const cmdNum = `CMD-${new Date().getFullYear()}-${String(db.lastCommandeNum).padStart(3,'0')}`;
+
+  const newCommande = {
+    id: generateId(),
+    numero: cmdNum,
+    date: new Date().toISOString(),
+    // Client info (not yet resolved to a client ID — admin will do that at validation)
+    clientInfo: { prenom, nom, email, telephone, adresse: `${adresse}, ${codePostal} ${ville}, ${pays}` },
+    clientId: null,
+    produits: cart.map(p => ({ ...p })),
+    montantTotal: total,
+    montantPaye: 0,
+    statutPaiement: 'en_attente',
+    modePaiement: '',
+    statutCommande: 'en_attente',
+    lienPaiement: '',
+    notes,
+    dateCreation: new Date().toISOString(),
+    dateValidation: null,
+    source: 'formulaire'
+  };
+
+  db.commandes.push(newCommande);
+  localStorage.setItem('devora_crm', JSON.stringify(db));
+
+  // Show success
+  document.getElementById('panel-3').classList.remove('active');
+  document.getElementById('panel-success').classList.add('active');
+  document.getElementById('order-number-display').textContent = cmdNum;
+
+  // Hide stepper
+  document.getElementById('stepper').style.display = 'none';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
