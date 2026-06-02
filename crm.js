@@ -159,7 +159,8 @@ function rfm(id){
 }
 function globalStats(){
   const active = db.commandes.filter(c=>c.statutCommande!=='annulee');
-  const ca = active.filter(c=>c.statutPaiement==='paye').reduce((s,c)=>s+c.montantTotal,0);
+  // CA encaissé = somme de tout ce qui a réellement été payé (acomptes inclus)
+  const ca = active.reduce((s,c)=>s+(c.montantPaye||0),0);
   const du = active.reduce((s,c)=>s+(c.montantTotal-c.montantPaye),0);
   return {
     clients: db.clients.filter(c=>c.actif!==false).length,
