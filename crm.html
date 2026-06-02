@@ -1,627 +1,371 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CRM — Devora Nissenbaum</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <style>
-    :root {
-      --gold: #C9A84C; --gold-d: #9E7B2E; --gold-l: #E8D08A;
-      --black: #0A0A0A; --sidebar: #141414; --sidebar-hover: #1E1E1E;
-      --bg: #F5F3EF; --bg-2: #EDEAE3; --white: #FFFFFF;
-      --text: #1A1A1A; --text-muted: #8A8A8A; --border: #E0DAD0;
-      --success: #2D7D4F; --warning: #B8860B; --danger: #9B2335;
-      --info: #1A5EA8;
-      --font-h: 'Cormorant Garamond', serif; --font: 'Montserrat', sans-serif;
-      --radius: 6px; --shadow: 0 2px 12px rgba(0,0,0,0.07);
-      --sidebar-w: 240px;
-    }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { height: 100%; font-family: var(--font); color: var(--text); background: var(--bg); -webkit-font-smoothing: antialiased; }
-    a { color: inherit; text-decoration: none; }
-    button { font-family: var(--font); cursor: pointer; }
-    input, select, textarea { font-family: var(--font); }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<title>CRM — Devora Nissenbaum</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --bg:#F6F5F2; --surface:#FFFFFF; --surface-2:#FBFAF8;
+  --ink:#1B1B19; --muted:#8C8C84; --faint:#B5B5AD;
+  --line:#ECEAE4; --line-2:#E2DFD7;
+  --accent:#B0884A; --accent-d:#92703A; --accent-soft:#F5EEE1;
+  --green:#2E7D52; --green-soft:#E6F2EB;
+  --amber:#B8860B; --amber-soft:#FBF1DA;
+  --red:#B23A48; --red-soft:#F9E7E9;
+  --blue:#2D6CB5; --blue-soft:#E7F0FA;
+  --purple:#7A5CB0; --purple-soft:#EFEAF7;
+  --radius:12px; --radius-sm:8px;
+  --shadow:0 1px 2px rgba(0,0,0,.04), 0 4px 16px rgba(0,0,0,.04);
+  --font:'Inter',system-ui,-apple-system,sans-serif;
+  --serif:'Fraunces',Georgia,serif;
+  --sidebar-w:230px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:var(--font);background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;font-size:14px;line-height:1.5}
+a{color:inherit;text-decoration:none}
+button{font-family:var(--font);cursor:pointer;border:none;background:none;color:inherit}
+input,select,textarea{font-family:var(--font);font-size:14px}
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-thumb{background:#d9d6cd;border-radius:10px}
 
-    /* ===== LOGIN ===== */
-    #login-screen {
-      display: flex; align-items: center; justify-content: center;
-      min-height: 100vh;
-      background: var(--sidebar) url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23C9A84C' fill-opacity='0.03'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/svg%3E");
-    }
-    .login-card {
-      background: var(--white); border-radius: 12px; padding: 3rem;
-      width: 100%; max-width: 400px; margin: 1rem;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
-    }
-    .login-logo { font-family: var(--font-h); font-size: 1.6rem; color: var(--text); text-align: center; margin-bottom: 0.5rem; }
-    .login-logo span { color: var(--gold); }
-    .login-sub { text-align: center; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 2.5rem; }
-    .login-card label { display: block; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.4rem; }
-    .login-card input { width: 100%; padding: 0.85rem 1rem; border: 1.5px solid var(--border); border-radius: var(--radius); font-size: 0.95rem; outline: none; transition: 0.2s; }
-    .login-card input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(201,168,76,0.12); }
-    .login-btn { width: 100%; padding: 0.9rem; background: var(--gold); color: var(--white); border: none; border-radius: var(--radius); font-size: 0.78rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; margin-top: 1.5rem; transition: 0.2s; }
-    .login-btn:hover { background: var(--gold-d); }
-    #login-error { display: none; background: rgba(155,35,53,0.08); border: 1px solid rgba(155,35,53,0.3); color: var(--danger); padding: 0.75rem 1rem; border-radius: var(--radius); font-size: 0.82rem; margin-top: 1rem; text-align: center; }
-    .login-hint { text-align: center; font-size: 0.72rem; color: var(--text-muted); margin-top: 1.5rem; }
+/* ===== LOGIN ===== */
+#login{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#16150F;padding:1rem;z-index:100}
+.login-box{background:var(--surface);border-radius:18px;padding:2.5rem;width:100%;max-width:380px;box-shadow:0 24px 70px rgba(0,0,0,.5)}
+.login-logo{font-family:var(--serif);font-size:1.5rem;text-align:center}
+.login-logo b{color:var(--accent);font-weight:600}
+.login-tag{text-align:center;font-size:.7rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin:.4rem 0 2rem}
+.login-box label{display:block;font-size:.7rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem}
+.login-box input{width:100%;padding:.8rem .9rem;border:1.5px solid var(--line-2);border-radius:var(--radius-sm);outline:none;transition:.15s}
+.login-box input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.login-btn{width:100%;margin-top:1.4rem;padding:.85rem;background:var(--accent);color:#fff;border-radius:var(--radius-sm);font-weight:600;letter-spacing:.04em;transition:.15s}
+.login-btn:hover{background:var(--accent-d)}
+.login-err{display:none;margin-top:.9rem;padding:.7rem;background:var(--red-soft);color:var(--red);border-radius:var(--radius-sm);font-size:.82rem;text-align:center}
+.login-hint{text-align:center;font-size:.72rem;color:var(--faint);margin-top:1.4rem}
 
-    /* ===== APP SHELL ===== */
-    #crm-app { display: none; height: 100vh; overflow: hidden; }
-    .app-layout { display: flex; height: 100%; }
+/* ===== APP SHELL ===== */
+#app{display:none;min-height:100vh}
+.shell{display:flex;min-height:100vh}
 
-    /* ===== SIDEBAR ===== */
-    .sidebar {
-      width: var(--sidebar-w); background: var(--sidebar); display: flex;
-      flex-direction: column; flex-shrink: 0; overflow-y: auto;
-      border-right: 1px solid rgba(255,255,255,0.05);
-    }
-    .sidebar-logo { padding: 1.75rem 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.06); }
-    .sidebar-logo .logo-main { font-family: var(--font-h); font-size: 1.25rem; color: var(--white); }
-    .sidebar-logo .logo-main span { color: var(--gold); }
-    .sidebar-logo .logo-sub { font-size: 0.6rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-top: 2px; }
-    .sidebar-section { padding: 0.75rem 0.75rem 0; }
-    .sidebar-section-label { font-size: 0.6rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.25); padding: 0 0.75rem; margin-bottom: 0.4rem; }
-    .nav-link {
-      display: flex; align-items: center; gap: 0.75rem;
-      padding: 0.7rem 0.75rem; border-radius: var(--radius);
-      font-size: 0.8rem; font-weight: 500; color: rgba(255,255,255,0.55);
-      transition: 0.15s; cursor: pointer; border: none; background: none;
-      width: 100%; text-align: left;
-    }
-    .nav-link:hover { background: var(--sidebar-hover); color: rgba(255,255,255,0.85); }
-    .nav-link.active { background: rgba(201,168,76,0.12); color: var(--gold); }
-    .nav-link .nav-icon { width: 20px; text-align: center; font-size: 1rem; }
-    .sidebar-footer { margin-top: auto; padding: 1rem 0.75rem; border-top: 1px solid rgba(255,255,255,0.06); }
-    .btn-logout { display: flex; align-items: center; gap: 0.75rem; padding: 0.7rem 0.75rem; border-radius: var(--radius); font-size: 0.78rem; color: rgba(255,255,255,0.35); background: none; border: none; width: 100%; cursor: pointer; transition: 0.15s; }
-    .btn-logout:hover { color: var(--danger); background: rgba(155,35,53,0.08); }
-    .back-to-site { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0.75rem; border-radius: var(--radius); font-size: 0.75rem; color: rgba(255,255,255,0.3); background: none; border: none; width: 100%; cursor: pointer; transition: 0.15s; text-decoration: none; }
-    .back-to-site:hover { color: rgba(255,255,255,0.6); }
+/* Sidebar (desktop) */
+.sidebar{width:var(--sidebar-w);background:var(--surface);border-right:1px solid var(--line);display:flex;flex-direction:column;position:fixed;inset:0 auto 0 0;z-index:40;overflow-y:auto}
+.side-logo{padding:1.3rem 1.3rem 1rem}
+.side-logo .nm{font-family:var(--serif);font-size:1.15rem;line-height:1.1}
+.side-logo .nm b{color:var(--accent);font-weight:600}
+.side-logo .sub{font-size:.6rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--faint);margin-top:.25rem}
+.side-nav{padding:.5rem .6rem;flex:1}
+.side-group{font-size:.6rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);padding:.9rem .7rem .4rem}
+.nav-item{display:flex;align-items:center;gap:.7rem;padding:.6rem .7rem;border-radius:var(--radius-sm);font-size:.85rem;font-weight:500;color:#55554E;width:100%;text-align:left;transition:.12s;position:relative}
+.nav-item:hover{background:var(--surface-2);color:var(--ink)}
+.nav-item.on{background:var(--accent-soft);color:var(--accent-d);font-weight:600}
+.nav-ic{width:18px;height:18px;flex-shrink:0;opacity:.85}
+.nav-badge{margin-left:auto;background:var(--red);color:#fff;font-size:.62rem;font-weight:700;padding:.05rem .4rem;border-radius:20px;min-width:18px;text-align:center}
+.side-foot{padding:.7rem .6rem;border-top:1px solid var(--line)}
 
-    /* ===== MAIN CONTENT ===== */
-    .main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-    .topbar {
-      background: var(--white); border-bottom: 1px solid var(--border);
-      padding: 0 2rem; height: 60px;
-      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
-      flex-shrink: 0;
-    }
-    .topbar-left { display: flex; align-items: center; gap: 1rem; }
-    .menu-toggle { display: none; background: none; border: none; font-size: 1.2rem; color: var(--text); cursor: pointer; }
-    .search-wrap { position: relative; }
-    .search-wrap input { padding: 0.5rem 1rem 0.5rem 2.25rem; border: 1.5px solid var(--border); border-radius: 50px; font-size: 0.82rem; outline: none; width: 260px; background: var(--bg); transition: 0.2s; }
-    .search-wrap input:focus { border-color: var(--gold); background: var(--white); box-shadow: 0 0 0 3px rgba(201,168,76,0.1); }
-    .search-icon { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); font-size: 0.85rem; color: var(--text-muted); }
-    .topbar-right { display: flex; align-items: center; gap: 0.5rem; }
-    .topbar-btn { padding: 0.5rem 1rem; border-radius: var(--radius); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; border: none; cursor: pointer; transition: 0.15s; }
-    .topbar-btn.gold { background: var(--gold); color: var(--white); }
-    .topbar-btn.gold:hover { background: var(--gold-d); }
-    .topbar-btn.outline { background: none; border: 1.5px solid var(--border); color: var(--text); }
-    .topbar-btn.outline:hover { border-color: var(--gold); color: var(--gold); }
+/* Main */
+.main{flex:1;margin-left:var(--sidebar-w);min-width:0;display:flex;flex-direction:column}
+.topbar{position:sticky;top:0;z-index:30;background:rgba(246,245,242,.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:.7rem 1.5rem;display:flex;align-items:center;gap:1rem}
+.search{position:relative;flex:1;max-width:420px}
+.search input{width:100%;padding:.55rem .9rem .55rem 2.2rem;border:1.5px solid var(--line-2);border-radius:30px;background:var(--surface);outline:none;transition:.15s}
+.search input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.search svg{position:absolute;left:.75rem;top:50%;transform:translateY(-50%);opacity:.4}
+.top-actions{display:flex;gap:.5rem;margin-left:auto}
+.content{padding:1.5rem;max-width:1240px;width:100%}
 
-    /* ===== VIEWS ===== */
-    .views-wrap { flex: 1; overflow-y: auto; }
-    .view { display: none; padding: 2rem; max-width: 1200px; }
-    .view.active { display: block; }
-    .view-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
-    .view-title { font-family: var(--font-h); font-size: 2rem; color: var(--text); }
-    .view-sub { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
+/* Mobile top + bottom nav */
+.mtop{display:none}
+.mobile-nav{display:none}
+.mobile-more{display:none}
 
-    /* ===== STAT CARDS ===== */
-    .stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1.25rem; margin-bottom: 2rem; }
-    .stat-card { background: var(--white); border-radius: var(--radius); padding: 1.5rem; box-shadow: var(--shadow); border: 1px solid var(--border); }
-    .stat-label { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.75rem; }
-    .stat-value { font-family: var(--font-h); font-size: 2.2rem; color: var(--text); line-height: 1; }
-    .stat-card.gold .stat-value { color: var(--gold); }
-    .stat-card.danger .stat-value { color: var(--danger); }
+/* ===== COMPONENTS ===== */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.4rem;padding:.55rem 1rem;border-radius:var(--radius-sm);font-size:.82rem;font-weight:600;transition:.15s;white-space:nowrap}
+.btn svg{width:15px;height:15px}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:var(--accent-d)}
+.btn-ghost{background:var(--surface);border:1.5px solid var(--line-2);color:var(--ink)}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent-d)}
+.btn-soft{background:var(--surface-2);border:1px solid var(--line);color:#55554E}
+.btn-soft:hover{background:var(--accent-soft);color:var(--accent-d)}
+.btn-green{background:#25D366;color:#fff}
+.btn-green:hover{background:#1da851}
+.btn-danger{background:var(--red-soft);color:var(--red)}
+.btn-danger:hover{background:var(--red);color:#fff}
+.btn-sm{padding:.35rem .7rem;font-size:.75rem}
+.btn-block{width:100%}
 
-    /* ===== CARDS ===== */
-    .card { background: var(--white); border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow); }
-    .card-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
-    .card-title { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--text); }
-    .card-body { padding: 1.5rem; }
+.page-head{display:flex;align-items:flex-end;justify-content:space-between;gap:1rem;margin-bottom:1.4rem;flex-wrap:wrap}
+.page-title{font-family:var(--serif);font-size:1.7rem;font-weight:500;letter-spacing:-.01em}
+.page-sub{font-size:.82rem;color:var(--muted);margin-top:.15rem}
 
-    /* ===== DASHBOARD GRID ===== */
-    .dash-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 1.25rem; }
-    .alert { padding: 1rem 1.25rem; border-radius: var(--radius); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem; font-size: 0.85rem; }
-    .alert-warning { background: rgba(184,134,11,0.08); border: 1px solid rgba(184,134,11,0.3); color: var(--warning); }
-    .alert-warning strong { cursor: pointer; text-decoration: underline; }
-    .alert-info { background: rgba(26,94,168,0.08); border: 1px solid rgba(26,94,168,0.2); color: var(--info); font-size: 0.82rem; }
-    .unpaid-row { display: flex; align-items: center; justify-content: space-between; padding: 0.85rem 0; border-bottom: 1px solid var(--border); cursor: pointer; transition: 0.15s; gap: 1rem; }
-    .unpaid-row:last-child { border-bottom: none; }
-    .unpaid-row:hover { background: rgba(0,0,0,0.02); margin: 0 -1.5rem; padding: 0.85rem 1.5rem; }
-    .unpaid-name { font-weight: 600; font-size: 0.88rem; }
-    .unpaid-cmd { font-size: 0.75rem; color: var(--text-muted); }
-    .unpaid-amount { font-family: var(--font-h); font-size: 1.1rem; color: var(--danger); white-space: nowrap; }
-    .btn-wa { background: #25D366; border: none; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.85rem; transition: 0.15s; flex-shrink: 0; }
-    .btn-wa:hover { background: #1da851; transform: scale(1.1); }
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.card-h{padding:1rem 1.2rem;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:.75rem}
+.card-t{font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.card-b{padding:1.2rem}
 
-    /* ===== TABLES ===== */
-    .table-wrap { overflow-x: auto; }
-    .crm-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-    .crm-table th { padding: 0.75rem 1rem; text-align: left; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); border-bottom: 1.5px solid var(--border); white-space: nowrap; }
-    .crm-table td { padding: 0.9rem 1rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
-    .crm-table tr:last-child td { border-bottom: none; }
-    .crm-table tr:hover td { background: rgba(201,168,76,0.03); }
-    .client-name { font-weight: 600; }
-    .btn-icon { background: none; border: 1px solid var(--border); border-radius: var(--radius); padding: 0.3rem 0.6rem; font-size: 0.8rem; cursor: pointer; transition: 0.15s; color: var(--text); }
-    .btn-icon:hover { border-color: var(--gold); color: var(--gold); background: rgba(201,168,76,0.05); }
+.chip{display:inline-flex;align-items:center;gap:.3rem;padding:.2rem .6rem;border-radius:30px;font-size:.7rem;font-weight:600;white-space:nowrap}
+.chip-gold{background:var(--accent-soft);color:var(--accent-d)}
+.chip-green{background:var(--green-soft);color:var(--green)}
+.chip-amber{background:var(--amber-soft);color:var(--amber)}
+.chip-red{background:var(--red-soft);color:var(--red)}
+.chip-blue{background:var(--blue-soft);color:var(--blue)}
+.chip-purple{background:var(--purple-soft);color:var(--purple)}
+.chip-gray{background:#F0EFEA;color:#77756c}
 
-    /* ===== FILTERS ===== */
-    .filter-bar { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-    .filter-btn { padding: 0.4rem 0.9rem; border-radius: 50px; font-size: 0.72rem; font-weight: 600; border: 1.5px solid var(--border); background: none; cursor: pointer; transition: 0.15s; color: var(--text-muted); }
-    .filter-btn:hover, .filter-btn.active { border-color: var(--gold); color: var(--gold); background: rgba(201,168,76,0.08); }
+.tag-pill{display:inline-flex;align-items:center;gap:.25rem;padding:.18rem .55rem;border-radius:30px;font-size:.68rem;font-weight:600}
 
-    /* ===== DETAIL VIEWS ===== */
-    .back-btn { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.78rem; color: var(--text-muted); cursor: pointer; border: none; background: none; padding: 0; margin-bottom: 1.25rem; transition: 0.15s; }
-    .back-btn:hover { color: var(--gold); }
-    .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1.25rem; }
-    .detail-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; box-shadow: var(--shadow); }
-    .detail-card-title { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border); }
-    .detail-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 0.5rem 0; border-bottom: 1px solid var(--bg-2); gap: 1rem; }
-    .detail-row:last-child { border-bottom: none; }
-    .detail-row span { font-size: 0.78rem; color: var(--text-muted); flex-shrink: 0; }
-    .detail-row strong { font-size: 0.88rem; text-align: right; word-break: break-word; }
-    .detail-actions { display: flex; gap: 0.75rem; margin-bottom: 1.25rem; flex-wrap: wrap; }
+/* Stats */
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.2rem}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:1.1rem 1.2rem;box-shadow:var(--shadow)}
+.stat-lbl{font-size:.68rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:.4rem}
+.stat-val{font-family:var(--serif);font-size:1.9rem;font-weight:500;margin-top:.4rem;line-height:1}
+.stat-sub{font-size:.72rem;color:var(--faint);margin-top:.35rem}
+.stat-sub.up{color:var(--green)}
+.stat-sub.down{color:var(--red)}
 
-    /* ===== BUTTONS ===== */
-    .btn { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.6rem 1.1rem; border-radius: var(--radius); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em; border: none; cursor: pointer; transition: 0.15s; }
-    .btn-primary { background: var(--gold); color: var(--white); }
-    .btn-primary:hover { background: var(--gold-d); }
-    .btn-secondary { background: var(--bg-2); color: var(--text); border: 1px solid var(--border); }
-    .btn-secondary:hover { border-color: var(--gold); color: var(--gold); }
-    .btn-danger { background: rgba(155,35,53,0.1); color: var(--danger); border: 1px solid rgba(155,35,53,0.2); }
-    .btn-danger:hover { background: var(--danger); color: var(--white); }
-    .btn-wa-full { background: #25D366; color: var(--white); }
-    .btn-wa-full:hover { background: #1da851; }
-    .btn-sm { padding: 0.35rem 0.75rem; font-size: 0.7rem; }
-    .btn-small { padding: 0.3rem 0.7rem; font-size: 0.68rem; border-radius: 4px; border: none; cursor: pointer; font-family: var(--font); font-weight: 600; }
+/* Grids */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem}
+.grid-2-1{display:grid;grid-template-columns:1.6fr 1fr;gap:1.2rem}
 
-    /* ===== MODALS ===== */
-    .modal-overlay {
-      display: none; position: fixed; inset: 0;
-      background: rgba(0,0,0,0.55); z-index: 1000;
-      align-items: center; justify-content: center; padding: 1rem;
-    }
-    .modal { background: var(--white); border-radius: 10px; width: 100%; max-width: 500px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); overflow: hidden; }
-    .modal-header { padding: 1.5rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
-    .modal-title { font-family: var(--font-h); font-size: 1.5rem; }
-    .modal-close { background: none; border: none; font-size: 1.3rem; color: var(--text-muted); cursor: pointer; line-height: 1; }
-    .modal-body { padding: 1.5rem; }
-    .modal-footer { padding: 1rem 1.5rem; border-top: 1px solid var(--border); display: flex; gap: 0.75rem; justify-content: flex-end; }
-    .form-group { margin-bottom: 1.25rem; }
-    .form-group label { display: block; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.4rem; }
-    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.75rem 0.9rem; border: 1.5px solid var(--border); border-radius: var(--radius); font-size: 0.9rem; outline: none; transition: 0.2s; font-family: var(--font); background: var(--white); color: var(--text); appearance: none; }
-    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(201,168,76,0.1); }
-    .form-group textarea { resize: vertical; min-height: 80px; }
-    .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-    .form-info { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem; padding: 0.75rem 1rem; background: var(--bg); border-radius: var(--radius); }
-    .form-info strong { color: var(--gold); }
+/* Table */
+.tbl-wrap{overflow-x:auto}
+table.tbl{width:100%;border-collapse:collapse;font-size:.84rem}
+.tbl th{text-align:left;padding:.7rem 1rem;font-size:.64rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);white-space:nowrap}
+.tbl td{padding:.8rem 1rem;border-bottom:1px solid var(--line);vertical-align:middle}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tbody tr{transition:.1s}
+.tbl tbody tr.clk{cursor:pointer}
+.tbl tbody tr.clk:hover{background:var(--surface-2)}
+.cell-strong{font-weight:600}
+.cell-sub{font-size:.74rem;color:var(--muted)}
 
-    /* ===== SETTINGS ===== */
-    .settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
-    .settings-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.75rem; box-shadow: var(--shadow); }
-    .settings-card-title { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 1.5rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border); }
+/* Bars chart */
+.bars{display:flex;align-items:flex-end;gap:.5rem;height:150px;padding-top:.5rem}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:.4rem;height:100%;justify-content:flex-end}
+.bar{width:100%;max-width:34px;background:linear-gradient(to top,var(--accent),var(--accent-soft));border-radius:5px 5px 0 0;min-height:3px;transition:.3s;position:relative}
+.bar:hover{background:linear-gradient(to top,var(--accent-d),var(--accent))}
+.bar-lbl{font-size:.64rem;color:var(--muted);font-weight:600}
+.bar-val{font-size:.6rem;color:var(--faint)}
 
-    /* ===== TOAST ===== */
-    .toast { position: fixed; bottom: 2rem; right: 2rem; background: var(--text); color: var(--white); padding: 0.85rem 1.5rem; border-radius: var(--radius); font-size: 0.85rem; font-weight: 500; z-index: 9999; transform: translateY(20px); opacity: 0; transition: 0.3s; pointer-events: none; max-width: 320px; }
-    .toast.show { transform: translateY(0); opacity: 1; }
-    .toast.toast-success { background: var(--success); }
-    .toast.toast-error { background: var(--danger); }
-    .toast.toast-info { background: var(--info); }
+/* Filters */
+.filters{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1rem}
+.filt{padding:.4rem .8rem;border-radius:30px;font-size:.74rem;font-weight:600;border:1.5px solid var(--line-2);color:var(--muted);transition:.12s;background:var(--surface)}
+.filt:hover{border-color:var(--accent)}
+.filt.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-d)}
 
-    /* ===== MOBILE SIDEBAR ===== */
-    #mobile-sidebar { display: none; }
+/* List rows */
+.lrow{display:flex;align-items:center;gap:.8rem;padding:.8rem 0;border-bottom:1px solid var(--line)}
+.lrow:last-child{border-bottom:none}
+.avatar{width:38px;height:38px;border-radius:50%;background:var(--accent-soft);color:var(--accent-d);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;flex-shrink:0}
+.lrow-main{flex:1;min-width:0}
+.lrow-name{font-weight:600;font-size:.86rem}
+.lrow-sub{font-size:.74rem;color:var(--muted)}
 
-    /* ===== RESPONSIVE ===== */
-    @media (max-width: 900px) {
-      .sidebar { display: none; position: fixed; inset: 0 auto 0 0; z-index: 500; width: var(--sidebar-w); }
-      .sidebar.open { display: flex; }
-      #mobile-sidebar { display: block; }
-      .menu-toggle { display: block; }
-      .stats-grid { grid-template-columns: 1fr 1fr; }
-      .dash-grid { grid-template-columns: 1fr; }
-      .detail-grid { grid-template-columns: 1fr; }
-      .settings-grid { grid-template-columns: 1fr; }
-      .search-wrap input { width: 160px; }
-      .view { padding: 1.25rem; }
-    }
-    @media (max-width: 560px) {
-      .stats-grid { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
-      .stat-value { font-size: 1.8rem; }
-      .topbar { padding: 0 1rem; }
-      .search-wrap { display: none; }
-      .form-grid-2 { grid-template-columns: 1fr; }
-    }
-  </style>
+/* Empty */
+.empty{text-align:center;padding:2.5rem 1rem;color:var(--faint)}
+.empty-ic{font-size:2rem;opacity:.5;margin-bottom:.5rem}
+
+/* Detail */
+.back{display:inline-flex;align-items:center;gap:.35rem;font-size:.8rem;color:var(--muted);margin-bottom:1rem;transition:.12s}
+.back:hover{color:var(--accent-d)}
+.drow{display:flex;justify-content:space-between;gap:1rem;padding:.55rem 0;border-bottom:1px solid var(--line)}
+.drow:last-child{border-bottom:none}
+.drow .k{font-size:.78rem;color:var(--muted);flex-shrink:0}
+.drow .v{font-size:.84rem;font-weight:500;text-align:right;word-break:break-word}
+.detail-actions{display:flex;flex-wrap:wrap;gap:.5rem;margin:1.2rem 0}
+
+/* Alert banner */
+.alert{display:flex;align-items:center;gap:.7rem;padding:.85rem 1.1rem;border-radius:var(--radius);font-size:.84rem;margin-bottom:1rem}
+.alert b{cursor:pointer;text-decoration:underline}
+.alert-amber{background:var(--amber-soft);color:#8a6608}
+.alert-blue{background:var(--blue-soft);color:var(--blue)}
+.alert-info{background:var(--surface-2);border:1px solid var(--line);color:var(--muted)}
+
+/* Kanban */
+.kanban{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+.kcol{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--radius);padding:.8rem;min-height:120px}
+.kcol-h{font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:.7rem;display:flex;align-items:center;justify-content:space-between}
+.kcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-sm);padding:.7rem;margin-bottom:.6rem;box-shadow:0 1px 2px rgba(0,0,0,.03);cursor:pointer;transition:.12s}
+.kcard:hover{border-color:var(--accent);transform:translateY(-1px)}
+.kcard-name{font-weight:600;font-size:.8rem}
+.kcard-sub{font-size:.72rem;color:var(--muted);margin-top:.15rem}
+
+/* Modal */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(20,18,12,.5);z-index:200;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(2px)}
+.modal-bg.show{display:flex}
+.modal{background:var(--surface);border-radius:16px;width:100%;max-width:520px;max-height:92vh;overflow-y:auto;box-shadow:0 24px 70px rgba(0,0,0,.4)}
+.modal-h{padding:1.2rem 1.4rem;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--surface);z-index:2}
+.modal-t{font-family:var(--serif);font-size:1.3rem;font-weight:500}
+.modal-x{font-size:1.4rem;color:var(--muted);line-height:1;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:.12s}
+.modal-x:hover{background:var(--surface-2);color:var(--ink)}
+.modal-b{padding:1.4rem}
+.modal-f{padding:1rem 1.4rem;border-top:1px solid var(--line);display:flex;gap:.6rem;justify-content:flex-end;position:sticky;bottom:0;background:var(--surface)}
+
+/* Form */
+.fg{margin-bottom:1rem}
+.fg label{display:block;font-size:.68rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-bottom:.35rem}
+.fg input,.fg select,.fg textarea{width:100%;padding:.65rem .8rem;border:1.5px solid var(--line-2);border-radius:var(--radius-sm);outline:none;transition:.15s;background:var(--surface);color:var(--ink)}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.fg textarea{resize:vertical;min-height:70px}
+.fg-2{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+.fg-hint{font-size:.74rem;color:var(--muted);background:var(--surface-2);padding:.6rem .8rem;border-radius:var(--radius-sm);margin-bottom:1rem}
+.tag-select{display:flex;flex-wrap:wrap;gap:.4rem}
+.tag-opt{padding:.35rem .7rem;border-radius:30px;font-size:.72rem;font-weight:600;border:1.5px solid var(--line-2);color:var(--muted);cursor:pointer;transition:.12s}
+.tag-opt.on{border-color:transparent}
+
+/* Toast */
+.toast{position:fixed;bottom:1.5rem;left:50%;transform:translate(-50%,1rem);background:var(--ink);color:#fff;padding:.8rem 1.3rem;border-radius:30px;font-size:.84rem;font-weight:500;z-index:500;opacity:0;transition:.25s;pointer-events:none;box-shadow:0 8px 30px rgba(0,0,0,.3)}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.toast.ok{background:var(--green)}
+.toast.err{background:var(--red)}
+
+.icon-btn{width:32px;height:32px;border-radius:var(--radius-sm);border:1px solid var(--line-2);display:inline-flex;align-items:center;justify-content:center;transition:.12s;color:#55554E}
+.icon-btn:hover{border-color:var(--accent);color:var(--accent-d);background:var(--accent-soft)}
+
+.view{display:none}
+.view.on{display:block;animation:fade .25s ease}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+.section-sep{font-size:.66rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin:1.4rem 0 .7rem}
+
+/* progress */
+.prog{height:7px;background:var(--line);border-radius:10px;overflow:hidden}
+.prog-fill{height:100%;background:var(--accent);border-radius:10px;transition:.4s}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:920px){
+  .stat-grid{grid-template-columns:1fr 1fr}
+  .grid-2,.grid-3,.grid-2-1{grid-template-columns:1fr}
+  .kanban{grid-template-columns:1fr 1fr}
+}
+@media(max-width:760px){
+  .sidebar{display:none}
+  .main{margin-left:0}
+  .topbar{display:none}
+  .mtop{display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:30;background:rgba(246,245,242,.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:.8rem 1rem}
+  .mtop .nm{font-family:var(--serif);font-size:1.1rem}
+  .mtop .nm b{color:var(--accent)}
+  .content{padding:1rem 1rem 5.5rem}
+  .mobile-nav{display:flex;position:fixed;bottom:0;left:0;right:0;z-index:50;background:var(--surface);border-top:1px solid var(--line);padding:.4rem .3rem calc(.4rem + env(safe-area-inset-bottom));justify-content:space-around;box-shadow:0 -2px 12px rgba(0,0,0,.05)}
+  .mnav{display:flex;flex-direction:column;align-items:center;gap:.15rem;padding:.35rem .6rem;border-radius:var(--radius-sm);font-size:.6rem;font-weight:600;color:var(--muted);flex:1;position:relative}
+  .mnav svg{width:21px;height:21px}
+  .mnav.on{color:var(--accent-d)}
+  .mnav .nav-badge{position:absolute;top:.1rem;right:50%;margin-right:-18px}
+  .mobile-more.show{display:block;position:fixed;inset:0;z-index:60;background:rgba(20,18,12,.4)}
+  .mm-sheet{position:absolute;bottom:0;left:0;right:0;background:var(--surface);border-radius:18px 18px 0 0;padding:1.2rem 1rem calc(1.2rem + env(safe-area-inset-bottom));box-shadow:0 -8px 40px rgba(0,0,0,.2)}
+  .mm-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin-top:1rem}
+  .mm-item{display:flex;flex-direction:column;align-items:center;gap:.4rem;padding:1rem .5rem;border-radius:var(--radius);background:var(--surface-2);font-size:.74rem;font-weight:600;color:#55554E}
+  .mm-item svg{width:22px;height:22px;opacity:.8}
+  .page-title{font-size:1.4rem}
+  .stat-val{font-size:1.6rem}
+  .modal{max-width:100%;border-radius:16px 16px 0 0;align-self:flex-end;max-height:94vh}
+  .modal-bg{align-items:flex-end;padding:0}
+  .fg-2{grid-template-columns:1fr}
+  .detail-actions .btn{flex:1}
+}
+</style>
 </head>
 <body>
 
 <!-- ===== LOGIN ===== -->
-<div id="login-screen">
-  <div class="login-card">
-    <div class="login-logo">Devora <span>Nissenbaum</span></div>
-    <div class="login-sub">Espace Administration</div>
-    <form id="login-form">
-      <div class="form-group">
-        <label>Mot de passe</label>
-        <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password" required />
-      </div>
-      <div id="login-error">Mot de passe incorrect. Réessayez.</div>
-      <button type="submit" class="login-btn">Accéder au CRM →</button>
+<div id="login">
+  <div class="login-box">
+    <div class="login-logo">Devora <b>Nissenbaum</b></div>
+    <div class="login-tag">Espace Administration</div>
+    <form id="login-form" autocomplete="off">
+      <label>Mot de passe</label>
+      <input type="password" id="login-pwd" placeholder="••••••••" autocomplete="current-password" />
+      <div class="login-err" id="login-err">Mot de passe incorrect.</div>
+      <button class="login-btn" type="submit">Entrer dans le CRM</button>
     </form>
-    <p class="login-hint">Mot de passe par défaut : <strong>admin2026</strong></p>
+    <div class="login-hint">Mot de passe par défaut : <b>admin2026</b></div>
   </div>
 </div>
 
 <!-- ===== APP ===== -->
-<div id="crm-app">
-  <div class="app-layout">
+<div id="app">
+<div class="shell">
 
-    <!-- SIDEBAR -->
-    <aside class="sidebar" id="mobile-sidebar">
-      <div class="sidebar-logo">
-        <div class="logo-main">Devora <span>Nissenbaum</span></div>
-        <div class="logo-sub">CRM Admin</div>
-      </div>
-
-      <div class="sidebar-section">
-        <div class="sidebar-section-label">Principal</div>
-        <button class="nav-link active" data-view="dashboard">
-          <span class="nav-icon">📊</span> Tableau de bord
-        </button>
-        <button class="nav-link" data-view="clients">
-          <span class="nav-icon">👥</span> Clients
-        </button>
-        <button class="nav-link" data-view="commandes">
-          <span class="nav-icon">📦</span> Commandes
-        </button>
-      </div>
-
-      <div class="sidebar-section" style="margin-top:1rem">
-        <div class="sidebar-section-label">Gestion</div>
-        <button class="nav-link" data-view="settings">
-          <span class="nav-icon">⚙️</span> Paramètres
-        </button>
-      </div>
-
-      <div class="sidebar-footer">
-        <a href="index.html" class="back-to-site">
-          <span>←</span> Retour au site
-        </a>
-        <button class="btn-logout" onclick="logout()">
-          <span>🚪</span> Déconnexion
-        </button>
-      </div>
-    </aside>
-
-    <!-- MAIN -->
-    <div class="main-content">
-
-      <!-- TOPBAR -->
-      <div class="topbar">
-        <div class="topbar-left">
-          <button class="menu-toggle" id="menu-toggle">☰</button>
-          <div class="search-wrap">
-            <span class="search-icon">🔍</span>
-            <input type="text" id="global-search" placeholder="Rechercher client, commande…" />
-          </div>
-        </div>
-        <div class="topbar-right">
-          <button class="topbar-btn outline" onclick="showView('clients');renderClientsList();openModal('modal-new-client')">+ Client</button>
-          <button class="topbar-btn gold" onclick="window.open('commande.html','_blank')">+ Commande web</button>
-        </div>
-      </div>
-
-      <!-- VIEWS -->
-      <div class="views-wrap">
-
-        <!-- ===== DASHBOARD ===== -->
-        <div class="view active" id="view-dashboard">
-          <div class="view-header">
-            <div>
-              <div class="view-title">Tableau de bord</div>
-              <div class="view-sub" id="dash-date"></div>
-            </div>
-            <div style="display:flex;gap:0.5rem">
-              <button class="topbar-btn outline" onclick="exportClients()">📤 Export clients</button>
-              <button class="topbar-btn outline" onclick="exportCommandes()">📤 Export commandes</button>
-            </div>
-          </div>
-
-          <!-- Pending alert -->
-          <div id="pending-alert" class="alert alert-warning" style="display:none">
-            <span>⚠️</span>
-            <span id="pending-count">0 commande en attente</span>
-            <strong onclick="showView('commandes');renderCommandesList();filterStatut='en_attente';" style="margin-left:auto">Voir →</strong>
-          </div>
-
-          <!-- Stats -->
-          <div class="stats-grid">
-            <div class="stat-card">
-              <div class="stat-label">Total Clients</div>
-              <div class="stat-value" id="stat-clients">—</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-label">Commandes</div>
-              <div class="stat-value" id="stat-commandes">—</div>
-            </div>
-            <div class="stat-card gold">
-              <div class="stat-label">Chiffre d'affaires</div>
-              <div class="stat-value" id="stat-ca">—</div>
-            </div>
-            <div class="stat-card danger">
-              <div class="stat-label">Impayés</div>
-              <div class="stat-value" id="stat-impaye">—</div>
-            </div>
-          </div>
-
-          <!-- Dashboard grid -->
-          <div class="dash-grid">
-            <div class="card">
-              <div class="card-header">
-                <span class="card-title">Commandes récentes</span>
-                <button class="btn-icon btn-sm" onclick="showView('commandes');renderCommandesList()">Voir tout →</button>
-              </div>
-              <div class="table-wrap">
-                <table class="crm-table">
-                  <thead><tr><th>N°</th><th>Client</th><th>Date</th><th>Montant</th><th>Statut</th><th>Paiement</th></tr></thead>
-                  <tbody id="recent-orders-body"></tbody>
-                </table>
-              </div>
-            </div>
-            <div class="card">
-              <div class="card-header">
-                <span class="card-title">Impayés</span>
-              </div>
-              <div class="card-body" id="unpaid-list"></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- ===== CLIENTS ===== -->
-        <div class="view" id="view-clients">
-          <div class="view-header">
-            <div>
-              <div class="view-title">Clients</div>
-              <div class="view-sub" id="clients-count"></div>
-            </div>
-            <div style="display:flex;gap:0.5rem">
-              <button class="topbar-btn outline" onclick="exportClients()">📤 Export CSV</button>
-              <button class="topbar-btn gold" onclick="openModal('modal-new-client')">+ Nouveau client</button>
-            </div>
-          </div>
-          <div class="card">
-            <div class="table-wrap">
-              <table class="crm-table">
-                <thead><tr><th>Client</th><th>Téléphone</th><th>Email</th><th style="text-align:center">Cmds</th><th>CA Total</th><th></th></tr></thead>
-                <tbody id="clients-tbody"></tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-
-        <!-- ===== CLIENT DETAIL ===== -->
-        <div class="view" id="view-client-detail">
-          <button class="back-btn" onclick="showView('clients');renderClientsList()">← Retour aux clients</button>
-          <div class="view-header">
-            <div>
-              <div class="view-title" id="detail-client-title">Client</div>
-              <div class="view-sub" id="detail-client-sub"></div>
-            </div>
-          </div>
-          <div id="client-detail-body"></div>
-        </div>
-
-        <!-- ===== COMMANDES ===== -->
-        <div class="view" id="view-commandes">
-          <div class="view-header">
-            <div>
-              <div class="view-title">Commandes</div>
-              <div class="view-sub" id="commandes-count"></div>
-            </div>
-            <button class="topbar-btn outline" onclick="exportCommandes()">📤 Export CSV</button>
-          </div>
-          <div class="filter-bar" style="margin-bottom:1.25rem">
-            <button class="filter-btn active" data-filter="all">Toutes</button>
-            <button class="filter-btn" data-filter="en_attente">⏳ En attente</button>
-            <button class="filter-btn" data-filter="validee">✓ Validées</button>
-            <button class="filter-btn" data-filter="en_cours">🔧 En préparation</button>
-            <button class="filter-btn" data-filter="livree">📬 Livrées</button>
-            <button class="filter-btn" data-filter="partiel">💳 Paiement partiel</button>
-          </div>
-          <div class="card">
-            <div class="table-wrap">
-              <table class="crm-table">
-                <thead><tr><th>N°</th><th>Client</th><th>Date</th><th>Produits</th><th>Montant</th><th>Statut</th><th>Paiement</th><th></th></tr></thead>
-                <tbody id="commandes-tbody"></tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-
-        <!-- ===== COMMANDE DETAIL ===== -->
-        <div class="view" id="view-commande-detail">
-          <button class="back-btn" onclick="showView('commandes');renderCommandesList()">← Retour aux commandes</button>
-          <div class="view-header">
-            <div>
-              <div class="view-title" id="detail-cmd-title">Commande</div>
-              <div class="view-sub" id="detail-cmd-sub"></div>
-            </div>
-          </div>
-          <div id="cmd-detail-body"></div>
-        </div>
-
-        <!-- ===== SETTINGS ===== -->
-        <div class="view" id="view-settings">
-          <div class="view-header">
-            <div class="view-title">Paramètres</div>
-          </div>
-          <div class="settings-grid">
-            <div class="settings-card">
-              <div class="settings-card-title">Boutique</div>
-              <div class="form-group"><label>Nom de la boutique</label><input type="text" id="set-nom" placeholder="Devora Nissenbaum" /></div>
-              <div class="form-group"><label>Email professionnel</label><input type="email" id="set-email" placeholder="contact@boutique.fr" /></div>
-              <div class="form-group"><label>Devise</label>
-                <select id="set-devise"><option value="€">€ Euro</option><option value="$">$ Dollar</option><option value="£">£ Livre</option></select>
-              </div>
-              <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="saveSettings()">Sauvegarder</button>
-            </div>
-            <div class="settings-card">
-              <div class="settings-card-title">WhatsApp & Paiement</div>
-              <div class="form-group"><label>Numéro WhatsApp (avec +33…)</label><input type="tel" id="set-whatsapp" placeholder="+33 6 XX XX XX XX" /></div>
-              <div class="form-group"><label>Lien de paiement de base</label><input type="url" id="set-lien-paiement" placeholder="https://paypal.me/votre-lien" /></div>
-              <div class="form-info">
-                Ce lien sera proposé comme base pour générer les liens de paiement dans les commandes.<br>
-                <strong>Ex : paypal.me/votrenom, sumeria.me/…</strong>
-              </div>
-              <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="saveSettings()">Sauvegarder</button>
-            </div>
-            <div class="settings-card">
-              <div class="settings-card-title">Sécurité</div>
-              <div class="form-group"><label>Mot de passe actuel</label><input type="password" id="set-pwd-current" /></div>
-              <div class="form-group"><label>Nouveau mot de passe</label><input type="password" id="set-pwd-new" /></div>
-              <div class="form-group"><label>Confirmer le nouveau mot de passe</label><input type="password" id="set-pwd-confirm" /></div>
-              <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="changePassword()">Changer le mot de passe</button>
-            </div>
-            <div class="settings-card">
-              <div class="settings-card-title">Données</div>
-              <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:1.5rem">Les données sont stockées localement dans votre navigateur. Exportez régulièrement vos données en CSV.</p>
-              <div style="display:flex;flex-direction:column;gap:0.75rem">
-                <button class="btn btn-secondary" style="justify-content:center" onclick="exportClients()">📤 Exporter clients (CSV)</button>
-                <button class="btn btn-secondary" style="justify-content:center" onclick="exportCommandes()">📤 Exporter commandes (CSV)</button>
-                <button class="btn btn-danger" style="justify-content:center;margin-top:0.5rem" onclick="if(confirm('Réinitialiser TOUTES les données ? Cette action est irréversible.')){{localStorage.removeItem(DB_KEY);location.reload();}}">🗑️ Réinitialiser les données</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div><!-- /views-wrap -->
-    </div><!-- /main-content -->
-  </div><!-- /app-layout -->
-</div><!-- /crm-app -->
-
-<!-- ===== MODALS ===== -->
-
-<!-- New Client -->
-<div class="modal-overlay" id="modal-new-client">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">Nouveau client</div>
-      <button class="modal-close" onclick="closeModal('modal-new-client')">✕</button>
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="side-logo">
+      <div class="nm">Devora <b>Nissenbaum</b></div>
+      <div class="sub">CRM · Espace Pro</div>
     </div>
-    <div class="modal-body">
-      <div class="form-grid-2">
-        <div class="form-group"><label>Prénom *</label><input type="text" id="new-client-prenom" /></div>
-        <div class="form-group"><label>Nom *</label><input type="text" id="new-client-nom" /></div>
+    <nav class="side-nav" id="side-nav"></nav>
+    <div class="side-foot">
+      <a href="index.html" class="nav-item"><span class="nav-ic">🌐</span> Voir le site</a>
+      <button class="nav-item" onclick="logout()"><span class="nav-ic">↩︎</span> Déconnexion</button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <!-- Desktop topbar -->
+    <div class="topbar">
+      <div class="search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <input type="text" id="search" placeholder="Rechercher un client, une commande…" />
       </div>
-      <div class="form-group"><label>Téléphone *</label><input type="tel" id="new-client-tel" placeholder="+33 6 XX XX XX XX" /></div>
-      <div class="form-group"><label>Email *</label><input type="email" id="new-client-email" /></div>
-      <div class="form-group"><label>Adresse postale</label><input type="text" id="new-client-adresse" /></div>
-      <div class="form-group"><label>Notes internes</label><textarea id="new-client-notes" rows="2"></textarea></div>
+      <div class="top-actions">
+        <button class="btn btn-ghost" onclick="openClientModal()">+ Client</button>
+        <button class="btn btn-primary" onclick="openCommandeModal()">+ Commande</button>
+      </div>
     </div>
-    <div class="modal-footer">
-      <button class="btn btn-secondary" onclick="closeModal('modal-new-client')">Annuler</button>
-      <button class="btn btn-primary" onclick="saveNewClient()">Créer le client</button>
+
+    <!-- Mobile top -->
+    <div class="mtop">
+      <div class="nm">Devora <b>N.</b></div>
+      <div style="display:flex;gap:.5rem">
+        <button class="icon-btn" onclick="openCommandeModal()">＋</button>
+        <button class="icon-btn" onclick="document.getElementById('msearch').scrollIntoView();document.getElementById('msearch').focus()">🔍</button>
+      </div>
     </div>
+
+    <div class="content">
+      <!-- mobile search -->
+      <div class="search" style="max-width:100%;margin-bottom:1rem;display:none" id="msearch-wrap">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <input type="text" id="msearch" placeholder="Rechercher…" />
+      </div>
+
+      <!-- VIEWS injected/here -->
+      <div class="view on" id="v-dashboard"></div>
+      <div class="view" id="v-clients"></div>
+      <div class="view" id="v-client"></div>
+      <div class="view" id="v-commandes"></div>
+      <div class="view" id="v-commande"></div>
+      <div class="view" id="v-entretien"></div>
+      <div class="view" id="v-stock"></div>
+      <div class="view" id="v-marketing"></div>
+      <div class="view" id="v-rappels"></div>
+      <div class="view" id="v-reglages"></div>
+    </div>
+  </main>
+</div>
+
+<!-- Mobile bottom nav -->
+<nav class="mobile-nav" id="mobile-nav"></nav>
+<!-- Mobile more sheet -->
+<div class="mobile-more" id="mobile-more" onclick="if(event.target===this)closeMore()">
+  <div class="mm-sheet">
+    <div style="text-align:center;font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Plus d'options</div>
+    <div class="mm-grid" id="mm-grid"></div>
   </div>
 </div>
 
-<!-- Edit Client -->
-<div class="modal-overlay" id="modal-edit-client">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">Modifier le client</div>
-      <button class="modal-close" onclick="closeModal('modal-edit-client')">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="form-grid-2">
-        <div class="form-group"><label>Prénom</label><input type="text" id="edit-client-prenom" /></div>
-        <div class="form-group"><label>Nom</label><input type="text" id="edit-client-nom" /></div>
-      </div>
-      <div class="form-group"><label>Téléphone</label><input type="tel" id="edit-client-tel" /></div>
-      <div class="form-group"><label>Email</label><input type="email" id="edit-client-email" /></div>
-      <div class="form-group"><label>Adresse postale</label><input type="text" id="edit-client-adresse" /></div>
-      <div class="form-group"><label>Notes internes</label><textarea id="edit-client-notes" rows="2"></textarea></div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-secondary" onclick="closeModal('modal-edit-client')">Annuler</button>
-      <button class="btn btn-primary" onclick="saveEditClient()">Sauvegarder</button>
-    </div>
-  </div>
+</div><!-- /app -->
+
+<!-- Modal container -->
+<div class="modal-bg" id="modal-bg" onclick="if(event.target===this)closeModal()">
+  <div class="modal" id="modal"></div>
 </div>
 
-<!-- Update Payment -->
-<div class="modal-overlay" id="modal-update-payment">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">Mettre à jour le paiement</div>
-      <button class="modal-close" onclick="closeModal('modal-update-payment')">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="form-info">Total commande : <strong id="pay-montant-total">—</strong></div>
-      <div class="form-group"><label>Montant payé (€)</label><input type="number" id="pay-montant-paye" min="0" step="0.01" /></div>
-      <div class="form-group"><label>Mode de paiement</label>
-        <select id="pay-mode">
-          <option value="">— Sélectionner —</option>
-          <option value="virement">Virement bancaire</option>
-          <option value="carte">Carte bancaire</option>
-          <option value="especes">Espèces</option>
-          <option value="cheque">Chèque</option>
-          <option value="paypal">PayPal</option>
-          <option value="lydia">Lydia / Sumeria</option>
-        </select>
-      </div>
-      <div class="form-group"><label>Statut paiement</label>
-        <select id="pay-statut">
-          <option value="en_attente">Non payé</option>
-          <option value="partiel">Paiement partiel</option>
-          <option value="paye">Payé intégralement</option>
-          <option value="annule">Annulé</option>
-        </select>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-secondary" onclick="closeModal('modal-update-payment')">Annuler</button>
-      <button class="btn btn-primary" onclick="savePaymentUpdate()">Enregistrer</button>
-    </div>
-  </div>
-</div>
-
-<!-- Generate Payment Link -->
-<div class="modal-overlay" id="modal-generate-link">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">Lien de paiement</div>
-      <button class="modal-close" onclick="closeModal('modal-generate-link')">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="form-info">Collez ici le lien de paiement généré depuis votre application bancaire (PayPal, Lydia, Sumeria, Stripe…)</div>
-      <div class="form-group">
-        <label>Lien de paiement</label>
-        <input type="url" id="link-current" placeholder="https://paypal.me/votrecompte/120" />
-      </div>
-      <div style="display:flex;gap:0.5rem;margin-top:0.5rem">
-        <button class="btn btn-secondary btn-sm" onclick="navigator.clipboard.readText().then(t=>{document.getElementById('link-current').value=t;})">📋 Coller depuis presse-papiers</button>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-secondary" onclick="closeModal('modal-generate-link')">Annuler</button>
-      <button class="btn btn-primary" onclick="saveLienPaiement()">Enregistrer & Envoyer WA</button>
-    </div>
-  </div>
-</div>
-
-<!-- Toast -->
 <div class="toast" id="toast"></div>
 
 <script src="crm.js"></script>
-<script>
-  // Date display
-  document.addEventListener('DOMContentLoaded', () => {
-    const el = document.getElementById('dash-date');
-    if (el) el.textContent = new Date().toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
-  });
-</script>
 </body>
 </html>
