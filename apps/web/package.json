@@ -12,6 +12,7 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
+    "@pedagoos/ai": "workspace:*",
     "@pedagoos/database": "workspace:*",
     "@pedagoos/pedagogy": "workspace:*",
     "@pedagoos/shared": "workspace:*",

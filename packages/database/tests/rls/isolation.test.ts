@@ -114,6 +114,33 @@ describe.runIf(configured)("RLS — isolation inter-organisations", () => {
     expect(error).not.toBeNull();
   });
 
+  it("un visiteur anonyme ne voit aucune source ni séquence", async () => {
+    const anonClient = createClient(url ?? "", anonKey ?? "");
+    const { data: sources } = await anonClient.from("source_documents").select("id");
+    const { data: sequences } = await anonClient.from("lesson_sequences").select("id");
+    expect(sources ?? []).toHaveLength(0);
+    expect(sequences ?? []).toHaveLength(0);
+  });
+
+  it("un membre ne voit pas les générations IA d'une autre organisation", async () => {
+    const { data: created } = await admin
+      .from("ai_generations")
+      .insert({
+        organization_id: orgA,
+        provider: "mock",
+        model: "mock",
+        prompt_name: "x",
+        prompt_version: "1",
+        target_type: "sequence_structure",
+        status: "succeeded",
+      })
+      .select("id")
+      .single();
+    expect(created).not.toBeNull();
+    const { data } = await teacherB.client.from("ai_generations").select("id");
+    expect(data ?? []).toHaveLength(0);
+  });
+
   it("audit_logs est inaccessible en écriture et invisible hors admin", async () => {
     const { error: insertError } = await teacherA.client
       .from("audit_logs")
