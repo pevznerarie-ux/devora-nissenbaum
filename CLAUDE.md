@@ -147,6 +147,10 @@ Les décisions sont consignées en ADR dans `docs/decisions/`. Résumé :
   de modèle (Sonnet/Haiku/Opus), caching, batch, monitoring (clôt D-4).
 - ADR-0015 : hébergement V1 — Railway (conteneurs Docker, EU) + Supabase Cloud
   comme base unique (Postgres/Auth/RLS/Storage S3) ; portable (clôt D-2).
+- ADR-0016 : Visual Intelligence Engine — direction de la production visuelle
+  (Director, Search, Illustration, Diagram, Quality, Media Library, Layout),
+  règles déterministes, providers abstraits, exécution synchrone + jobs, affine
+  ADR-0013.
 
 Toute nouvelle décision structurante = nouvel ADR. Toute hypothèse = entrée dans
 `docs/assumptions.md`.
