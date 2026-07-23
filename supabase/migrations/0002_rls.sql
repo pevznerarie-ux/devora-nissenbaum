@@ -279,3 +279,18 @@ create policy class_students_write on public.class_students
 -- AUCUNE politique update/delete → impossibles pour tout rôle non-service.
 create policy audit_logs_select on public.audit_logs
   for select using (has_role(organization_id, 'org_admin'));
+
+-- ------------------------------------------------------------------ grants
+-- Privilèges de table explicites (la RLS filtre ensuite). Sans GRANT, même
+-- service_role reçoit « permission denied » ; on ne dépend pas des privilèges
+-- par défaut de l'environnement.
+grant usage on schema public to anon, authenticated, service_role;
+grant all privileges on all tables in schema public to service_role;
+grant select, insert, update, delete on all tables in schema public to authenticated;
+grant select on all tables in schema public to anon;
+alter default privileges in schema public
+  grant all privileges on tables to service_role;
+alter default privileges in schema public
+  grant select, insert, update, delete on tables to authenticated;
+alter default privileges in schema public
+  grant select on tables to anon;

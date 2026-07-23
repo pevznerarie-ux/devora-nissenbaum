@@ -38,7 +38,8 @@ jobs:
       - name: Tests RLS (bloquants)
         run: |
           eval "$(supabase status -o env)"
-          export SUPABASE_TEST_URL="$API_URL"
-          export SUPABASE_TEST_ANON_KEY="$ANON_KEY"
-          export SUPABASE_TEST_SERVICE_ROLE_KEY="$SERVICE_ROLE_KEY"
+          export SUPABASE_TEST_URL="${API_URL:-${SUPABASE_URL:-http://127.0.0.1:54321}}"
+          export SUPABASE_TEST_ANON_KEY="${ANON_KEY:-${SUPABASE_ANON_KEY:-${PUBLISHABLE_KEY:-}}}"
+          export SUPABASE_TEST_SERVICE_ROLE_KEY="${SERVICE_ROLE_KEY:-${SUPABASE_SERVICE_ROLE_KEY:-${SECRET_KEY:-}}}"
+          echo "url:${SUPABASE_TEST_URL:+ok} anon:${SUPABASE_TEST_ANON_KEY:+ok} service:${SUPABASE_TEST_SERVICE_ROLE_KEY:+ok}"
           RLS_TESTS_REQUIRED=1 pnpm test:rls
