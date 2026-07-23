@@ -4,8 +4,15 @@ import {
   type BloomLevel,
   type LessonSequence,
   type MaterialContent,
+  type PedagogicalPurpose,
+  type PreferredSource,
+  type RecommendedVisualType,
+  type VisualRequest,
   MaterialContentSchema,
   SourceCitationSchema,
+  VisualRequestSchema,
+  chooseRecommendedType,
+  isSensitiveSubject,
 } from "@pedagoos/pedagogy";
 import type {
   AIProvider,
@@ -19,8 +26,10 @@ import type {
 import * as sequenceStructurePromptV1 from "../prompts/sequence-structure/v1";
 import * as materialPromptV1 from "../prompts/material/v1";
 import * as materialEditPromptV1 from "../prompts/material-edit/v1";
+import * as visualDirectorPromptV1 from "../prompts/visual-director/v1";
 import { SequenceStructureInputSchema } from "../sequence-structure";
 import { MaterialEditInputSchema, MaterialGenerationInputSchema } from "../material";
+import { VisualDirectorInputSchema } from "../visual/director";
 
 /** Générateur d'UUID DÉTERMINISTE (mock reproductible — ADR-0004). */
 function deterministicUuid(seed: number): string {
@@ -338,11 +347,88 @@ export function buildMockBlockEdit(
   }
 }
 
+const PURPOSE_FALLBACK: Record<PedagogicalPurpose, RecommendedVisualType> = {
+  illustrate: "ai_illustration",
+  engage: "ai_illustration",
+  contextualize: "ai_illustration",
+  demonstrate: "vector_diagram",
+  explain: "vector_diagram",
+  compare: "vector_diagram",
+  memorize: "vector_diagram",
+  document: "historical_source",
+  assess: "none",
+};
+
+const TYPE_TO_SOURCE: Record<RecommendedVisualType, PreferredSource> = {
+  none: "internal_library",
+  real_photo: "unsplash",
+  ai_illustration: "openai",
+  vector_diagram: "generated_svg",
+  timeline: "generated_svg",
+  chart: "generated_svg",
+  map: "generated_svg",
+  historical_source: "wikimedia",
+  library_asset: "internal_library",
+  teacher_upload: "teacher",
+};
+
+/**
+ * Construit un VisualRequest plausible et déterministe (Visual Director mock,
+ * ADR-0016). Applique les règles déterministes ; pour un cas ambigu, replie sur
+ * la fonction pédagogique. « Aucun visuel » reste une issue normale.
+ */
+export function buildMockVisualRequest(
+  input: z.infer<typeof VisualDirectorInputSchema>,
+): VisualRequest {
+  const purpose: PedagogicalPurpose = input.pedagogicalPurpose ?? "illustrate";
+  const isSensitive = isSensitiveSubject(input.concept);
+  const decision = chooseRecommendedType({
+    contentKind: input.contentKind ?? "other",
+    hasPedagogicalValue: input.hasPedagogicalValue,
+    hasValidatedLibraryAsset: input.hasValidatedLibraryAsset,
+    isSensitive,
+    usedInGradedAssessment: input.usedInGradedAssessment,
+  });
+  const type = decision.recommendedType ?? PURPOSE_FALLBACK[purpose];
+  const needsSearch = type === "real_photo" || type === "historical_source";
+
+  return VisualRequestSchema.parse({
+    id: deterministicUuid(1),
+    organizationId: input.organizationId,
+    ...(input.materialId ? { materialId: input.materialId } : {}),
+    ...(input.lessonBlockId ? { lessonBlockId: input.lessonBlockId } : {}),
+    visualNeeded: type !== "none",
+    pedagogicalPurpose: purpose,
+    recommendedType: type,
+    preferredSource: TYPE_TO_SOURCE[type],
+    fallbackTypes:
+      type === "real_photo"
+        ? ["library_asset"]
+        : type === "ai_illustration"
+          ? ["vector_diagram", "none"]
+          : [],
+    concept: input.concept,
+    description: input.blockText || input.concept,
+    caption: input.concept,
+    altText: `Illustration : ${input.concept}`,
+    ...(input.targetAge !== undefined ? { targetAge: input.targetAge } : {}),
+    ...(input.schoolLevel ? { schoolLevel: input.schoolLevel } : {}),
+    ...(input.subject ? { subject: input.subject } : {}),
+    ...(input.language ? { language: input.language } : {}),
+    orientation: input.orientation,
+    searchQueries: needsSearch
+      ? [input.concept, `${input.concept} educational photo`]
+      : [],
+    negativeSearchTerms: type === "real_photo" ? ["watermark", "cartoon", "logo"] : [],
+    requiresHumanReview: decision.requiresHumanReview,
+  });
+}
+
 /**
  * Fournisseur IA factice : déterministe, sans réseau ni coût, utilisé en CI et
  * en développement (ADR-0004). Gère la structure de séquence, la génération de
- * supports par blocs et la retouche d'un bloc ; tout autre prompt échoue
- * proprement.
+ * supports par blocs, la retouche d'un bloc et l'analyse visuelle (Director) ;
+ * tout autre prompt échoue proprement.
  */
 export class MockAIProvider implements AIProvider {
   readonly name = "mock";
@@ -385,6 +471,11 @@ export class MockAIProvider implements AIProvider {
       if (!parsed.success)
         return fail("provider_failed", "Contexte de retouche invalide.");
       raw = buildMockBlockEdit(parsed.data);
+    } else if (request.promptName === visualDirectorPromptV1.PROMPT_NAME) {
+      const parsed = VisualDirectorInputSchema.safeParse(request.context);
+      if (!parsed.success)
+        return fail("provider_failed", "Contexte d'analyse visuelle invalide.");
+      raw = buildMockVisualRequest(parsed.data);
     } else {
       return fail(
         "provider_failed",

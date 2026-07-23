@@ -48,7 +48,11 @@ export type Capability =
   | "QualityAudit"
   | "GenerateAnnualCurriculum"
   | "GenerateIllustrationSpecification"
-  | "EditBlock";
+  | "EditBlock"
+  | "AnalyzeVisualNeeds"
+  | "DesignImagePrompt"
+  | "DesignDiagram"
+  | "ReviewVisualQuality";
 
 /** Niveau de base par capacité (config — ADR-0014 §2). */
 export const CAPABILITY_BASELINE: Record<Capability, ModelTier> = {
@@ -69,6 +73,11 @@ export const CAPABILITY_BASELINE: Record<Capability, ModelTier> = {
   GenerateAnnualCurriculum: "premium",
   GenerateIllustrationSpecification: "standard",
   EditBlock: "economy",
+  // Visual Intelligence Engine (ADR-0016).
+  AnalyzeVisualNeeds: "standard",
+  DesignImagePrompt: "standard",
+  DesignDiagram: "standard",
+  ReviewVisualQuality: "standard",
 };
 
 /** Capacité de génération de support en fonction du type (ADR-0014). */
