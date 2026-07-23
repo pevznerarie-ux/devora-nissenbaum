@@ -145,6 +145,8 @@ Les décisions sont consignées en ADR dans `docs/decisions/`. Résumé :
 - ADR-0013 : sous-système d'illustrations (décision visuelle, spec JSON, `ImageProvider`).
 - ADR-0014 : runtime IA — couche fournisseur, API par capacité, routage par niveau
   de modèle (Sonnet/Haiku/Opus), caching, batch, monitoring (clôt D-4).
+- ADR-0015 : hébergement V1 — Railway (conteneurs Docker, EU) + Supabase Cloud
+  comme base unique (Postgres/Auth/RLS/Storage S3) ; portable (clôt D-2).
 
 Toute nouvelle décision structurante = nouvel ADR. Toute hypothèse = entrée dans
 `docs/assumptions.md`.

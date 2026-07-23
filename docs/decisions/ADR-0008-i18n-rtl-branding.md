@@ -31,3 +31,24 @@ et doit pouvoir changer sans chasse aux chaînes.
 
 - Renommage du produit = un fichier.
 - Le coût RTL est payé en continu (conventions) plutôt qu'en refonte tardive.
+
+## Renforcements D-8 (2026-07-23)
+
+Le premier déploiement visible reste **français complet**, mais l'hébreu (RTL)
+n'est jamais un ajout après coup — l'infrastructure est prête dès maintenant :
+
+- **Code langue par contenu** : chaque entité pédagogique et chaque document
+  porte son `language` (déjà en place). L'anglais existe dans le modèle mais
+  n'est pas prioritaire au MVP.
+- **Design system ltr/rtl** : `dir` piloté par la langue, **propriétés
+  logiques uniquement** ; aucune concaténation supposant un sens gauche-droite.
+- **RTL de bout en bout** : polices, tableaux, listes, numérotation et
+  **exports** (PDF/PPTX) préparés pour le RTL.
+- **Schémas JSON indépendants de la langue** : les schémas Zod du modèle
+  pédagogique ne codent aucune langue ; la langue est une donnée, pas une
+  structure.
+- **Champs multilingues multi-versions** : un même contenu peut coexister en
+  plusieurs langues comme **versions liées** (fr ↔ he), pas par écrasement —
+  cohérent avec le Translation Engine (ADR-0012) et le versionnement (ADR-0011).
+
+Principe : aucune décision technique ne doit bloquer l'hébreu.
