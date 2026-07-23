@@ -122,6 +122,14 @@ describe.runIf(configured)("RLS — isolation inter-organisations", () => {
     expect(sequences ?? []).toHaveLength(0);
   });
 
+  it("un visiteur anonyme ne voit ni dépendances ni historique d'objets", async () => {
+    const anonClient = createClient(url ?? "", anonKey ?? "");
+    const { data: deps } = await anonClient.from("pedagogical_dependencies").select("id");
+    const { data: versions } = await anonClient.from("object_versions").select("id");
+    expect(deps ?? []).toHaveLength(0);
+    expect(versions ?? []).toHaveLength(0);
+  });
+
   it("un membre ne voit pas les générations IA d'une autre organisation", async () => {
     const { data: created } = await admin
       .from("ai_generations")
