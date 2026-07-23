@@ -3,6 +3,7 @@
 Statut : acceptée · Date : 2026-07-23
 
 ## Contexte
+
 Tous les supports (fiche professeur, support élève, présentation, exercices,
 évaluation) doivent être éditables, versionnés, exportables en plusieurs
 variantes, et rester des **données structurées** reliées aux objectifs et
@@ -10,6 +11,7 @@ compétences. Un éditeur riche générique (ProseMirror/TipTap complet) serait
 coûteux et casserait la structure.
 
 ## Décision
+
 - Chaque support est une liste ordonnée de **blocs pédagogiques typés**,
   définis dans `packages/pedagogy` (Zod) : ex. `objectives`, `vocabulary`,
   `timeline_step`, `explanation`, `example`, `discussion_question`,
@@ -27,6 +29,7 @@ coûteux et casserait la structure.
   slides PPTX (blocs `slide`).
 
 ## Conséquences
+
 - L'IA génère directement des blocs valides ; l'édition ne dégrade jamais la
   structure ; les variantes d'export sont un simple filtrage.
 - Limite assumée : mise en forme libre restreinte ; c'est un choix produit

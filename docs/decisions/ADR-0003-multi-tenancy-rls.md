@@ -3,11 +3,13 @@
 Statut : acceptée · Date : 2026-07-23
 
 ## Contexte
+
 Plusieurs organisations (chacune avec plusieurs établissements) partagent la
 plateforme. Exigence absolue : aucune donnée ne traverse la frontière d'une
 organisation. Un professeur peut appartenir à plusieurs établissements.
 
 ## Décision
+
 - **Schéma partagé** : toutes les organisations dans les mêmes tables, chaque
   entité métier portant `organization_id` (dénormalisé quand la table n'a pas
   de FK directe vers `organizations`, ex. `source_chunks`, `material_versions`,
@@ -22,10 +24,12 @@ organisation. Un professeur peut appartenir à plusieurs établissements.
 - `audit_logs` append-only (aucune politique UPDATE/DELETE).
 
 ## Conséquences
+
 - Opérations et migrations simples (une base) ; coût maîtrisé.
 - Tests RLS obligatoires en CI : accès légitime, refus inter-organisations,
   refus inter-établissements, restrictions élève.
 
 ## Alternatives rejetées
+
 - Schéma-par-tenant ou base-par-tenant : isolation plus forte mais opérations,
   migrations et agrégats plateforme beaucoup plus lourds ; injustifié au MVP.

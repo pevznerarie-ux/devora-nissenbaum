@@ -1,0 +1,36 @@
+{
+  "name": "web",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint src",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests src",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": {
+    "@pedagoos/database": "workspace:*",
+    "@pedagoos/pedagogy": "workspace:*",
+    "@pedagoos/shared": "workspace:*",
+    "@pedagoos/ui": "workspace:*",
+    "@supabase/ssr": "^0.6.1",
+    "@supabase/supabase-js": "^2.50.0",
+    "next": "^15.5.0",
+    "next-intl": "^4.3.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.55.0",
+    "@tailwindcss/postcss": "^4.1.0",
+    "@types/node": "^22.15.0",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "tailwindcss": "^4.1.0",
+    "vitest": "^3.2.0"
+  }
+}

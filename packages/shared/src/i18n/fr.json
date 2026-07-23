@@ -1,0 +1,34 @@
+{
+  "branding": {
+    "tagline": "Le système d'exploitation pédagogique"
+  },
+  "common": {
+    "loading": "Chargement…",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "error": "Une erreur est survenue.",
+    "signOut": "Se déconnecter"
+  },
+  "auth": {
+    "signInTitle": "Connexion",
+    "email": "Adresse email",
+    "password": "Mot de passe",
+    "signIn": "Se connecter",
+    "invalidCredentials": "Identifiants invalides."
+  },
+  "nav": {
+    "home": "Accueil",
+    "classes": "Mes classes",
+    "sequences": "Séquences",
+    "library": "Bibliothèque",
+    "assessments": "Évaluations",
+    "students": "Élèves",
+    "analytics": "Analyses",
+    "administration": "Administration"
+  },
+  "dashboard": {
+    "title": "Tableau de bord",
+    "empty": "Bienvenue. Commencez par créer une classe ou une séquence.",
+    "placeholder": "Cette section arrive dans une prochaine étape du développement."
+  }
+}

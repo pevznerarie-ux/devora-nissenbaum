@@ -3,11 +3,13 @@
 Statut : acceptée · Date : 2026-07-23
 
 ## Contexte
+
 Exigences éditeur : sauvegarde automatique, versions, duplication, historique,
 restauration, statuts brouillon/validé/publié/archivé — sans construire un
 système de collaboration temps réel.
 
 ## Décision
+
 - Modèle à deux niveaux : `materials` (identité, `kind`, `status`, langue,
   `current_version_id`) et `material_versions` (contenu `blocks` jsonb,
   **immuables** une fois figées).
@@ -27,6 +29,7 @@ système de collaboration temps réel.
   CRDT au MVP.
 
 ## Conséquences
+
 - Historique fiable et simple ; stockage borné (instantanés événementiels, pas
   à chaque frappe).
 - La collaboration simultanée multi-professeurs sur un même support est hors

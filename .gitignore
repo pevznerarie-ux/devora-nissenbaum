@@ -2,3 +2,14 @@ node_modules/
 .DS_Store
 Thumbs.db
 *.log
+.next/
+dist/
+coverage/
+.turbo/
+.env
+.env.local
+.env.*.local
+playwright-report/
+test-results/
+supabase/.branches/
+supabase/.temp/

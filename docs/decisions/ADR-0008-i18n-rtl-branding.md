@@ -3,11 +3,13 @@
 Statut : acceptée · Date : 2026-07-23
 
 ## Contexte
+
 Localisation française dès le départ ; anglais et hébreu prévus dans
 l'architecture, y compris les contenus RTL. Le nom « PedagoOS » est provisoire
 et doit pouvoir changer sans chasse aux chaînes.
 
 ## Décision
+
 - **Branding** : `packages/shared/src/branding.ts` exporte `PRODUCT_NAME` (et
   dérivés : nom court, nom légal, domaine). Interdiction de coder le nom en dur
   (UI, emails, exports, prompts, métadonnées) ; règle vérifiée par lint (regex
@@ -26,5 +28,6 @@ et doit pouvoir changer sans chasse aux chaînes.
 - Formats dates/nombres via `Intl` avec la locale du contexte.
 
 ## Conséquences
+
 - Renommage du produit = un fichier.
 - Le coût RTL est payé en continu (conventions) plutôt qu'en refonte tardive.

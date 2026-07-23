@@ -1,0 +1,34 @@
+{
+  "branding": {
+    "tagline": "מערכת ההפעלה הפדגוגית"
+  },
+  "common": {
+    "loading": "טוען…",
+    "save": "שמירה",
+    "cancel": "ביטול",
+    "error": "אירעה שגיאה.",
+    "signOut": "התנתקות"
+  },
+  "auth": {
+    "signInTitle": "התחברות",
+    "email": "כתובת אימייל",
+    "password": "סיסמה",
+    "signIn": "התחברות",
+    "invalidCredentials": "פרטי התחברות שגויים."
+  },
+  "nav": {
+    "home": "דף הבית",
+    "classes": "הכיתות שלי",
+    "sequences": "רצפים",
+    "library": "ספרייה",
+    "assessments": "הערכות",
+    "students": "תלמידים",
+    "analytics": "ניתוחים",
+    "administration": "ניהול"
+  },
+  "dashboard": {
+    "title": "לוח בקרה",
+    "empty": "ברוכים הבאים. התחילו ביצירת כיתה או רצף.",
+    "placeholder": "חלק זה יגיע בשלב פיתוח מאוחר יותר."
+  }
+}

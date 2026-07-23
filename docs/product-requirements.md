@@ -26,16 +26,16 @@ Principes produit :
 
 ## 2. Utilisateurs et rôles
 
-| Rôle | Portée | MVP |
-|---|---|---|
-| Super administrateur plateforme | Toute la plateforme (support, provisioning) | Oui (minimal) |
-| Administrateur d'organisation | Son organisation et ses établissements | Oui |
-| Directeur d'établissement | Son établissement | Oui |
-| Responsable pédagogique | Établissement(s) assigné(s), lecture + validation pédagogique | Oui |
-| Professeur | Ses classes, ses ressources, ressources partagées | Oui (cœur du produit) |
-| Correcteur autorisé | Copies qui lui sont assignées | Modèle prévu, UI post-MVP |
-| Élève | Ses propres contenus publiés et résultats | Modèle prévu, UI minimale |
-| Parent | Enfants rattachés | Modèle prévu, **non développé** au MVP |
+| Rôle                            | Portée                                                        | MVP                                    |
+| ------------------------------- | ------------------------------------------------------------- | -------------------------------------- |
+| Super administrateur plateforme | Toute la plateforme (support, provisioning)                   | Oui (minimal)                          |
+| Administrateur d'organisation   | Son organisation et ses établissements                        | Oui                                    |
+| Directeur d'établissement       | Son établissement                                             | Oui                                    |
+| Responsable pédagogique         | Établissement(s) assigné(s), lecture + validation pédagogique | Oui                                    |
+| Professeur                      | Ses classes, ses ressources, ressources partagées             | Oui (cœur du produit)                  |
+| Correcteur autorisé             | Copies qui lui sont assignées                                 | Modèle prévu, UI post-MVP              |
+| Élève                           | Ses propres contenus publiés et résultats                     | Modèle prévu, UI minimale              |
+| Parent                          | Enfants rattachés                                             | Modèle prévu, **non développé** au MVP |
 
 Contraintes de structure : un utilisateur appartient à une organisation (via
 `memberships`) ; une organisation possède plusieurs établissements ; un professeur
@@ -44,17 +44,20 @@ peut intervenir dans plusieurs établissements et plusieurs classes.
 ## 3. Périmètre du MVP
 
 ### A. Authentification et organisations
+
 Connexion / déconnexion (Supabase Auth, email + mot de passe, magic link),
 invitation d'utilisateur par email avec rôle, organisations, établissements,
 rôles, profils, années scolaires, permissions sécurisées par RLS testée.
 
 ### B. Classes et élèves
+
 Création de classe (niveau, année scolaire, matière associée), ajout d'élèves
 manuel et import CSV (avec rapport d'erreurs ligne par ligne), association de
 professeurs (plusieurs professeurs par classe, plusieurs classes par professeur),
 archivage de classe (lecture seule, exclue des listes actives).
 
 ### C. Bibliothèque de sources
+
 Import PDF, DOCX, TXT, images ; métadonnées (titre, matière, niveau/classe,
 langue, tags) ; rattachement organisation ou établissement ; extraction de texte
 asynchrone avec état de traitement visible (`pending → processing → ready → failed`) ;
@@ -62,6 +65,7 @@ recherche plein texte ; conservation des références utilisées dans chaque
 génération (`source_citations` dans les blocs générés).
 
 ### D. Assistant de création de séquence (expérience centrale)
+
 Assistant en 6 étapes, formulaires structurés :
 
 1. Cadre : classe, matière, thème, nombre de séances, durée de séance, niveau,
@@ -76,6 +80,7 @@ Assistant en 6 étapes, formulaires structurés :
 6. Génération des supports complets à partir de la structure validée.
 
 ### E. Supports générés (par séquence validée)
+
 1. **Fiche professeur** : objectifs, prérequis, vocabulaire, matériel, déroulé
    minute par minute, explications, exemples, questions à poser, réponses
    attendues, erreurs fréquentes, différenciation, synthèse, devoir éventuel.
@@ -91,12 +96,14 @@ Assistant en 6 étapes, formulaires structurés :
    objectifs de la séquence.
 
 ### F. Éditeur par blocs
+
 Tous les supports sont éditables via un modèle de **blocs pédagogiques
 structurés** (pas d'éditeur riche générique) : sauvegarde automatique, versions,
 duplication, historique, restauration d'une version, statuts
 `draft → validated → published → archived`.
 
 ### G. Export
+
 Impression, export PDF (Playwright/Chromium), PPTX (PptxGenJS), DOCX
 (best-effort) ; variantes : version professeur / version élève / avec corrigé /
 sans corrigé. Les exports sont journalisés (`exports`).

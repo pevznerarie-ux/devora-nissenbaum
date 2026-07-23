@@ -99,12 +99,13 @@ Règles de dépendance (vérifiées par lint) :
 ## 3. Couches applicatives
 
 **Lecture** : React Server Components → requêtes via `packages/database` avec le
-client Supabase *au nom de l'utilisateur* (RLS active).
+client Supabase _au nom de l'utilisateur_ (RLS active).
 
 **Écriture** : Server Actions uniquement, chacune suit le même contrat :
+
 1. validation Zod de l'entrée ; 2. vérification d'autorisation applicative
-(rôle + appartenance) ; 3. opération DB (RLS en dernier rempart) ;
-4. écriture `audit_logs` si sensible ; 5. retour typé `{ ok } | { error }`.
+   (rôle + appartenance) ; 3. opération DB (RLS en dernier rempart) ;
+2. écriture `audit_logs` si sensible ; 5. retour typé `{ ok } | { error }`.
 
 **Tâches longues** (extraction de texte, générations IA, exports) : exécutées
 côté serveur avec suivi d'état en base (`pending/processing/ready/failed`) et
@@ -127,13 +128,15 @@ lectures métier d'une requête utilisateur.
 - Autorisation à deux niveaux : vérification applicative explicite dans chaque
   server action **et** RLS en base. Les politiques RLS s'appuient sur des
   fonctions SQL `security definer` (`is_member_of(org_id)`, `has_role(org_id,
-  role)`, `teaches_class(class_id)`) pour rester lisibles et testables.
+role)`, `teaches_class(class_id)`) pour rester lisibles et testables.
 
 ## 5. Couche IA (`packages/ai`)
 
 ```ts
 interface AIProvider {
-  generateStructured<T>(req: StructuredGenerationRequest<T>): Promise<StructuredGenerationResult<T>>;
+  generateStructured<T>(
+    req: StructuredGenerationRequest<T>,
+  ): Promise<StructuredGenerationResult<T>>;
   analyzeDocument(req: DocumentAnalysisRequest): Promise<DocumentAnalysisResult>;
   analyzeImage(req: ImageAnalysisRequest): Promise<ImageAnalysisResult>;
 }

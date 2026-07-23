@@ -1,0 +1,34 @@
+{
+  "branding": {
+    "tagline": "The pedagogical operating system"
+  },
+  "common": {
+    "loading": "Loading…",
+    "save": "Save",
+    "cancel": "Cancel",
+    "error": "Something went wrong.",
+    "signOut": "Sign out"
+  },
+  "auth": {
+    "signInTitle": "Sign in",
+    "email": "Email address",
+    "password": "Password",
+    "signIn": "Sign in",
+    "invalidCredentials": "Invalid credentials."
+  },
+  "nav": {
+    "home": "Home",
+    "classes": "My classes",
+    "sequences": "Sequences",
+    "library": "Library",
+    "assessments": "Assessments",
+    "students": "Students",
+    "analytics": "Analytics",
+    "administration": "Administration"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "empty": "Welcome. Start by creating a class or a sequence.",
+    "placeholder": "This section arrives in a later development step."
+  }
+}

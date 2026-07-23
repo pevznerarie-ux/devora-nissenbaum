@@ -6,18 +6,18 @@ des tests, risques restants, prochaine étape recommandée.
 
 ## Vue d'ensemble des phases
 
-| Phase | Contenu | Sortie vérifiable |
-|---|---|---|
-| 1 | Cadrage : PRD, architecture, modèle de données, sécurité, CLAUDE.md, ADR | Docs relus et validés (**cette PR**) |
-| 2 | Monorepo pnpm+Turborepo, TS strict, ESLint/Prettier, Vitest, Playwright, design system (packages/ui), Supabase Auth (login/logout/invitation) | `pnpm lint && pnpm typecheck && pnpm test` verts ; login E2E |
-| 3 | Migrations complètes, fonctions RLS, politiques RLS, tests de sécurité | `pnpm test:rls` vert, refus inter-org prouvés |
-| 4 | Organisations, écoles, utilisateurs, classes, élèves (+ import CSV), années scolaires | CRUD complets testés, audit_logs actifs |
-| 5 | Bibliothèque de sources : upload, extraction texte, états, recherche | Import PDF/DOCX/TXT/image → texte recherché |
-| 6 | Modèle pédagogique (packages/pedagogy) + assistant de séquence (6 étapes) | Assistant complet avec MockAIProvider |
-| 7 | Couche IA réelle : AnthropicProvider, OpenAIProvider, prompts versionnés, journal ai_generations | Génération structurée validée Zod + journalisée |
-| 8 | Supports générés + éditeur par blocs (autosave, versions, statuts, restauration) | Les 5 types de supports éditables |
-| 9 | Exports PDF/PPTX (+DOCX best-effort), variantes prof/élève/corrigé | Exports conformes A4/RTL |
-| 10 | E2E complet du parcours obligatoire, données de démonstration, préparation scan (interfaces, tables, mock OCR, écran démo, docs/scan-architecture.md) | Parcours E2E 13 étapes vert en CI |
+| Phase | Contenu                                                                                                                                               | Sortie vérifiable                                            |
+| ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| 1     | Cadrage : PRD, architecture, modèle de données, sécurité, CLAUDE.md, ADR                                                                              | Docs relus et validés (**cette PR**)                         |
+| 2     | Monorepo pnpm+Turborepo, TS strict, ESLint/Prettier, Vitest, Playwright, design system (packages/ui), Supabase Auth (login/logout/invitation)         | `pnpm lint && pnpm typecheck && pnpm test` verts ; login E2E |
+| 3     | Migrations complètes, fonctions RLS, politiques RLS, tests de sécurité                                                                                | `pnpm test:rls` vert, refus inter-org prouvés                |
+| 4     | Organisations, écoles, utilisateurs, classes, élèves (+ import CSV), années scolaires                                                                 | CRUD complets testés, audit_logs actifs                      |
+| 5     | Bibliothèque de sources : upload, extraction texte, états, recherche                                                                                  | Import PDF/DOCX/TXT/image → texte recherché                  |
+| 6     | Modèle pédagogique (packages/pedagogy) + assistant de séquence (6 étapes)                                                                             | Assistant complet avec MockAIProvider                        |
+| 7     | Couche IA réelle : AnthropicProvider, OpenAIProvider, prompts versionnés, journal ai_generations                                                      | Génération structurée validée Zod + journalisée              |
+| 8     | Supports générés + éditeur par blocs (autosave, versions, statuts, restauration)                                                                      | Les 5 types de supports éditables                            |
+| 9     | Exports PDF/PPTX (+DOCX best-effort), variantes prof/élève/corrigé                                                                                    | Exports conformes A4/RTL                                     |
+| 10    | E2E complet du parcours obligatoire, données de démonstration, préparation scan (interfaces, tables, mock OCR, écran démo, docs/scan-architecture.md) | Parcours E2E 13 étapes vert en CI                            |
 
 ## Sprint 1 (premier sprint de développement — Phases 2 et 3)
 
@@ -50,10 +50,10 @@ Hors sprint 1 : toute fonctionnalité pédagogique, toute IA, tout export.
 ## Parcours E2E obligatoire (Phase 10, construit progressivement dès la Phase 4)
 
 1. créer une organisation ; 2. créer un établissement ; 3. inviter un
-professeur ; 4. créer une classe ; 5. ajouter des élèves ; 6. importer une
-source ; 7. créer une séquence ; 8. générer une proposition (MockAIProvider en
-CI) ; 9. modifier et valider ; 10. générer les supports ; 11. exporter la fiche
-professeur ; 12. exporter le support élève ; 13. exporter la présentation.
+   professeur ; 4. créer une classe ; 5. ajouter des élèves ; 6. importer une
+   source ; 7. créer une séquence ; 8. générer une proposition (MockAIProvider en
+   CI) ; 9. modifier et valider ; 10. générer les supports ; 11. exporter la fiche
+   professeur ; 12. exporter le support élève ; 13. exporter la présentation.
 
 ## Skills Claude Code
 
@@ -67,10 +67,10 @@ d'acceptation, format de sortie, interdictions.
 
 ## Risques principaux et parades
 
-| Risque | Parade |
-|---|---|
-| RLS incomplète → fuite inter-org | Politiques écrites avec les tables (Phase 3), testées en CI, checklist §9 de privacy-and-security.md |
-| Sorties IA non conformes au schéma | `generateStructured` + relance bornée + échec explicite journalisé ; MockAIProvider en CI |
-| Éditeur trop ambitieux | Blocs structurés uniquement (ADR-0005), pas de WYSIWYG |
-| Extraction PDF/DOCX de qualité variable | État `failed` visible + ressaisie possible ; qualité améliorée itérativement |
-| Fidélité DOCX | Best-effort assumé (ADR-0006), PDF fait référence |
+| Risque                                  | Parade                                                                                               |
+| --------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| RLS incomplète → fuite inter-org        | Politiques écrites avec les tables (Phase 3), testées en CI, checklist §9 de privacy-and-security.md |
+| Sorties IA non conformes au schéma      | `generateStructured` + relance bornée + échec explicite journalisé ; MockAIProvider en CI            |
+| Éditeur trop ambitieux                  | Blocs structurés uniquement (ADR-0005), pas de WYSIWYG                                               |
+| Extraction PDF/DOCX de qualité variable | État `failed` visible + ressaisie possible ; qualité améliorée itérativement                         |
+| Fidélité DOCX                           | Best-effort assumé (ADR-0006), PDF fait référence                                                    |
