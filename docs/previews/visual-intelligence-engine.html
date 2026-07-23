@@ -1,0 +1,878 @@
+<title>PedagoOS — Aperçu du Visual Intelligence Engine</title>
+<style>
+  :root {
+    --ground: #fafaf8;
+    --surface: #ffffff;
+    --surface-2: #f4f2ee;
+    --border: #e6e3dd;
+    --border-strong: #d8d4cc;
+    --text: #1c1b19;
+    --muted: #6b6862;
+    --faint: #97938b;
+    --accent: #3b5bdb;
+    --accent-soft: #eaeeff;
+    --warn: #a06a12;
+    --warn-soft: #fbf1dc;
+    --radius: 12px;
+    /* semantic per visual type */
+    --t-diagram: #4954c4;
+    --t-diagram-bg: #ebedfb;
+    --t-timeline: #2b74b8;
+    --t-timeline-bg: #e6f1fb;
+    --t-chart: #0f7d86;
+    --t-chart-bg: #e0f4f4;
+    --t-map: #1f8a6d;
+    --t-map-bg: #e2f4ec;
+    --t-photo: #2f8a3e;
+    --t-photo-bg: #e6f4e7;
+    --t-source: #9a6a12;
+    --t-source-bg: #f7edd6;
+    --t-illus: #7a49b8;
+    --t-illus-bg: #f1e9fb;
+    --t-library: #5b6470;
+    --t-library-bg: #eceef1;
+    --t-none: #7d7a73;
+    --t-none-bg: #efece7;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ground: #171719;
+      --surface: #1f1f23;
+      --surface-2: #26262b;
+      --border: #2f2f36;
+      --border-strong: #3a3a42;
+      --text: #ecebe8;
+      --muted: #9d998f;
+      --faint: #726e66;
+      --accent: #93a6ff;
+      --accent-soft: #23273a;
+      --warn: #e0a94a;
+      --warn-soft: #322813;
+      --t-diagram: #9aa4f2;
+      --t-diagram-bg: #22243a;
+      --t-timeline: #7db6ec;
+      --t-timeline-bg: #182634;
+      --t-chart: #52c4cb;
+      --t-chart-bg: #10302f;
+      --t-map: #59c79f;
+      --t-map-bg: #123027;
+      --t-photo: #6cc57a;
+      --t-photo-bg: #16301a;
+      --t-source: #d6a94f;
+      --t-source-bg: #33280f;
+      --t-illus: #b592e6;
+      --t-illus-bg: #271c36;
+      --t-library: #9aa2ad;
+      --t-library-bg: #24262b;
+      --t-none: #928e86;
+      --t-none-bg: #24221e;
+    }
+  }
+  :root[data-theme="light"] {
+    --ground: #fafaf8;
+    --surface: #ffffff;
+    --surface-2: #f4f2ee;
+    --border: #e6e3dd;
+    --border-strong: #d8d4cc;
+    --text: #1c1b19;
+    --muted: #6b6862;
+    --faint: #97938b;
+    --accent: #3b5bdb;
+    --accent-soft: #eaeeff;
+    --warn: #a06a12;
+    --warn-soft: #fbf1dc;
+    --t-diagram: #4954c4;
+    --t-diagram-bg: #ebedfb;
+    --t-timeline: #2b74b8;
+    --t-timeline-bg: #e6f1fb;
+    --t-chart: #0f7d86;
+    --t-chart-bg: #e0f4f4;
+    --t-map: #1f8a6d;
+    --t-map-bg: #e2f4ec;
+    --t-photo: #2f8a3e;
+    --t-photo-bg: #e6f4e7;
+    --t-source: #9a6a12;
+    --t-source-bg: #f7edd6;
+    --t-illus: #7a49b8;
+    --t-illus-bg: #f1e9fb;
+    --t-library: #5b6470;
+    --t-library-bg: #eceef1;
+    --t-none: #7d7a73;
+    --t-none-bg: #efece7;
+  }
+  :root[data-theme="dark"] {
+    --ground: #171719;
+    --surface: #1f1f23;
+    --surface-2: #26262b;
+    --border: #2f2f36;
+    --border-strong: #3a3a42;
+    --text: #ecebe8;
+    --muted: #9d998f;
+    --faint: #726e66;
+    --accent: #93a6ff;
+    --accent-soft: #23273a;
+    --warn: #e0a94a;
+    --warn-soft: #322813;
+    --t-diagram: #9aa4f2;
+    --t-diagram-bg: #22243a;
+    --t-timeline: #7db6ec;
+    --t-timeline-bg: #182634;
+    --t-chart: #52c4cb;
+    --t-chart-bg: #10302f;
+    --t-map: #59c79f;
+    --t-map-bg: #123027;
+    --t-photo: #6cc57a;
+    --t-photo-bg: #16301a;
+    --t-source: #d6a94f;
+    --t-source-bg: #33280f;
+    --t-illus: #b592e6;
+    --t-illus-bg: #271c36;
+    --t-library: #9aa2ad;
+    --t-library-bg: #24262b;
+    --t-none: #928e86;
+    --t-none-bg: #24221e;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--text);
+    font-family:
+      ui-sans-serif,
+      system-ui,
+      -apple-system,
+      "Segoe UI",
+      Roboto,
+      "Helvetica Neue",
+      Arial,
+      sans-serif;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: "kern" 1;
+  }
+  .wrap {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: clamp(20px, 4vw, 56px) clamp(16px, 4vw, 40px) 72px;
+  }
+  .eyebrow {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 600;
+  }
+  h1 {
+    font-size: clamp(26px, 4vw, 38px);
+    line-height: 1.1;
+    margin: 10px 0 0;
+    text-wrap: balance;
+    letter-spacing: -0.02em;
+  }
+  h2 {
+    font-size: 20px;
+    letter-spacing: -0.01em;
+    margin: 0;
+  }
+  .lede {
+    color: var(--muted);
+    max-width: 62ch;
+    margin: 14px 0 0;
+    font-size: 16px;
+  }
+  .callout {
+    margin-top: 22px;
+    padding: 12px 16px;
+    border: 1px solid var(--border);
+    border-inline-start: 3px solid var(--accent);
+    border-radius: 8px;
+    background: var(--surface);
+    color: var(--muted);
+    font-size: 14px;
+    max-width: 72ch;
+  }
+  .callout b {
+    color: var(--text);
+  }
+
+  section {
+    margin-top: 48px;
+  }
+  .sec-head {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 4px;
+  }
+  .sec-head .n {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+  }
+  .sec-sub {
+    color: var(--muted);
+    font-size: 14px;
+    margin: 6px 0 22px;
+    max-width: 68ch;
+  }
+
+  /* editor mimic */
+  .frame {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface-2);
+    overflow: hidden;
+  }
+  .frame-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--border-strong);
+  }
+  .frame-title {
+    font-size: 13px;
+    color: var(--muted);
+    margin-inline-start: 6px;
+  }
+  .frame-title b {
+    color: var(--text);
+    font-weight: 600;
+  }
+  .stack {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 16px;
+  }
+
+  .block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 15px;
+  }
+  .block-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .block-kind {
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--faint);
+    font-weight: 600;
+  }
+  .block-body {
+    margin: 3px 0 0;
+    font-size: 14.5px;
+  }
+  .aud {
+    font-size: 11px;
+    color: var(--faint);
+    white-space: nowrap;
+    padding-top: 2px;
+  }
+
+  .rec {
+    margin-top: 12px;
+    border: 1px dashed var(--border-strong);
+    border-radius: 9px;
+    padding: 11px 13px;
+    background: color-mix(in oklab, var(--surface-2) 60%, transparent);
+  }
+  .rec-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 11px;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .rec-head .robot {
+    color: var(--accent);
+    font-weight: 700;
+    letter-spacing: 0;
+    text-transform: none;
+    font-size: 12px;
+  }
+  .rec-body {
+    margin-top: 9px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+  .rec-line {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    flex-wrap: wrap;
+    font-size: 13.5px;
+  }
+  .rec-reason {
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .rec-meta {
+    color: var(--muted);
+    font-size: 12.5px;
+  }
+  .rec-meta code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 12px;
+    background: var(--surface-2);
+    padding: 1px 6px;
+    border-radius: 5px;
+    border: 1px solid var(--border);
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12.5px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    white-space: nowrap;
+  }
+  .chip::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.9;
+  }
+  .chip.none {
+    color: var(--t-none);
+    background: var(--t-none-bg);
+  }
+  .chip.vector_diagram {
+    color: var(--t-diagram);
+    background: var(--t-diagram-bg);
+  }
+  .chip.timeline {
+    color: var(--t-timeline);
+    background: var(--t-timeline-bg);
+  }
+  .chip.chart {
+    color: var(--t-chart);
+    background: var(--t-chart-bg);
+  }
+  .chip.map {
+    color: var(--t-map);
+    background: var(--t-map-bg);
+  }
+  .chip.real_photo {
+    color: var(--t-photo);
+    background: var(--t-photo-bg);
+  }
+  .chip.historical_source {
+    color: var(--t-source);
+    background: var(--t-source-bg);
+  }
+  .chip.ai_illustration {
+    color: var(--t-illus);
+    background: var(--t-illus-bg);
+  }
+  .chip.library_asset,
+  .chip.teacher_upload {
+    color: var(--t-library);
+    background: var(--t-library-bg);
+  }
+
+  .warnrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12.5px;
+    color: var(--warn);
+    background: var(--warn-soft);
+    border: 1px solid color-mix(in oklab, var(--warn) 30%, transparent);
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-weight: 600;
+  }
+  .queries {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .q {
+    font-size: 11.5px;
+    color: var(--muted);
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 2px 8px;
+  }
+  .note-inline {
+    font-size: 12.5px;
+    color: var(--muted);
+    border-top: 1px dashed var(--border);
+    margin-top: 9px;
+    padding-top: 8px;
+  }
+  .note-inline b {
+    color: var(--text);
+  }
+
+  /* matrix */
+  .matrix-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    min-width: 560px;
+    font-size: 14px;
+  }
+  thead th {
+    text-align: start;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--faint);
+    font-weight: 600;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  tbody td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  tbody tr:last-child td {
+    border-bottom: none;
+  }
+  .rule-name {
+    font-weight: 600;
+  }
+  .rule-name span {
+    display: block;
+    font-weight: 400;
+    color: var(--muted);
+    font-size: 12.5px;
+    margin-top: 1px;
+  }
+  .rule-n {
+    color: var(--faint);
+    font-variant-numeric: tabular-nums;
+    font-size: 12px;
+    padding-inline-end: 4px;
+  }
+
+  .legend {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 8px 20px;
+    margin-top: 18px;
+  }
+  .legend .li {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  footer {
+    margin-top: 56px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    color: var(--faint);
+    font-size: 13px;
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .kbd {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  @media (max-width: 640px) {
+    .aud {
+      display: none;
+    }
+  }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">PedagoOS · Visual Intelligence Engine</div>
+    <h1>Le logiciel décide quel visuel va où</h1>
+    <p class="lede">
+      Aperçu réel du <b>Visual Director</b> : pour chaque bloc d'un support, le moteur
+      décide s'il faut un visuel et lequel — photo, schéma, source authentique,
+      illustration… ou aucun. Les cartes ci-dessous sont les <b>sorties exactes</b> du
+      code (moteur mock déterministe), telles qu'elles apparaissent dans l'éditeur.
+    </p>
+    <div class="callout">
+      Ceci est un <b>aperçu statique</b> rendu à partir des vraies sorties du moteur, pas
+      l'application en direct (elle est protégée par authentification et branchée sur
+      Supabase). En production, le bouton « Analyser le visuel » de chaque bloc appelle ce
+      même moteur.
+    </div>
+  </header>
+
+  <section>
+    <div class="sec-head">
+      <span class="n">01</span>
+      <h2>Dans l'éditeur de support</h2>
+    </div>
+    <p class="sec-sub">
+      Séquence « Le passé composé · CM1 » → support généré. Chaque bloc reçoit une
+      recommandation. Remarque l'issue la plus importante&nbsp;:
+      <b>« aucun visuel »</b> est une réponse fréquente et légitime.
+    </p>
+
+    <div class="frame">
+      <div class="frame-bar">
+        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        <span class="frame-title"><b>Support élève</b> — blocs du support</span>
+      </div>
+      <div class="stack">
+        <!-- explanation -->
+        <article class="block">
+          <div class="block-top">
+            <div>
+              <div class="block-kind">Explication · Tous</div>
+              <p class="block-body">
+                Le cycle de l'eau — L'eau s'évapore puis se condense et retombe en pluie.
+              </p>
+            </div>
+            <div class="aud">🔓</div>
+          </div>
+          <div class="rec">
+            <div class="rec-head">
+              <span>Visuel</span><span class="robot">Recommandation du moteur</span>
+            </div>
+            <div class="rec-body">
+              <div class="rec-line">
+                <span class="chip vector_diagram">Schéma vectoriel</span
+                ><span class="rec-reason"
+                  >— pour <b>expliquer</b> un mécanisme, pas illustrer une ambiance.</span
+                >
+              </div>
+              <div class="rec-meta">
+                Source privilégiée&nbsp;: <code>SVG généré</code>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- timeline -->
+        <article class="block">
+          <div class="block-top">
+            <div>
+              <div class="block-kind">Étape · Tous</div>
+              <p class="block-body">
+                1789 — la Révolution française
+                <span style="color: var(--faint)">(10 min)</span>
+              </p>
+            </div>
+            <div class="aud">🔓</div>
+          </div>
+          <div class="rec">
+            <div class="rec-head">
+              <span>Visuel</span><span class="robot">Recommandation du moteur</span>
+            </div>
+            <div class="rec-body">
+              <div class="rec-line">
+                <span class="chip timeline">Frise chronologique</span
+                ><span class="rec-reason"
+                  >— une chronologie se construit, elle ne se photographie pas.</span
+                >
+              </div>
+              <div class="rec-meta">
+                Source privilégiée&nbsp;: <code>SVG généré</code>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- document_ref -->
+        <article class="block">
+          <div class="block-top">
+            <div>
+              <div class="block-kind">Référence · Tous</div>
+              <p class="block-body">Déclaration des droits de l'homme (1789)</p>
+            </div>
+            <div class="aud">🔓</div>
+          </div>
+          <div class="rec">
+            <div class="rec-head">
+              <span>Visuel</span><span class="robot">Recommandation du moteur</span>
+            </div>
+            <div class="rec-body">
+              <div class="rec-line">
+                <span class="chip historical_source">Source authentique</span
+                ><span class="rec-reason"
+                  >— pour <b>documenter</b>, on cherche le document réel.</span
+                >
+              </div>
+              <div class="rec-meta">
+                Source privilégiée&nbsp;: <code>Wikimedia</code> (domaine public)
+              </div>
+              <div class="queries">
+                <span class="q">Déclaration des droits de l'homme (1789)</span>
+                <span class="q">… educational photo</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- example / lion -->
+        <article class="block">
+          <div class="block-top">
+            <div>
+              <div class="block-kind">Exemple · Élève</div>
+              <p class="block-body">Le lion dans la savane</p>
+            </div>
+            <div class="aud">🔓</div>
+          </div>
+          <div class="rec">
+            <div class="rec-head">
+              <span>Visuel</span><span class="robot">Recommandation du moteur</span>
+            </div>
+            <div class="rec-body">
+              <div class="rec-line">
+                <span class="chip ai_illustration">Illustration IA</span
+                ><span class="rec-reason"
+                  >— repli sur la fonction « illustrer ». Alternatives&nbsp;: schéma,
+                  aucun.</span
+                >
+              </div>
+              <div class="rec-meta">
+                Source privilégiée&nbsp;: <code>Génération IA</code>
+              </div>
+              <p class="note-inline">
+                <b>Limite honnête (V2)&nbsp;:</b> la classification heuristique ne « voit
+                » pas encore le mot <i>lion</i>. Le Visual Director IA (Sprint suivant)
+                classera « animal » →
+                <span class="chip real_photo" style="transform: scale(0.92)"
+                  >Vraie photographie</span
+                >
+                comme le montre la matrice ci-dessous.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <!-- answer_space / none -->
+        <article class="block">
+          <div class="block-top">
+            <div>
+              <div class="block-kind">Espace de réponse · Élève</div>
+              <p class="block-body">
+                Réponds ici <span style="color: var(--faint)">(5 lignes)</span>
+              </p>
+            </div>
+            <div class="aud">🔓</div>
+          </div>
+          <div class="rec">
+            <div class="rec-head">
+              <span>Visuel</span><span class="robot">Recommandation du moteur</span>
+            </div>
+            <div class="rec-body">
+              <div class="rec-line">
+                <span class="chip none">Aucun visuel</span
+                ><span class="rec-reason"
+                  >— aucune valeur pédagogique ajoutée&nbsp;: on n'ajoute pas d'image
+                  décorative.</span
+                >
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- slide -->
+        <article class="block">
+          <div class="block-top">
+            <div>
+              <div class="block-kind">Diapositive · Tous</div>
+              <p class="block-body">
+                La photosynthèse
+                <span style="color: var(--faint)">— lumière · CO₂ · O₂</span>
+              </p>
+            </div>
+            <div class="aud">🔓</div>
+          </div>
+          <div class="rec">
+            <div class="rec-head">
+              <span>Visuel</span><span class="robot">Recommandation du moteur</span>
+            </div>
+            <div class="rec-body">
+              <div class="rec-line">
+                <span class="chip ai_illustration">Illustration IA</span
+                ><span class="rec-reason"
+                  >— pour <b>engager</b> sur une diapositive d'ouverture.</span
+                >
+              </div>
+              <div class="rec-meta">
+                Source privilégiée&nbsp;: <code>Génération IA</code>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="n">02</span>
+      <h2>Le moteur de décision</h2>
+    </div>
+    <p class="sec-sub">
+      Douze règles déterministes tranchent les cas clairs <b>avant</b> tout appel IA. Le
+      Visual Director ne décide que l'ambigu. Voici la nature du concept → le type de
+      visuel juste.
+    </p>
+
+    <div class="matrix-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Nature du concept</th>
+            <th>Visuel recommandé</th>
+            <th>Règle</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="rule-name">
+              Donnée quantitative<span>statistiques, répartition, évolution</span>
+            </td>
+            <td><span class="chip chart">Graphique</span></td>
+            <td><span class="rule-n">01</span></td>
+          </tr>
+          <tr>
+            <td class="rule-name">
+              Chronologie<span>étapes, biographie, succession</span>
+            </td>
+            <td><span class="chip timeline">Frise chronologique</span></td>
+            <td><span class="rule-n">02</span></td>
+          </tr>
+          <tr>
+            <td class="rule-name">
+              Processus / structure<span>cycle, mécanisme, système</span>
+            </td>
+            <td><span class="chip vector_diagram">Schéma vectoriel</span></td>
+            <td><span class="rule-n">03</span></td>
+          </tr>
+          <tr>
+            <td class="rule-name">
+              Personnage historique réel<span>figure, dirigeant, savant</span>
+            </td>
+            <td><span class="chip historical_source">Source authentique</span></td>
+            <td><span class="rule-n">04</span></td>
+          </tr>
+          <tr>
+            <td class="rule-name">
+              Lieu réel contemporain<span>ville, monument, environnement</span>
+            </td>
+            <td><span class="chip real_photo">Vraie photographie</span></td>
+            <td><span class="rule-n">05</span></td>
+          </tr>
+          <tr>
+            <td class="rule-name">Animal ou plante<span>faune, flore, espèce</span></td>
+            <td><span class="chip real_photo">Vraie photographie</span></td>
+            <td><span class="rule-n">06</span></td>
+          </tr>
+          <tr>
+            <td class="rule-name">
+              Scène fictive<span>récit, reconstitution imaginée</span>
+            </td>
+            <td><span class="chip ai_illustration">Illustration IA</span></td>
+            <td><span class="rule-n">07</span></td>
+          </tr>
+          <tr>
+            <td class="rule-name">
+              Carte pédagogique<span>localisation, frontières, trajets</span>
+            </td>
+            <td><span class="chip map">Carte</span></td>
+            <td><span class="rule-n">08</span></td>
+          </tr>
+          <tr>
+            <td class="rule-name">
+              Œuvre historique<span>tableau, manuscrit, objet patrimonial</span>
+            </td>
+            <td><span class="chip historical_source">Source authentique</span></td>
+            <td><span class="rule-n">09</span></td>
+          </tr>
+          <tr>
+            <td class="rule-name">Cas ambigu<span>rien de tranché à la règle</span></td>
+            <td><span class="chip library_asset">Délégué au Visual Director</span></td>
+            <td><span class="rule-n">—</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout" style="border-inline-start-color: var(--warn); margin-top: 18px">
+      <b>Deux garde-fous transverses.</b> Un sujet sensible (religion, guerre, corps,
+      mineurs, contrôle noté…) force une <b>validation humaine</b>. Un visuel déjà validé
+      dans la médiathèque est proposé <b>avant</b> toute nouvelle génération. Et « aucun
+      visuel » reste toujours une issue légitime.
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="n">03</span>
+      <h2>La palette de types</h2>
+    </div>
+    <p class="sec-sub">
+      Neuf modalités possibles, plus « aucun ». Chaque type a sa source privilégiée et sa
+      gestion de droits.
+    </p>
+    <div class="legend">
+      <div class="li"><span class="chip real_photo">Vraie photographie</span></div>
+      <div class="li"><span class="chip historical_source">Source authentique</span></div>
+      <div class="li"><span class="chip ai_illustration">Illustration IA</span></div>
+      <div class="li"><span class="chip vector_diagram">Schéma vectoriel</span></div>
+      <div class="li"><span class="chip chart">Graphique</span></div>
+      <div class="li"><span class="chip timeline">Frise chronologique</span></div>
+      <div class="li"><span class="chip map">Carte</span></div>
+      <div class="li"><span class="chip library_asset">Médiathèque</span></div>
+      <div class="li"><span class="chip none">Aucun visuel</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span
+      >Sorties réelles du moteur ·
+      <span class="kbd">packages/pedagogy · packages/ai</span> · MockAIProvider
+      déterministe</span
+    >
+    <span
+      >Prochain&nbsp;: rendu SVG des schémas, médiathèque, recherche Wikimedia
+      réelle</span
+    >
+  </footer>
+</div>
