@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { publicEnv } from "@/lib/env";
 
-const PUBLIC_PATHS = ["/login"];
+const PUBLIC_PATHS = ["/login", "/invitation"];
 
 /**
  * Rafraîchit la session Supabase et protège toutes les routes hors /login.
@@ -48,7 +48,9 @@ export async function middleware(request: NextRequest) {
     url.pathname = "/login";
     return NextResponse.redirect(url);
   }
-  if (isAuthenticated && isPublic) {
+  // Un utilisateur connecté peut ouvrir /invitation (multi-organisations) ;
+  // seule la page de connexion le renvoie vers l'accueil.
+  if (isAuthenticated && request.nextUrl.pathname.startsWith("/login")) {
     const url = request.nextUrl.clone();
     url.pathname = "/";
     return NextResponse.redirect(url);

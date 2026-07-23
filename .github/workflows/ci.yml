@@ -20,3 +20,25 @@ jobs:
       - run: pnpm typecheck
       - run: pnpm test
       - run: pnpm format:check
+
+  rls:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      - run: pnpm install --frozen-lockfile
+      - run: supabase start
+      - name: Tests RLS (bloquants)
+        run: |
+          eval "$(supabase status -o env)"
+          export SUPABASE_TEST_URL="$API_URL"
+          export SUPABASE_TEST_ANON_KEY="$ANON_KEY"
+          export SUPABASE_TEST_SERVICE_ROLE_KEY="$SERVICE_ROLE_KEY"
+          RLS_TESTS_REQUIRED=1 pnpm test:rls

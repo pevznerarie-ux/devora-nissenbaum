@@ -7,7 +7,8 @@
     "save": "שמירה",
     "cancel": "ביטול",
     "error": "אירעה שגיאה.",
-    "signOut": "התנתקות"
+    "signOut": "התנתקות",
+    "copy": "העתקה"
   },
   "auth": {
     "signInTitle": "התחברות",
@@ -30,5 +31,45 @@
     "title": "לוח בקרה",
     "empty": "ברוכים הבאים. התחילו ביצירת כיתה או רצף.",
     "placeholder": "חלק זה יגיע בשלב פיתוח מאוחר יותר."
+  },
+  "roles": {
+    "org_admin": "מנהל ארגון",
+    "school_director": "מנהל בית ספר",
+    "pedagogical_lead": "רכז פדגוגי",
+    "teacher": "מורה",
+    "grader": "בודק"
+  },
+  "admin": {
+    "orgTitle": "ארגון",
+    "noOrgTitle": "יצירת הארגון שלך",
+    "noOrgHelp": "אינך שייך עדיין לאף ארגון. צור ארגון כדי להתחיל.",
+    "notAdmin": "חלק זה מיועד למנהלי ארגון בלבד.",
+    "orgName": "שם הארגון",
+    "createOrg": "יצירת הארגון",
+    "schoolsTitle": "בתי ספר",
+    "schoolsEmpty": "אין עדיין בתי ספר.",
+    "schoolName": "שם בית הספר",
+    "createSchool": "יצירת בית הספר",
+    "invitationsTitle": "הזמנות",
+    "invitationsEmpty": "אין הזמנות ממתינות.",
+    "inviteEmail": "אימייל המוזמן",
+    "inviteRole": "תפקיד",
+    "inviteSchool": "בית ספר (אופציונלי)",
+    "inviteNone": "— ללא —",
+    "sendInvite": "יצירת ההזמנה",
+    "inviteLinkLabel": "קישור הזמנה",
+    "inviteLinkHelp": "העבירו קישור זה למוזמן; תוקפו יפוג בעוד 7 ימים. שליחה אוטומטית באימייל תגיע עם הגדרת SMTP.",
+    "pendingExpires": "פג תוקף ב-{date}"
+  },
+  "invitation": {
+    "title": "קבלת ההזמנה",
+    "intro": "הוזמנת להצטרף אל {org} בתפקיד {role}.",
+    "invalid": "הזמנה זו אינה תקפה, כבר נוצלה או שפג תוקפה.",
+    "fullName": "שם מלא",
+    "password": "סיסמה (8 תווים לפחות)",
+    "submitNew": "יצירת חשבון והצטרפות",
+    "submitExisting": "הצטרפות עם החשבון הנוכחי",
+    "wrongAccount": "אתם מחוברים עם אימייל שונה מזה שבהזמנה. התנתקו ופתחו את הקישור מחדש.",
+    "accountExists": "כבר קיים חשבון לאימייל זה. התחברו תחילה ואז פתחו שוב את קישור ההזמנה."
   }
 }

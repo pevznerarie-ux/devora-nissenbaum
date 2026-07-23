@@ -7,7 +7,8 @@
     "save": "Enregistrer",
     "cancel": "Annuler",
     "error": "Une erreur est survenue.",
-    "signOut": "Se déconnecter"
+    "signOut": "Se déconnecter",
+    "copy": "Copier"
   },
   "auth": {
     "signInTitle": "Connexion",
@@ -30,5 +31,45 @@
     "title": "Tableau de bord",
     "empty": "Bienvenue. Commencez par créer une classe ou une séquence.",
     "placeholder": "Cette section arrive dans une prochaine étape du développement."
+  },
+  "roles": {
+    "org_admin": "Administrateur d'organisation",
+    "school_director": "Directeur d'établissement",
+    "pedagogical_lead": "Responsable pédagogique",
+    "teacher": "Professeur",
+    "grader": "Correcteur"
+  },
+  "admin": {
+    "orgTitle": "Organisation",
+    "noOrgTitle": "Créer votre organisation",
+    "noOrgHelp": "Vous n'appartenez encore à aucune organisation. Créez-la pour commencer.",
+    "notAdmin": "Cette section est réservée aux administrateurs d'organisation.",
+    "orgName": "Nom de l'organisation",
+    "createOrg": "Créer l'organisation",
+    "schoolsTitle": "Établissements",
+    "schoolsEmpty": "Aucun établissement pour le moment.",
+    "schoolName": "Nom de l'établissement",
+    "createSchool": "Créer l'établissement",
+    "invitationsTitle": "Invitations",
+    "invitationsEmpty": "Aucune invitation en attente.",
+    "inviteEmail": "Email de la personne invitée",
+    "inviteRole": "Rôle",
+    "inviteSchool": "Établissement (optionnel)",
+    "inviteNone": "— Aucun —",
+    "sendInvite": "Créer l'invitation",
+    "inviteLinkLabel": "Lien d'invitation",
+    "inviteLinkHelp": "Transmettez ce lien à la personne invitée ; il expire dans 7 jours. L'envoi automatique par email arrivera avec la configuration SMTP.",
+    "pendingExpires": "Expire le {date}"
+  },
+  "invitation": {
+    "title": "Accepter l'invitation",
+    "intro": "Vous êtes invité·e à rejoindre {org} en tant que {role}.",
+    "invalid": "Cette invitation est invalide, déjà utilisée ou expirée.",
+    "fullName": "Nom complet",
+    "password": "Mot de passe (8 caractères minimum)",
+    "submitNew": "Créer mon compte et rejoindre",
+    "submitExisting": "Rejoindre avec mon compte actuel",
+    "wrongAccount": "Vous êtes connecté·e avec un autre email que celui de l'invitation. Déconnectez-vous puis rouvrez le lien.",
+    "accountExists": "Un compte existe déjà pour cet email. Connectez-vous d'abord, puis rouvrez ce lien d'invitation."
   }
 }

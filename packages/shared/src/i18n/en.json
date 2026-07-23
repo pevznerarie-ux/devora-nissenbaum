@@ -7,7 +7,8 @@
     "save": "Save",
     "cancel": "Cancel",
     "error": "Something went wrong.",
-    "signOut": "Sign out"
+    "signOut": "Sign out",
+    "copy": "Copy"
   },
   "auth": {
     "signInTitle": "Sign in",
@@ -30,5 +31,45 @@
     "title": "Dashboard",
     "empty": "Welcome. Start by creating a class or a sequence.",
     "placeholder": "This section arrives in a later development step."
+  },
+  "roles": {
+    "org_admin": "Organization administrator",
+    "school_director": "School director",
+    "pedagogical_lead": "Pedagogical lead",
+    "teacher": "Teacher",
+    "grader": "Grader"
+  },
+  "admin": {
+    "orgTitle": "Organization",
+    "noOrgTitle": "Create your organization",
+    "noOrgHelp": "You do not belong to any organization yet. Create one to get started.",
+    "notAdmin": "This section is restricted to organization administrators.",
+    "orgName": "Organization name",
+    "createOrg": "Create the organization",
+    "schoolsTitle": "Schools",
+    "schoolsEmpty": "No school yet.",
+    "schoolName": "School name",
+    "createSchool": "Create the school",
+    "invitationsTitle": "Invitations",
+    "invitationsEmpty": "No pending invitation.",
+    "inviteEmail": "Invitee's email",
+    "inviteRole": "Role",
+    "inviteSchool": "School (optional)",
+    "inviteNone": "— None —",
+    "sendInvite": "Create the invitation",
+    "inviteLinkLabel": "Invitation link",
+    "inviteLinkHelp": "Share this link with the invitee; it expires in 7 days. Automatic email delivery will arrive with SMTP configuration.",
+    "pendingExpires": "Expires on {date}"
+  },
+  "invitation": {
+    "title": "Accept the invitation",
+    "intro": "You are invited to join {org} as {role}.",
+    "invalid": "This invitation is invalid, already used, or expired.",
+    "fullName": "Full name",
+    "password": "Password (minimum 8 characters)",
+    "submitNew": "Create my account and join",
+    "submitExisting": "Join with my current account",
+    "wrongAccount": "You are signed in with a different email than the invitation. Sign out and reopen the link.",
+    "accountExists": "An account already exists for this email. Sign in first, then reopen this invitation link."
   }
 }
