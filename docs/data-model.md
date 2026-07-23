@@ -61,8 +61,12 @@ plusieurs établissements.
 
 ### academic_years
 
-`id`, `organization_id`, `label` (ex. « 2026-2027 »), `starts_on date`,
-`ends_on date`, `is_current boolean`, timestamps.
+`id`, `organization_id`, `label` (ex. « 2026-2027 »), `hebrew_label`
+(ex. « תשפ״ז », libellé hébreu traditionnel calculé via Intl/ICU, modifiable —
+voir A-013), `starts_on date`, `ends_on date`, `is_current boolean`, timestamps.
+Double calendrier : les **dates** restent civiles (grégoriennes) ; seul le
+libellé hébreu double l'affichage — aucune date n'est stockée en calendrier
+hébreu.
 CHECK `starts_on < ends_on` ; UNIQUE `(organization_id, label)`.
 
 ## 2. Classes, élèves, matières
