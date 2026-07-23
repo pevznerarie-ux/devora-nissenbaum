@@ -4,6 +4,8 @@ import { getAdminContext } from "@/features/admin/queries";
 import { CreateOrgForm } from "@/features/admin/components/create-org-form";
 import { CreateSchoolForm } from "@/features/admin/components/create-school-form";
 import { InviteForm } from "@/features/admin/components/invite-form";
+import { CreateYearForm } from "@/features/admin/components/create-year-form";
+import { CreateSubjectForm } from "@/features/admin/components/create-subject-form";
 
 export default async function AdministrationPage() {
   const t = await getTranslations();
@@ -64,6 +66,47 @@ export default async function AdministrationPage() {
             </ul>
           )}
           <CreateSchoolForm organizationId={organization.id} />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>{t("adminYears.title")}</CardTitle>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-4">
+          {context.years.length === 0 ? (
+            <p className="text-sm text-muted-foreground">{t("adminYears.empty")}</p>
+          ) : (
+            <ul className="flex flex-wrap gap-2 text-sm">
+              {context.years.map((year) => (
+                <li key={year.id} className="rounded-full border px-3 py-1">
+                  {year.label}
+                  {year.is_current ? ` · ${t("adminYears.isCurrent")}` : ""}
+                </li>
+              ))}
+            </ul>
+          )}
+          <CreateYearForm organizationId={organization.id} />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>{t("adminSubjects.title")}</CardTitle>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-4">
+          {context.subjects.length === 0 ? (
+            <p className="text-sm text-muted-foreground">{t("adminSubjects.empty")}</p>
+          ) : (
+            <ul className="flex flex-wrap gap-2 text-sm">
+              {context.subjects.map((subject) => (
+                <li key={subject.id} className="rounded-full border px-3 py-1">
+                  {subject.name}
+                </li>
+              ))}
+            </ul>
+          )}
+          <CreateSubjectForm organizationId={organization.id} />
         </CardContent>
       </Card>
 

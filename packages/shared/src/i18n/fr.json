@@ -71,5 +71,71 @@
     "submitExisting": "Rejoindre avec mon compte actuel",
     "wrongAccount": "Vous êtes connecté·e avec un autre email que celui de l'invitation. Déconnectez-vous puis rouvrez le lien.",
     "accountExists": "Un compte existe déjà pour cet email. Connectez-vous d'abord, puis rouvrez ce lien d'invitation."
+  },
+  "grades": {
+    "cp": "CP",
+    "ce1": "CE1",
+    "ce2": "CE2",
+    "cm1": "CM1",
+    "cm2": "CM2",
+    "sixieme": "6e",
+    "cinquieme": "5e",
+    "quatrieme": "4e",
+    "troisieme": "3e",
+    "seconde": "2nde",
+    "premiere": "1re",
+    "terminale": "Terminale"
+  },
+  "classes": {
+    "empty": "Aucune classe pour le moment.",
+    "createTitle": "Créer une classe",
+    "name": "Nom de la classe",
+    "school": "Établissement",
+    "year": "Année scolaire",
+    "grade": "Niveau",
+    "subject": "Matière",
+    "subjectNone": "— Aucune —",
+    "create": "Créer la classe",
+    "archived": "Classe archivée (lecture seule).",
+    "archive": "Archiver la classe",
+    "teachersTitle": "Professeurs",
+    "teachersEmpty": "Aucun professeur associé.",
+    "selectTeacher": "Professeur",
+    "addTeacher": "Associer le professeur",
+    "studentsTitle": "Élèves",
+    "studentsEmpty": "Aucun élève dans cette classe.",
+    "needSchoolYear": "Créez d'abord un établissement et une année scolaire dans Administration.",
+    "notFound": "Classe introuvable ou inaccessible."
+  },
+  "students": {
+    "empty": "Aucun élève visible.",
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "birthDate": "Date de naissance (optionnelle)",
+    "add": "Ajouter l'élève",
+    "importTitle": "Import CSV",
+    "importHelp": "Colonnes : prénom, nom, date de naissance (AAAA-MM-JJ, optionnelle). Séparateur virgule ou point-virgule, en-tête facultatif.",
+    "importFile": "Fichier CSV",
+    "import": "Importer",
+    "importResult": "{created} élève(s) créé(s), {errors} erreur(s).",
+    "errorLine": "Ligne {line} : {message}",
+    "errMissingName": "prénom ou nom manquant",
+    "errInvalidDate": "date invalide",
+    "school": "Établissement"
+  },
+  "adminYears": {
+    "title": "Années scolaires",
+    "empty": "Aucune année scolaire.",
+    "label": "Libellé (ex. 2026-2027)",
+    "startsOn": "Début",
+    "endsOn": "Fin",
+    "isCurrent": "Année en cours",
+    "create": "Créer l'année scolaire"
+  },
+  "adminSubjects": {
+    "title": "Matières",
+    "empty": "Aucune matière.",
+    "name": "Nom de la matière",
+    "create": "Ajouter la matière"
   }
 }

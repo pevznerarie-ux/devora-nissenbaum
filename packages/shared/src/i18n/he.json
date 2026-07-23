@@ -71,5 +71,71 @@
     "submitExisting": "הצטרפות עם החשבון הנוכחי",
     "wrongAccount": "אתם מחוברים עם אימייל שונה מזה שבהזמנה. התנתקו ופתחו את הקישור מחדש.",
     "accountExists": "כבר קיים חשבון לאימייל זה. התחברו תחילה ואז פתחו שוב את קישור ההזמנה."
+  },
+  "grades": {
+    "cp": "CP",
+    "ce1": "CE1",
+    "ce2": "CE2",
+    "cm1": "CM1",
+    "cm2": "CM2",
+    "sixieme": "6e",
+    "cinquieme": "5e",
+    "quatrieme": "4e",
+    "troisieme": "3e",
+    "seconde": "2nde",
+    "premiere": "1re",
+    "terminale": "Terminale"
+  },
+  "classes": {
+    "empty": "אין עדיין כיתות.",
+    "createTitle": "יצירת כיתה",
+    "name": "שם הכיתה",
+    "school": "בית ספר",
+    "year": "שנת לימודים",
+    "grade": "שכבה",
+    "subject": "מקצוע",
+    "subjectNone": "— ללא —",
+    "create": "יצירת הכיתה",
+    "archived": "כיתה בארכיון (קריאה בלבד).",
+    "archive": "העברת הכיתה לארכיון",
+    "teachersTitle": "מורים",
+    "teachersEmpty": "אין מורה משויך.",
+    "selectTeacher": "מורה",
+    "addTeacher": "שיוך המורה",
+    "studentsTitle": "תלמידים",
+    "studentsEmpty": "אין תלמידים בכיתה זו.",
+    "needSchoolYear": "צרו תחילה בית ספר ושנת לימודים בניהול.",
+    "notFound": "הכיתה לא נמצאה או אינה נגישה."
+  },
+  "students": {
+    "empty": "אין תלמידים גלויים.",
+    "firstName": "שם פרטי",
+    "lastName": "שם משפחה",
+    "birthDate": "תאריך לידה (אופציונלי)",
+    "add": "הוספת התלמיד",
+    "importTitle": "ייבוא CSV",
+    "importHelp": "עמודות: שם פרטי, שם משפחה, תאריך לידה (YYYY-MM-DD, אופציונלי). מפריד פסיק או נקודה-פסיק, כותרת אופציונלית.",
+    "importFile": "קובץ CSV",
+    "import": "ייבוא",
+    "importResult": "נוצרו {created} תלמידים, {errors} שגיאות.",
+    "errorLine": "שורה {line}: {message}",
+    "errMissingName": "חסר שם פרטי או שם משפחה",
+    "errInvalidDate": "תאריך לא תקין",
+    "school": "בית ספר"
+  },
+  "adminYears": {
+    "title": "שנות לימודים",
+    "empty": "אין שנת לימודים.",
+    "label": "תווית (לדוגמה 2026-2027)",
+    "startsOn": "התחלה",
+    "endsOn": "סיום",
+    "isCurrent": "השנה הנוכחית",
+    "create": "יצירת שנת הלימודים"
+  },
+  "adminSubjects": {
+    "title": "מקצועות",
+    "empty": "אין מקצועות.",
+    "name": "שם המקצוע",
+    "create": "הוספת המקצוע"
   }
 }

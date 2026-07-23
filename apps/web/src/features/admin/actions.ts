@@ -2,16 +2,23 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { AppError, toActionError, type ActionResult } from "@pedagoos/shared";
+import {
+  AppError,
+  DEFAULT_SUBJECTS,
+  toActionError,
+  type ActionResult,
+} from "@pedagoos/shared";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { writeAuditLog } from "@/lib/audit";
 import {
   acceptExistingSchema,
   acceptNewAccountSchema,
+  createAcademicYearSchema,
   createInvitationSchema,
   createOrganizationSchema,
   createSchoolSchema,
+  createSubjectSchema,
 } from "./schemas";
 import {
   INVITATION_TTL_DAYS,
@@ -82,6 +89,11 @@ export async function createOrganizationAction(
       status: "active",
     });
     if (mError) throw new AppError("internal", "Attribution du rôle impossible.");
+
+    // Matières par défaut (A-005) — personnalisables ensuite dans Administration.
+    await admin
+      .from("subjects")
+      .insert(DEFAULT_SUBJECTS.map((name) => ({ organization_id: org.id, name })));
 
     await writeAuditLog({
       organizationId: org.id,
@@ -313,4 +325,86 @@ export async function acceptInvitationExistingAction(
     return { error: "internal" };
   }
   redirect("/");
+}
+
+export async function createAcademicYearAction(
+  formData: FormData,
+): Promise<ActionResult<{ yearId: string }>> {
+  try {
+    const parsed = createAcademicYearSchema.safeParse({
+      organizationId: formData.get("organizationId"),
+      label: formData.get("label"),
+      startsOn: formData.get("startsOn"),
+      endsOn: formData.get("endsOn"),
+      isCurrent: formData.get("isCurrent") === "on",
+    });
+    if (!parsed.success) throw new AppError("validation_failed", "Entrée invalide.");
+    const { supabase, user } = await requireOrgAdmin(parsed.data.organizationId);
+
+    if (parsed.data.isCurrent) {
+      await supabase
+        .from("academic_years")
+        .update({ is_current: false })
+        .eq("organization_id", parsed.data.organizationId)
+        .eq("is_current", true);
+    }
+
+    // Client utilisateur : RLS academic_years_write (org_admin).
+    const { data: year, error } = await supabase
+      .from("academic_years")
+      .insert({
+        organization_id: parsed.data.organizationId,
+        label: parsed.data.label,
+        starts_on: parsed.data.startsOn,
+        ends_on: parsed.data.endsOn,
+        is_current: parsed.data.isCurrent,
+      })
+      .select("id")
+      .single();
+    if (error || !year) throw new AppError("internal", "Création impossible.");
+
+    await writeAuditLog({
+      organizationId: parsed.data.organizationId,
+      actorId: user.id,
+      action: "academic_year.create",
+      entityType: "academic_year",
+      entityId: year.id,
+    });
+    revalidatePath("/administration");
+    return { ok: true, data: { yearId: year.id } };
+  } catch (error) {
+    return toActionError(error);
+  }
+}
+
+export async function createSubjectAction(
+  formData: FormData,
+): Promise<ActionResult<{ subjectId: string }>> {
+  try {
+    const parsed = createSubjectSchema.safeParse({
+      organizationId: formData.get("organizationId"),
+      name: formData.get("name"),
+    });
+    if (!parsed.success) throw new AppError("validation_failed", "Entrée invalide.");
+    const { supabase, user } = await requireOrgAdmin(parsed.data.organizationId);
+
+    const { data: subject, error } = await supabase
+      .from("subjects")
+      .insert({ organization_id: parsed.data.organizationId, name: parsed.data.name })
+      .select("id")
+      .single();
+    if (error || !subject) throw new AppError("conflict", "Matière déjà existante.");
+
+    await writeAuditLog({
+      organizationId: parsed.data.organizationId,
+      actorId: user.id,
+      action: "subject.create",
+      entityType: "subject",
+      entityId: subject.id,
+    });
+    revalidatePath("/administration");
+    return { ok: true, data: { subjectId: subject.id } };
+  } catch (error) {
+    return toActionError(error);
+  }
 }

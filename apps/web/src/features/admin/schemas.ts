@@ -29,3 +29,18 @@ export const acceptNewAccountSchema = z.object({
 export const acceptExistingSchema = z.object({
   token: z.string().min(20),
 });
+
+export const createAcademicYearSchema = z
+  .object({
+    organizationId: z.uuid(),
+    label: z.string().trim().min(4).max(40),
+    startsOn: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+    endsOn: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+    isCurrent: z.boolean(),
+  })
+  .refine((v) => v.startsOn < v.endsOn, { message: "startsOn doit précéder endsOn" });
+
+export const createSubjectSchema = z.object({
+  organizationId: z.uuid(),
+  name: z.string().trim().min(1).max(80),
+});

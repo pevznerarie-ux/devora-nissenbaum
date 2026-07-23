@@ -29,6 +29,8 @@ export type AdminContext =
       organization: AdminOrganization;
       schools: AdminSchool[];
       pendingInvitations: PendingInvitation[];
+      years: { id: string; label: string; is_current: boolean }[];
+      subjects: { id: string; name: string }[];
     };
 
 /**
@@ -54,26 +56,39 @@ export async function getAdminContext(): Promise<AdminContext> {
   if (!adminRow || !adminRow.organizations) return { kind: "not_admin" };
   const organization = adminRow.organizations as unknown as AdminOrganization;
 
-  const [{ data: schools }, { data: invitations }] = await Promise.all([
-    supabase
-      .from("schools")
-      .select("id, name")
-      .eq("organization_id", organization.id)
-      .is("archived_at", null)
-      .order("name"),
-    supabase
-      .from("invitations")
-      .select("id, email, role, expires_at")
-      .eq("organization_id", organization.id)
-      .is("accepted_at", null)
-      .gt("expires_at", new Date().toISOString())
-      .order("created_at", { ascending: false }),
-  ]);
+  const [{ data: schools }, { data: invitations }, { data: years }, { data: subjects }] =
+    await Promise.all([
+      supabase
+        .from("schools")
+        .select("id, name")
+        .eq("organization_id", organization.id)
+        .is("archived_at", null)
+        .order("name"),
+      supabase
+        .from("invitations")
+        .select("id, email, role, expires_at")
+        .eq("organization_id", organization.id)
+        .is("accepted_at", null)
+        .gt("expires_at", new Date().toISOString())
+        .order("created_at", { ascending: false }),
+      supabase
+        .from("academic_years")
+        .select("id, label, is_current")
+        .eq("organization_id", organization.id)
+        .order("starts_on", { ascending: false }),
+      supabase
+        .from("subjects")
+        .select("id, name")
+        .eq("organization_id", organization.id)
+        .order("name"),
+    ]);
 
   return {
     kind: "admin",
     organization,
     schools: schools ?? [],
     pendingInvitations: (invitations ?? []) as PendingInvitation[],
+    years: years ?? [],
+    subjects: subjects ?? [],
   };
 }

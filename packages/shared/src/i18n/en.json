@@ -71,5 +71,71 @@
     "submitExisting": "Join with my current account",
     "wrongAccount": "You are signed in with a different email than the invitation. Sign out and reopen the link.",
     "accountExists": "An account already exists for this email. Sign in first, then reopen this invitation link."
+  },
+  "grades": {
+    "cp": "CP",
+    "ce1": "CE1",
+    "ce2": "CE2",
+    "cm1": "CM1",
+    "cm2": "CM2",
+    "sixieme": "6e",
+    "cinquieme": "5e",
+    "quatrieme": "4e",
+    "troisieme": "3e",
+    "seconde": "2nde",
+    "premiere": "1re",
+    "terminale": "Terminale"
+  },
+  "classes": {
+    "empty": "No class yet.",
+    "createTitle": "Create a class",
+    "name": "Class name",
+    "school": "School",
+    "year": "Academic year",
+    "grade": "Grade level",
+    "subject": "Subject",
+    "subjectNone": "— None —",
+    "create": "Create the class",
+    "archived": "Archived class (read-only).",
+    "archive": "Archive the class",
+    "teachersTitle": "Teachers",
+    "teachersEmpty": "No teacher assigned.",
+    "selectTeacher": "Teacher",
+    "addTeacher": "Assign the teacher",
+    "studentsTitle": "Students",
+    "studentsEmpty": "No student in this class.",
+    "needSchoolYear": "First create a school and an academic year in Administration.",
+    "notFound": "Class not found or inaccessible."
+  },
+  "students": {
+    "empty": "No visible student.",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "birthDate": "Birth date (optional)",
+    "add": "Add the student",
+    "importTitle": "CSV import",
+    "importHelp": "Columns: first name, last name, birth date (YYYY-MM-DD, optional). Comma or semicolon separator, optional header.",
+    "importFile": "CSV file",
+    "import": "Import",
+    "importResult": "{created} student(s) created, {errors} error(s).",
+    "errorLine": "Line {line}: {message}",
+    "errMissingName": "missing first or last name",
+    "errInvalidDate": "invalid date",
+    "school": "School"
+  },
+  "adminYears": {
+    "title": "Academic years",
+    "empty": "No academic year.",
+    "label": "Label (e.g. 2026-2027)",
+    "startsOn": "Start",
+    "endsOn": "End",
+    "isCurrent": "Current year",
+    "create": "Create the academic year"
+  },
+  "adminSubjects": {
+    "title": "Subjects",
+    "empty": "No subject.",
+    "name": "Subject name",
+    "create": "Add the subject"
   }
 }
