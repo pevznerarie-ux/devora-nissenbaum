@@ -126,7 +126,8 @@
   "adminYears": {
     "title": "Academic years",
     "empty": "No academic year.",
-    "label": "Label (e.g. 2026-2027)",
+    "label": "Civil label (e.g. 2026-2027)",
+    "hebrewLabel": "Hebrew label (e.g. תשפ״ז) — computed automatically if empty",
     "startsOn": "Start",
     "endsOn": "End",
     "isCurrent": "Current year",
@@ -137,5 +138,35 @@
     "empty": "No subject.",
     "name": "Subject name",
     "create": "Add the subject"
+  },
+  "languages": {
+    "fr": "French",
+    "en": "English",
+    "he": "Hebrew"
+  },
+  "library": {
+    "uploadTitle": "Import a document",
+    "file": "File (PDF, DOCX, TXT or image)",
+    "docTitle": "Title",
+    "language": "Document language",
+    "grade": "Grade level (optional)",
+    "gradeNone": "— Unspecified —",
+    "subject": "Subject (optional)",
+    "subjectNone": "— None —",
+    "school": "Visibility",
+    "schoolNone": "— Whole organization —",
+    "tags": "Tags (comma-separated)",
+    "upload": "Import",
+    "empty": "No document. Import your curricula, textbooks and resources.",
+    "searchPlaceholder": "Search titles and text…",
+    "search": "Search",
+    "download": "Download",
+    "status": {
+      "pending": "Pending",
+      "processing": "Processing…",
+      "ready": "Ready",
+      "awaiting_ocr": "Image imported — text extraction arrives with the scan module",
+      "failed": "Extraction failed"
+    }
   }
 }

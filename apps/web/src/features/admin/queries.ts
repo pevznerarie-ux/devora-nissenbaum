@@ -29,7 +29,12 @@ export type AdminContext =
       organization: AdminOrganization;
       schools: AdminSchool[];
       pendingInvitations: PendingInvitation[];
-      years: { id: string; label: string; is_current: boolean }[];
+      years: {
+        id: string;
+        label: string;
+        hebrew_label: string | null;
+        is_current: boolean;
+      }[];
       subjects: { id: string; name: string }[];
     };
 
@@ -73,7 +78,7 @@ export async function getAdminContext(): Promise<AdminContext> {
         .order("created_at", { ascending: false }),
       supabase
         .from("academic_years")
-        .select("id, label, is_current")
+        .select("id, label, hebrew_label, is_current")
         .eq("organization_id", organization.id)
         .order("starts_on", { ascending: false }),
       supabase

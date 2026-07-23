@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import {
   AppError,
   DEFAULT_SUBJECTS,
+  hebrewAcademicYearLabel,
   toActionError,
   type ActionResult,
 } from "@pedagoos/shared";
@@ -334,12 +335,19 @@ export async function createAcademicYearAction(
     const parsed = createAcademicYearSchema.safeParse({
       organizationId: formData.get("organizationId"),
       label: formData.get("label"),
+      hebrewLabel: formData.get("hebrewLabel") ?? "",
       startsOn: formData.get("startsOn"),
       endsOn: formData.get("endsOn"),
       isCurrent: formData.get("isCurrent") === "on",
     });
     if (!parsed.success) throw new AppError("validation_failed", "Entrée invalide.");
     const { supabase, user } = await requireOrgAdmin(parsed.data.organizationId);
+
+    // Double calendrier : libellé hébreu fourni, sinon calculé depuis les
+    // dates civiles (ex. תשפ״ו–תשפ״ז pour une rentrée avant Roch Hachana).
+    const hebrewLabel =
+      parsed.data.hebrewLabel ??
+      hebrewAcademicYearLabel(parsed.data.startsOn, parsed.data.endsOn);
 
     if (parsed.data.isCurrent) {
       await supabase
@@ -355,6 +363,7 @@ export async function createAcademicYearAction(
       .insert({
         organization_id: parsed.data.organizationId,
         label: parsed.data.label,
+        hebrew_label: hebrewLabel,
         starts_on: parsed.data.startsOn,
         ends_on: parsed.data.endsOn,
         is_current: parsed.data.isCurrent,

@@ -34,6 +34,12 @@ export const createAcademicYearSchema = z
   .object({
     organizationId: z.uuid(),
     label: z.string().trim().min(4).max(40),
+    hebrewLabel: z
+      .string()
+      .trim()
+      .max(40)
+      .optional()
+      .or(z.literal("").transform(() => undefined)),
     startsOn: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
     endsOn: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
     isCurrent: z.boolean(),

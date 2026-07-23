@@ -45,7 +45,7 @@ export function CreateClassForm({ formData }: { formData: ClassFormData }) {
         >
           {formData.years.map((year) => (
             <option key={year.id} value={year.id}>
-              {year.label}
+              {year.hebrew_label ? `${year.label} · ${year.hebrew_label}` : year.label}
             </option>
           ))}
         </select>

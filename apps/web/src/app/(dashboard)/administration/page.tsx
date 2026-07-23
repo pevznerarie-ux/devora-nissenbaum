@@ -81,6 +81,9 @@ export default async function AdministrationPage() {
               {context.years.map((year) => (
                 <li key={year.id} className="rounded-full border px-3 py-1">
                   {year.label}
+                  {year.hebrew_label ? (
+                    <span dir="rtl"> · {year.hebrew_label}</span>
+                  ) : null}
                   {year.is_current ? ` · ${t("adminYears.isCurrent")}` : ""}
                 </li>
               ))}

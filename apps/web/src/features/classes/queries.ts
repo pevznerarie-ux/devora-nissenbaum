@@ -14,7 +14,7 @@ export interface ClassListItem {
 export interface ClassFormData {
   organizationId: string;
   schools: { id: string; name: string }[];
-  years: { id: string; label: string }[];
+  years: { id: string; label: string; hebrew_label: string | null }[];
   subjects: { id: string; name: string }[];
 }
 
@@ -73,7 +73,7 @@ export async function getClassFormData(): Promise<ClassFormData | null> {
       .order("name"),
     supabase
       .from("academic_years")
-      .select("id, label")
+      .select("id, label, hebrew_label")
       .eq("organization_id", organizationId)
       .order("starts_on", { ascending: false }),
     supabase

@@ -126,7 +126,8 @@
   "adminYears": {
     "title": "Années scolaires",
     "empty": "Aucune année scolaire.",
-    "label": "Libellé (ex. 2026-2027)",
+    "label": "Libellé civil (ex. 2026-2027)",
+    "hebrewLabel": "Libellé hébreu (ex. תשפ״ז) — calculé automatiquement si vide",
     "startsOn": "Début",
     "endsOn": "Fin",
     "isCurrent": "Année en cours",
@@ -137,5 +138,35 @@
     "empty": "Aucune matière.",
     "name": "Nom de la matière",
     "create": "Ajouter la matière"
+  },
+  "languages": {
+    "fr": "Français",
+    "en": "Anglais",
+    "he": "Hébreu"
+  },
+  "library": {
+    "uploadTitle": "Importer un document",
+    "file": "Fichier (PDF, DOCX, TXT ou image)",
+    "docTitle": "Titre",
+    "language": "Langue du document",
+    "grade": "Niveau (optionnel)",
+    "gradeNone": "— Non précisé —",
+    "subject": "Matière (optionnelle)",
+    "subjectNone": "— Aucune —",
+    "school": "Visibilité",
+    "schoolNone": "— Toute l'organisation —",
+    "tags": "Tags (séparés par des virgules)",
+    "upload": "Importer",
+    "empty": "Aucun document. Importez vos programmes, manuels et ressources.",
+    "searchPlaceholder": "Rechercher dans les titres et le texte…",
+    "search": "Rechercher",
+    "download": "Télécharger",
+    "status": {
+      "pending": "En attente",
+      "processing": "Traitement…",
+      "ready": "Prêt",
+      "awaiting_ocr": "Image importée — texte extrait à l'arrivée du module scan",
+      "failed": "Échec de l'extraction"
+    }
   }
 }

@@ -21,6 +21,10 @@ export function CreateYearForm({ organizationId }: { organizationId: string }) {
         <Label htmlFor="year-label">{t("adminYears.label")}</Label>
         <Input id="year-label" name="label" required minLength={4} maxLength={40} />
       </div>
+      <div className="flex flex-col gap-1.5">
+        <Label htmlFor="year-hebrew">{t("adminYears.hebrewLabel")}</Label>
+        <Input id="year-hebrew" name="hebrewLabel" maxLength={40} dir="rtl" />
+      </div>
       <div className="flex gap-4">
         <div className="flex flex-1 flex-col gap-1.5">
           <Label htmlFor="year-start">{t("adminYears.startsOn")}</Label>
