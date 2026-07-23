@@ -15,3 +15,4 @@ export * from "./character";
 export * from "./quality";
 export * from "./layout";
 export * from "./rules";
+export * from "./block-classify";

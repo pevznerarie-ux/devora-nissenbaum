@@ -317,5 +317,46 @@
       "answer_space": "Answer space",
       "slide": "Slide"
     }
+  },
+  "visuals": {
+    "title": "Visual",
+    "analyze": "Analyze visual",
+    "source": "Source",
+    "humanReview": "Human review required (sensitive topic).",
+    "none": "No visual recommended for this block.",
+    "type": {
+      "none": "No visual",
+      "real_photo": "Real photograph",
+      "ai_illustration": "AI illustration",
+      "vector_diagram": "Vector diagram",
+      "timeline": "Timeline",
+      "chart": "Chart",
+      "map": "Map",
+      "historical_source": "Authentic source",
+      "library_asset": "Media library",
+      "teacher_upload": "Uploaded image"
+    },
+    "purpose": {
+      "explain": "explain",
+      "demonstrate": "demonstrate",
+      "contextualize": "contextualize",
+      "compare": "compare",
+      "memorize": "memorize",
+      "illustrate": "illustrate",
+      "document": "document",
+      "engage": "engage",
+      "assess": "assess"
+    },
+    "preferredSource": {
+      "internal_library": "Internal library",
+      "unsplash": "Unsplash",
+      "pexels": "Pexels",
+      "wikimedia": "Wikimedia",
+      "institutional_archive": "Institutional archive",
+      "openai": "AI generation",
+      "google": "Google",
+      "generated_svg": "Generated SVG",
+      "teacher": "Teacher"
+    }
   }
 }

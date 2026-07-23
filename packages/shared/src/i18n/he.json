@@ -317,5 +317,46 @@
       "answer_space": "מקום לתשובה",
       "slide": "שקופית"
     }
+  },
+  "visuals": {
+    "title": "חזותי",
+    "analyze": "נתח חזותי",
+    "source": "מקור",
+    "humanReview": "נדרש אישור אנושי (נושא רגיש).",
+    "none": "לא מומלץ חזותי לבלוק זה.",
+    "type": {
+      "none": "ללא חזותי",
+      "real_photo": "צילום אמיתי",
+      "ai_illustration": "איור AI",
+      "vector_diagram": "תרשים וקטורי",
+      "timeline": "ציר זמן",
+      "chart": "גרף",
+      "map": "מפה",
+      "historical_source": "מקור אותנטי",
+      "library_asset": "מדיה",
+      "teacher_upload": "תמונה שהועלתה"
+    },
+    "purpose": {
+      "explain": "להסביר",
+      "demonstrate": "להדגים",
+      "contextualize": "להקשר",
+      "compare": "להשוות",
+      "memorize": "לשנן",
+      "illustrate": "לאייר",
+      "document": "לתעד",
+      "engage": "לערב",
+      "assess": "להעריך"
+    },
+    "preferredSource": {
+      "internal_library": "מדיה פנימית",
+      "unsplash": "Unsplash",
+      "pexels": "Pexels",
+      "wikimedia": "Wikimedia",
+      "institutional_archive": "ארכיון מוסדי",
+      "openai": "יצירת AI",
+      "google": "Google",
+      "generated_svg": "SVG שנוצר",
+      "teacher": "מורה"
+    }
   }
 }

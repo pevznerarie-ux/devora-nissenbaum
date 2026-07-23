@@ -7,6 +7,7 @@ import { reorderBlocks, type Block } from "@pedagoos/pedagogy";
 import { Button, Card, CardContent } from "@pedagoos/ui";
 import { applyEditIntentAction, lockBlockAction, saveBlocksAction } from "../actions";
 import { blockSummary } from "./block-summary";
+import { VisualRecommendation } from "@/features/visuals/components/visual-recommendation";
 
 const QUICK_ACTIONS = [
   "simplify",
@@ -173,6 +174,8 @@ function BlockCard({
             )}
           </div>
         )}
+
+        <VisualRecommendation materialId={materialId} blockId={block.id} />
       </CardContent>
     </Card>
   );

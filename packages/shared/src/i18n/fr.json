@@ -317,5 +317,46 @@
       "answer_space": "Espace de réponse",
       "slide": "Diapositive"
     }
+  },
+  "visuals": {
+    "title": "Visuel",
+    "analyze": "Analyser le visuel",
+    "source": "Source",
+    "humanReview": "Validation humaine requise (sujet sensible).",
+    "none": "Aucun visuel recommandé pour ce bloc.",
+    "type": {
+      "none": "Aucun visuel",
+      "real_photo": "Vraie photographie",
+      "ai_illustration": "Illustration IA",
+      "vector_diagram": "Schéma vectoriel",
+      "timeline": "Frise chronologique",
+      "chart": "Graphique",
+      "map": "Carte",
+      "historical_source": "Source authentique",
+      "library_asset": "Médiathèque",
+      "teacher_upload": "Image importée"
+    },
+    "purpose": {
+      "explain": "expliquer",
+      "demonstrate": "démontrer",
+      "contextualize": "contextualiser",
+      "compare": "comparer",
+      "memorize": "mémoriser",
+      "illustrate": "illustrer",
+      "document": "documenter",
+      "engage": "engager",
+      "assess": "évaluer"
+    },
+    "preferredSource": {
+      "internal_library": "Médiathèque interne",
+      "unsplash": "Unsplash",
+      "pexels": "Pexels",
+      "wikimedia": "Wikimedia",
+      "institutional_archive": "Archive institutionnelle",
+      "openai": "Génération IA",
+      "google": "Google",
+      "generated_svg": "SVG généré",
+      "teacher": "Professeur"
+    }
   }
 }
