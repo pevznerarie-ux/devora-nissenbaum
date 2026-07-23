@@ -9,6 +9,8 @@ import {
   SourcesForm,
 } from "@/features/sequences/components/wizard-forms";
 import { StructureEditor } from "@/features/sequences/components/structure-editor";
+import { listMaterials } from "@/features/materials/queries";
+import { MaterialsPanel } from "@/features/materials/components/materials-panel";
 
 function currentStep(status: string): number {
   switch (status) {
@@ -145,10 +147,15 @@ export default async function SequenceWizardPage({
             <CardHeader>
               <CardTitle>{t("sequences.materialsTitle")}</CardTitle>
             </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">
-                {t("sequences.materialsSoon")}
-              </p>
+            <CardContent className="flex flex-col gap-3">
+              <p className="text-sm text-muted-foreground">{t("materials.panelHelp")}</p>
+              <MaterialsPanel
+                sequenceId={detail.id}
+                lessons={[...detail.structure.lessons]
+                  .sort((a, b) => a.orderIndex - b.orderIndex)
+                  .map((l) => ({ id: l.id, title: l.title }))}
+                materials={await listMaterials(detail.id)}
+              />
             </CardContent>
           </Card>
         </>

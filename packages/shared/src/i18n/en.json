@@ -244,5 +244,78 @@
       "awaiting_ocr": "Image imported — text extraction arrives with the scan module",
       "failed": "Extraction failed"
     }
+  },
+  "materials": {
+    "panelHelp": "Generate each lesson's materials, then refine them by intent.",
+    "notFound": "Material not found.",
+    "backToSequence": "Back to sequence",
+    "blocksTitle": "Material blocks",
+    "noBlocks": "No block yet. Generate the material from the sequence.",
+    "editByIntent": "Edit by intent",
+    "instructionPlaceholder": "Targeted instruction (e.g. add a key date)…",
+    "apply": "Apply",
+    "moveUp": "Move block up",
+    "moveDown": "Move block down",
+    "deleteBlock": "Delete block",
+    "lock": "Lock",
+    "unlock": "Unlock",
+    "answerKey": "answer key",
+    "unsavedChanges": "Unsaved changes.",
+    "saveStructure": "Save order",
+    "sequenceHint": "Sequence",
+    "regenerateAffected": "Regenerate affected materials",
+    "regenerateDone": "{regenerated} regenerated, {skipped} locked kept.",
+    "publishTitle": "Publishing",
+    "publish": "Publish a version",
+    "historyTitle": "History",
+    "noVersions": "No published version.",
+    "restore": "Restore",
+    "audience": {
+      "teacher": "Teacher",
+      "student": "Student",
+      "both": "All"
+    },
+    "kind": {
+      "teacher_guide": "Teacher guide",
+      "student_handout": "Student handout",
+      "presentation": "Presentation",
+      "exercise_set": "Exercises",
+      "assessment": "Assessment"
+    },
+    "status": {
+      "proposed": "Proposed",
+      "draft": "Draft",
+      "validated": "Validated",
+      "published": "Published",
+      "archived": "Archived"
+    },
+    "quickAction": {
+      "simplify": "Simplify",
+      "shorten": "Shorten",
+      "expand": "Expand",
+      "rephrase": "Rephrase",
+      "add_example": "Add example",
+      "raise_difficulty": "Harder",
+      "lower_difficulty": "Easier",
+      "make_more_concrete": "More concrete",
+      "add_citation": "Link a source"
+    },
+    "blockType": {
+      "objectives": "Objectives",
+      "vocabulary": "Vocabulary",
+      "timeline_step": "Step",
+      "explanation": "Explanation",
+      "example": "Example",
+      "discussion_question": "Discussion question",
+      "expected_answer": "Expected answer",
+      "misconception": "Misconception",
+      "differentiation": "Differentiation",
+      "summary": "Summary",
+      "exercise": "Exercise",
+      "assessment_question": "Assessment question",
+      "document_ref": "Reference",
+      "answer_space": "Answer space",
+      "slide": "Slide"
+    }
   }
 }

@@ -244,5 +244,78 @@
       "awaiting_ocr": "Image importée — texte extrait à l'arrivée du module scan",
       "failed": "Échec de l'extraction"
     }
+  },
+  "materials": {
+    "panelHelp": "Générez les supports de chaque séance, puis affinez-les par intentions.",
+    "notFound": "Support introuvable.",
+    "backToSequence": "Retour à la séquence",
+    "blocksTitle": "Blocs du support",
+    "noBlocks": "Aucun bloc. Générez le support depuis la séquence.",
+    "editByIntent": "Modifier par intention",
+    "instructionPlaceholder": "Instruction ciblée (ex. : ajoute une date clé)…",
+    "apply": "Appliquer",
+    "moveUp": "Monter le bloc",
+    "moveDown": "Descendre le bloc",
+    "deleteBlock": "Supprimer le bloc",
+    "lock": "Verrouiller",
+    "unlock": "Déverrouiller",
+    "answerKey": "corrigé",
+    "unsavedChanges": "Modifications non enregistrées.",
+    "saveStructure": "Enregistrer l'ordre",
+    "sequenceHint": "Séquence",
+    "regenerateAffected": "Régénérer les supports impactés",
+    "regenerateDone": "{regenerated} régénéré(s), {skipped} verrouillé(s) conservé(s).",
+    "publishTitle": "Publication",
+    "publish": "Publier une version",
+    "historyTitle": "Historique",
+    "noVersions": "Aucune version publiée.",
+    "restore": "Restaurer",
+    "audience": {
+      "teacher": "Professeur",
+      "student": "Élève",
+      "both": "Tous"
+    },
+    "kind": {
+      "teacher_guide": "Fiche professeur",
+      "student_handout": "Support élève",
+      "presentation": "Présentation",
+      "exercise_set": "Exercices",
+      "assessment": "Évaluation"
+    },
+    "status": {
+      "proposed": "Proposé",
+      "draft": "Brouillon",
+      "validated": "Validé",
+      "published": "Publié",
+      "archived": "Archivé"
+    },
+    "quickAction": {
+      "simplify": "Simplifier",
+      "shorten": "Raccourcir",
+      "expand": "Développer",
+      "rephrase": "Reformuler",
+      "add_example": "Ajouter un exemple",
+      "raise_difficulty": "Plus difficile",
+      "lower_difficulty": "Plus facile",
+      "make_more_concrete": "Plus concret",
+      "add_citation": "Rattacher une source"
+    },
+    "blockType": {
+      "objectives": "Objectifs",
+      "vocabulary": "Vocabulaire",
+      "timeline_step": "Étape",
+      "explanation": "Explication",
+      "example": "Exemple",
+      "discussion_question": "Question de discussion",
+      "expected_answer": "Réponse attendue",
+      "misconception": "Erreur fréquente",
+      "differentiation": "Différenciation",
+      "summary": "Synthèse",
+      "exercise": "Exercice",
+      "assessment_question": "Question d'évaluation",
+      "document_ref": "Référence",
+      "answer_space": "Espace de réponse",
+      "slide": "Diapositive"
+    }
   }
 }

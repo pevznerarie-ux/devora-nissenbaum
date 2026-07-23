@@ -244,5 +244,78 @@
       "awaiting_ocr": "תמונה יובאה — חילוץ הטקסט יגיע עם מודול הסריקה",
       "failed": "חילוץ הטקסט נכשל"
     }
+  },
+  "materials": {
+    "panelHelp": "צור את חומרי כל שיעור, ולאחר מכן שכלל אותם לפי כוונה.",
+    "notFound": "החומר לא נמצא.",
+    "backToSequence": "חזרה לרצף",
+    "blocksTitle": "בלוקים של החומר",
+    "noBlocks": "אין עדיין בלוק. צור את החומר מהרצף.",
+    "editByIntent": "עריכה לפי כוונה",
+    "instructionPlaceholder": "הוראה ממוקדת (למשל: הוסף תאריך מפתח)…",
+    "apply": "החל",
+    "moveUp": "הזז בלוק למעלה",
+    "moveDown": "הזז בלוק למטה",
+    "deleteBlock": "מחק בלוק",
+    "lock": "נעל",
+    "unlock": "בטל נעילה",
+    "answerKey": "פתרון",
+    "unsavedChanges": "שינויים לא שמורים.",
+    "saveStructure": "שמור סדר",
+    "sequenceHint": "רצף",
+    "regenerateAffected": "צור מחדש חומרים מושפעים",
+    "regenerateDone": "{regenerated} נוצרו מחדש, {skipped} נעולים נשמרו.",
+    "publishTitle": "פרסום",
+    "publish": "פרסם גרסה",
+    "historyTitle": "היסטוריה",
+    "noVersions": "אין גרסה שפורסמה.",
+    "restore": "שחזר",
+    "audience": {
+      "teacher": "מורה",
+      "student": "תלמיד",
+      "both": "הכול"
+    },
+    "kind": {
+      "teacher_guide": "מדריך למורה",
+      "student_handout": "דף לתלמיד",
+      "presentation": "מצגת",
+      "exercise_set": "תרגילים",
+      "assessment": "הערכה"
+    },
+    "status": {
+      "proposed": "מוצע",
+      "draft": "טיוטה",
+      "validated": "מאושר",
+      "published": "פורסם",
+      "archived": "בארכיון"
+    },
+    "quickAction": {
+      "simplify": "פשט",
+      "shorten": "קצר",
+      "expand": "הרחב",
+      "rephrase": "נסח מחדש",
+      "add_example": "הוסף דוגמה",
+      "raise_difficulty": "קשה יותר",
+      "lower_difficulty": "קל יותר",
+      "make_more_concrete": "מוחשי יותר",
+      "add_citation": "קשר מקור"
+    },
+    "blockType": {
+      "objectives": "מטרות",
+      "vocabulary": "אוצר מילים",
+      "timeline_step": "שלב",
+      "explanation": "הסבר",
+      "example": "דוגמה",
+      "discussion_question": "שאלת דיון",
+      "expected_answer": "תשובה צפויה",
+      "misconception": "תפיסה שגויה",
+      "differentiation": "הבחנה",
+      "summary": "סיכום",
+      "exercise": "תרגיל",
+      "assessment_question": "שאלת הערכה",
+      "document_ref": "הפניה",
+      "answer_space": "מקום לתשובה",
+      "slide": "שקופית"
+    }
   }
 }
