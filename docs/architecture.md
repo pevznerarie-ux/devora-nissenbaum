@@ -205,3 +205,36 @@ Au MVP : interfaces TypeScript (`ScanJob`, `ScannedPage`, `AnswerSegment`,
 `docs/scan-architecture.md`. Le service FastAPI n'est créé qu'au moment du
 module réel. L'OCR réel (Google Cloud Vision / Document AI) restera derrière
 l'interface `OCRProvider`.
+
+## 11. Couche moteurs IA et sous-système d'illustrations (ADR-0010 à 0013)
+
+### 11.1 Moteurs spécialisés (`packages/ai/src/engines/`)
+
+Au-dessus de `AIProvider`, une couche « moteurs » orchestre les tâches :
+Curriculum, Lesson, Assessment, Illustration, Photo Selection, Diagram,
+Translation, Citation, Review, Quality. Chaque moteur : prompt(s) versionné(s),
+schéma de sortie Zod, politique de modèle (routage D-4), journalisation
+`ai_generations`. Les moteurs ne connaissent pas la base ; ils passent par les
+abstractions fournisseurs. Ajouter un moteur n'impacte pas les autres.
+
+### 11.2 Flux preview-first et régénération incrémentale
+
+- **Blueprint** (structure validée) → **Aperçu interactif** (échantillons
+  réalistes bon marché) → validation → **génération complète** → **contrôle
+  qualité** (Review + Quality) → export.
+- Chaque objet pédagogique porte `id/version/status/locked/dependencies`. Un
+  **planificateur de régénération** calcule la fermeture transitive des
+  dépendants non verrouillés et ne régénère qu'eux (graphe explicite persisté).
+- Édition par **EditIntent** `{ targetObjectId, instruction, quickAction? }`,
+  validé Zod, borné à un objet — jamais une interface chat générique.
+
+### 11.3 Abstraction `ImageProvider` (`packages/ai` ou package dédié)
+
+Parallèle à `AIProvider`/`OCRProvider` : `selectPhoto(spec)`,
+`generateIllustration(spec)`, `renderDiagram(spec)`. Le moteur de décision
+visuelle produit une **spécification JSON** (validée Zod), puis un
+`ImageProvider` la rend. Trois types : photo sous licence, illustration IA sous
+charte, schéma vectoriel (SVG). Au MVP : interfaces + specs + `MockImageProvider`.
+Les fournisseurs réels (banque photo, générateur IA, moteur SVG) et leurs
+licences sont branchés plus tard (D-10, D-11). Aucun secret de fournisseur
+d'images côté client ; production serveur uniquement.

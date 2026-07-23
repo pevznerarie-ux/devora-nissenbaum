@@ -351,3 +351,67 @@ accès légitime, refus inter-organisations, refus inter-établissements, refus
 
 Aucun bucket public. Les chemins incluent `organization_id` en préfixe et les
 politiques Storage répliquent l'isolation par organisation.
+
+## 11. Objets pédagogiques versionnés, dépendances, aperçu, illustrations (ADR-0010 à 0013)
+
+> Extension du modèle pour la génération preview-first, la régénération partielle
+> et le sous-système d'illustrations. Toutes ces tables portent `organization_id`
+> et sont soumises à la RLS via `can_access_sequence` / périmètre du support.
+
+### Champs ajoutés aux objets pédagogiques
+
+Sur les tables d'objets régénérables (`lessons`, `activities`, `exercises`,
+`assessment_questions`, blocs de `material_versions`, slides, illustrations) :
+`version int`, `status` (`proposed/draft/validated/published/archived`),
+`locked boolean not null default false`. Un objet `locked` n'est jamais
+régénéré automatiquement.
+
+### pedagogical_dependencies (graphe explicite)
+
+`id`, `organization_id`, `sequence_id`, `source_object_type`, `source_object_id`,
+`dependent_object_type`, `dependent_object_id`, `created_at`.
+Arête « la modification de la source impose de recalculer le dépendant ».
+Index `(source_object_type, source_object_id)`.
+
+### object_versions (historique par objet, append-only)
+
+`id`, `organization_id`, `object_type`, `object_id`, `version_number`,
+`snapshot jsonb` (état complet de l'objet), `created_by`, `created_at`,
+`ai_generation_id` (nullable, provenance). UNIQUE `(object_type, object_id,
+version_number)`. Support de compare / restore / merge (résolution par objet).
+
+### sequence_previews (aperçu interactif — étape 8.2)
+
+`id`, `organization_id`, `sequence_id`, `screens jsonb` (les ~5 écrans
+d'échantillons réalistes validés Zod), `status` (`generating/ready/validated`),
+`ai_generation_id`, `created_at`, `updated_at`. La séquence passe en statut
+`preview_ready` puis `materials_generated` après validation.
+
+### edit_intents (modifications par intentions — étape 8.3)
+
+`id`, `organization_id`, `sequence_id`, `target_object_type`,
+`target_object_id`, `quick_action` (nullable), `instruction text` (nullable),
+`requested_by`, `status` (`pending/applied/failed`), `ai_generation_id`,
+`created_at`. Journalise chaque intention et sa régénération partielle.
+
+### illustration_specs (spécification JSON avant image — ADR-0013)
+
+`id`, `organization_id`, `objective_id → learning_objectives`, `owner_object_type`,
+`owner_object_id`, `image_type` (`photo/ai_illustration/diagram/icon/none`),
+`spec jsonb` (purpose, style, target_age, language, must_show[]…),
+`decision_rationale text` (pourquoi ce visuel / ce type), timestamps.
+
+### illustration_assets (image produite)
+
+`id`, `organization_id`, `illustration_spec_id`, `provider`, `source`
+(`licensed_photo/ai/svg`), `file_path` (bucket privé `illustrations`),
+`license` (nullable — droits de la photo), `alt_text`, `checksum`, timestamps.
+Bucket `illustrations` privé ; accès par URL signée courte. La version canonique
+partagée (A-016) référence la `spec`, pas un actif photo sous licence non
+transférable.
+
+### Statuts de séquence (mis à jour — ADR-0010)
+
+`draft → structure_proposed → structure_validated → preview_ready
+→ materials_generated → published → archived`. Le contrôle qualité (Review +
+Quality engines) s'exécute entre `materials_generated` et `published`.

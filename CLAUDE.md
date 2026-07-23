@@ -17,9 +17,16 @@ programme & sources → objectifs d'apprentissage → séquence → cours
 → prochaine séquence adaptée
 ```
 
-Ce n'est **pas** un générateur de texte : chaque production est un objet structuré
-(blocs pédagogiques JSON validés par Zod), relié aux objectifs, compétences,
-sources et résultats des élèves, et versionné dans le temps.
+Ce n'est **pas** un générateur de texte ni de documents : chaque production est
+un objet structuré (blocs pédagogiques JSON validés par Zod), relié aux
+objectifs, compétences, sources et résultats des élèves, et versionné dans le
+temps. PedagoOS accompagne le professeur dans une **boucle itérative** :
+Concevoir → Prévisualiser → Modifier → Valider → Générer → Améliorer. La
+génération est toujours **preview-first** (aperçu validé avant tout dossier
+complet — ADR-0010), **incrémentale** (régénération partielle par graphe de
+dépendances — ADR-0011), orchestrée par des **moteurs IA spécialisés**
+(ADR-0012), et **illustrée à bon escient** (le bon visuel au bon endroit —
+ADR-0013).
 
 Documents de référence : `docs/product-requirements.md`, `docs/architecture.md`,
 `docs/data-model.md`, `docs/privacy-and-security.md`, `docs/roadmap.md`,
@@ -132,6 +139,10 @@ Les décisions sont consignées en ADR dans `docs/decisions/`. Résumé :
 - ADR-0007 : service image FastAPI différé ; interfaces, tables et mocks OCR d'abord.
 - ADR-0008 : i18n fr/en/he, RTL, centralisation du branding.
 - ADR-0009 : versionnement des supports (autosave, versions, statuts).
+- ADR-0010 : génération en deux temps (preview-first) + édition par intentions.
+- ADR-0011 : objets versionnés, graphe de dépendances, régénération partielle.
+- ADR-0012 : moteurs IA spécialisés au-dessus de `AIProvider`.
+- ADR-0013 : sous-système d'illustrations (décision visuelle, spec JSON, `ImageProvider`).
 
 Toute nouvelle décision structurante = nouvel ADR. Toute hypothèse = entrée dans
 `docs/assumptions.md`.

@@ -74,3 +74,21 @@ d'acceptation, format de sortie, interdictions.
 | Éditeur trop ambitieux                  | Blocs structurés uniquement (ADR-0005), pas de WYSIWYG                                               |
 | Extraction PDF/DOCX de qualité variable | État `failed` visible + ressaisie possible ; qualité améliorée itérativement                         |
 | Fidélité DOCX                           | Best-effort assumé (ADR-0006), PDF fait référence                                                    |
+
+## Re-séquencement suite aux extensions obligatoires (2026-07-23)
+
+Les exigences preview-first, régénération intelligente, historique de versions,
+moteurs IA spécialisés et illustrations (ADR-0010 à 0013) s'intègrent ainsi :
+
+| Phase                  | Ajouts                                                                                                                                                                                                                              |
+| ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 6 (modèle + assistant) | Étend l'assistant : Blueprint → **aperçu interactif** (~5 écrans) → validation → génération → **contrôle qualité** → export. Statuts `preview_ready`.                                                                               |
+| 7 (couche IA)          | Introduit la **couche moteurs** (Curriculum, Lesson, Assessment, Translation, Citation, Review, Quality) au-dessus de `AIProvider` ; routage de modèle par moteur (D-4).                                                            |
+| 7bis (nouveau)         | **Régénération intelligente** : objets `version/status/locked/dependencies`, graphe `pedagogical_dependencies`, planificateur de régénération partielle ; **historique** par objet (compare/restore/merge).                         |
+| 8 (supports + éditeur) | **Édition par intentions** (actions rapides + instruction ciblée → `EditIntent`), pas de chat générique.                                                                                                                            |
+| 8bis (nouveau)         | **Sous-système d'illustrations** : moteur de décision visuelle, spécifications JSON, `ImageProvider` + `MockImageProvider`, trois types (photo licenciée / IA / schéma) ; écran de rendu. Fournisseurs réels différés (D-10, D-11). |
+| 9 (exports)            | Export intègre les illustrations et respecte le contrôle qualité préalable.                                                                                                                                                         |
+
+Principe directeur (rappel) : **PedagoOS n'est pas un générateur de documents,
+c'est un système d'exploitation pédagogique** — boucle Concevoir → Prévisualiser
+→ Modifier → Valider → Générer → Améliorer.
