@@ -92,3 +92,11 @@ moteurs IA spécialisés et illustrations (ADR-0010 à 0013) s'intègrent ainsi 
 Principe directeur (rappel) : **PedagoOS n'est pas un générateur de documents,
 c'est un système d'exploitation pédagogique** — boucle Concevoir → Prévisualiser
 → Modifier → Valider → Générer → Améliorer.
+
+### Arbitrages de construction (2026-07-23)
+
+- **Ordre** : suivre la roadmap re-séquencée (6 → 7 → 7bis → 8 → 8bis → 9),
+  sans priorisation hors-phase.
+- **Illustrations** : au sein de la Phase 8bis, **schémas vectoriels (Type 3)
+  en premier** (coût minimal, aucun problème de droits), puis photographies
+  sous licence (Type 1), puis illustrations IA (Type 2).
