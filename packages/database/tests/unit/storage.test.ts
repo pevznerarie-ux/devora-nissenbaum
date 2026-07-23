@@ -14,12 +14,14 @@ describe("storage", () => {
     expect(SIGNED_URL_MAX_AGE_SECONDS).toBeLessThanOrEqual(600);
   });
 
-  it("déclare les 4 buckets privés attendus", () => {
+  it("déclare les buckets privés attendus (dont les visuels)", () => {
     expect([...STORAGE_BUCKETS].sort()).toEqual([
       "ai-raw",
       "exports",
       "scans",
       "sources",
+      "visuals",
+      "visuals-personal",
     ]);
   });
 

@@ -138,6 +138,16 @@ describe.runIf(configured)("RLS — isolation inter-organisations", () => {
     expect(versions ?? []).toHaveLength(0);
   });
 
+  it("un visiteur anonyme ne voit ni assets visuels ni leurs usages", async () => {
+    const anonClient = createClient(url ?? "", anonKey ?? "");
+    const { data: assets } = await anonClient.from("visual_assets").select("id");
+    const { data: usages } = await anonClient.from("visual_usages").select("id");
+    const { data: licenses } = await anonClient.from("visual_licenses").select("id");
+    expect(assets ?? []).toHaveLength(0);
+    expect(usages ?? []).toHaveLength(0);
+    expect(licenses ?? []).toHaveLength(0);
+  });
+
   it("un membre ne voit pas les générations IA d'une autre organisation", async () => {
     const { data: created } = await admin
       .from("ai_generations")

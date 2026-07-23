@@ -3,7 +3,16 @@
  * par URL signée à durée courte. Les chemins sont préfixés par l'organisation
  * pour que les politiques Storage répliquent l'isolation multi-tenant.
  */
-export const STORAGE_BUCKETS = ["sources", "exports", "ai-raw", "scans"] as const;
+export const STORAGE_BUCKETS = [
+  "sources",
+  "exports",
+  "ai-raw",
+  "scans",
+  // Visual Intelligence Engine (ADR-0016) : visuels pédagogiques et, isolés,
+  // les visuels contenant des données personnelles / d'élèves.
+  "visuals",
+  "visuals-personal",
+] as const;
 export type StorageBucket = (typeof STORAGE_BUCKETS)[number];
 
 /** Durée de vie maximale d'une URL signée (secondes). */
