@@ -4,3 +4,4 @@ export * from "./assessment";
 export * from "./regeneration";
 export * from "./blocks";
 export * from "./edit-intent";
+export * from "./visual";
