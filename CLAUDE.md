@@ -148,6 +148,3 @@ Toute nouvelle décision structurante = nouvel ADR. Toute hypothèse = entrée d
   côté requêtes utilisateur.
 - Ne pas inventer de références ou de citations dans les prompts/sorties IA.
 - Ne pas écrire le nom du produit en dur (passer par `PRODUCT_NAME`).
-- Ne pas supprimer ni réutiliser les fichiers hérités du dépôt (`index.html`,
-  `crm.*`, `commande.html`, `styles.css`, `QUESTIONNAIRE.md`) sans décision
-  explicite de l'utilisateur — voir `docs/assumptions.md` (A-001).

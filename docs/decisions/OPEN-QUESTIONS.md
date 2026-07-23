@@ -5,7 +5,7 @@ mise à jour de `docs/assumptions.md`.
 
 | # | Question | Options | Recommandation | Échéance |
 |---|---|---|---|---|
-| D-1 | Où vit PedagoOS ? Ce dépôt contient un projet boutique sans rapport (cf. A-001). | (a) dépôt dédié neuf ; (b) ce dépôt, fichiers hérités déplacés dans `legacy/` ; (c) ce dépôt tel quel | **(a)** dépôt dédié | Avant Phase 2 |
+| D-1 | ~~Où vit PedagoOS ?~~ **Tranchée le 2026-07-23** : PedagoOS vit dans ce dépôt ; les fichiers du projet boutique hérité ont été supprimés sur décision de l'utilisateur (cf. A-001). | — | — | Close |
 | D-2 | Hébergement production de `apps/web` (contrainte : Chromium serveur pour les PDF). | (a) Vercel + fonction dédiée export ; (b) conteneur (Fly.io/Railway/Cloud Run) | **(b)** conteneur : Playwright/Chromium sans contorsions | Avant Phase 9 |
 | D-3 | Granularité de l'éditeur en base. | (a) blocs en jsonb dans `material_versions` ; (b) table `lesson_blocks` par bloc | **(a)** au MVP (ADR-0005/0009) ; (b) seulement si collaboration temps réel | Sprint 1 (validation ADR) |
 | D-4 | Fournisseur IA par défaut et modèles exacts (A-004), et budget coût/génération. | Anthropic / OpenAI / mixte par tâche | **Anthropic** par défaut, choix du modèle par type de tâche configurable | Avant Phase 7 |

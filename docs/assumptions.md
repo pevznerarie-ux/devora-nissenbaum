@@ -6,7 +6,7 @@ si besoin, un ADR.
 
 | # | Hypothèse | Impact si infirmée |
 |---|---|---|
-| A-001 | **Dépôt** : ce dépôt (`devora-nissenbaum`) contient un projet antérieur sans rapport (site vitrine + CRM boutique : `index.html`, `crm.html`, `crm.js`, `commande.html`, `styles.css`, `QUESTIONNAIRE.md`). Hypothèse : PedagoOS sera développé ici (fichiers hérités laissés intacts jusqu'à décision), mais un **dépôt dédié serait préférable**. Décision utilisateur requise avant la Phase 2. | Déplacement des docs vers un nouveau dépôt (trivial à ce stade). |
+| A-001 | **Dépôt** — *résolue le 2026-07-23* : ce dépôt contenait un projet antérieur sans rapport (site vitrine + CRM boutique). L'utilisateur a décidé de développer PedagoOS ici et a autorisé la suppression des fichiers hérités (`index.html`, `crm.html`, `crm.js`, `commande.html`, `styles.css`, `QUESTIONNAIRE.md`), effectuée sur cette branche. L'historique git conserve l'ancien projet. | — |
 | A-002 | Hébergement : Supabase cloud (projet managé) + Vercel ou équivalent pour Next.js ; pas d'auto-hébergement au MVP. | Ajustement CI/CD et gestion des secrets. |
 | A-003 | Gestionnaire de paquets : pnpm + Turborepo (non imposés par la commande, choisis en ADR-0001). | Remplacement par npm/yarn/Nx, faible coût avant Phase 2. |
 | A-004 | Fournisseur IA par défaut : Anthropic (AnthropicProvider), OpenAI en second ; MockAIProvider en CI et développement. | Simple changement de provider par configuration. |

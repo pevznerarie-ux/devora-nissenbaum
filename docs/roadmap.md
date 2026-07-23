@@ -74,4 +74,3 @@ d'acceptation, format de sortie, interdictions.
 | Éditeur trop ambitieux | Blocs structurés uniquement (ADR-0005), pas de WYSIWYG |
 | Extraction PDF/DOCX de qualité variable | État `failed` visible + ressaisie possible ; qualité améliorée itérativement |
 | Fidélité DOCX | Best-effort assumé (ADR-0006), PDF fait référence |
-| Dépôt partagé avec le projet boutique existant | Hypothèse A-001 : décision utilisateur requise avant Phase 2 |
