@@ -1,7 +1,10 @@
 import type { z } from "zod";
 import {
+  type Block,
   type BloomLevel,
   type LessonSequence,
+  type MaterialContent,
+  MaterialContentSchema,
   SourceCitationSchema,
 } from "@pedagoos/pedagogy";
 import type {
@@ -13,8 +16,11 @@ import type {
   StructuredGenerationRequest,
   StructuredGenerationResult,
 } from "../provider";
-import { PROMPT_NAME } from "../prompts/sequence-structure/v1";
+import * as sequenceStructurePromptV1 from "../prompts/sequence-structure/v1";
+import * as materialPromptV1 from "../prompts/material/v1";
+import * as materialEditPromptV1 from "../prompts/material-edit/v1";
 import { SequenceStructureInputSchema } from "../sequence-structure";
+import { MaterialEditInputSchema, MaterialGenerationInputSchema } from "../material";
 
 /** Générateur d'UUID DÉTERMINISTE (mock reproductible — ADR-0004). */
 function deterministicUuid(seed: number): string {
@@ -101,9 +107,242 @@ export function buildMockSequenceStructure(
 }
 
 /**
- * Fournisseur IA factice : déterministe, sans réseau ni coût, utilisé en CI
- * et en développement (ADR-0004). Gère la génération de structure de séquence
- * nativement ; toute autre demande structurée échoue proprement.
+ * Construit un support par blocs plausible et déterministe pour un type donné.
+ * Les blocs référencent les objectifs fournis, marquent `audience`/`answerKey`
+ * correctement, et ne citent que les sources fournies. Base de test/CI et
+ * développement (aucun réseau, aucun coût).
+ */
+export function buildMockMaterial(
+  input: z.infer<typeof MaterialGenerationInputSchema>,
+): MaterialContent {
+  let counter = 1;
+  const nextId = () => deterministicUuid(counter++);
+  const objectiveIds = input.objectives.map((o) => o.id);
+  const firstObjective = objectiveIds[0] ? [objectiveIds[0]] : [];
+  const citations = input.sourceExcerpts.map((source) =>
+    SourceCitationSchema.parse({
+      sourceDocumentId: source.sourceDocumentId,
+      excerpt: source.excerpt.slice(0, 200) || undefined,
+    }),
+  );
+
+  const objectivesBlock: Block = {
+    id: nextId(),
+    type: "objectives",
+    audience: "both",
+    answerKey: false,
+    locked: false,
+    objectiveIds,
+    items: input.objectives.map((o) => ({ objectiveId: o.id, label: o.title })),
+  };
+
+  const blocks: Block[] = [];
+
+  switch (input.kind) {
+    case "teacher_guide": {
+      blocks.push(objectivesBlock);
+      const phases = ["Mise en route", "Apprentissage guidé", "Synthèse"];
+      phases.forEach((title, i) => {
+        const duration = Math.max(5, Math.round(input.durationMinutes / phases.length));
+        blocks.push({
+          id: nextId(),
+          type: "timeline_step",
+          audience: "teacher",
+          answerKey: false,
+          locked: false,
+          objectiveIds: firstObjective,
+          index: i,
+          title,
+          durationMinutes: duration,
+          teacherNote: `${title} — appui sur : ${input.lessonTitle}.`,
+        });
+      });
+      blocks.push({
+        id: nextId(),
+        type: "misconception",
+        audience: "teacher",
+        answerKey: false,
+        locked: false,
+        objectiveIds: firstObjective,
+        description: `Erreur fréquente à anticiper sur « ${input.lessonTitle} ».`,
+        remediationHint: "Reprendre un exemple concret avant de généraliser.",
+      });
+      blocks.push({
+        id: nextId(),
+        type: "summary",
+        audience: "both",
+        answerKey: false,
+        locked: false,
+        objectiveIds,
+        points: input.objectives.map((o) => `À retenir : ${o.title}`),
+      });
+      break;
+    }
+    case "student_handout": {
+      blocks.push(objectivesBlock);
+      blocks.push({
+        id: nextId(),
+        type: "explanation",
+        audience: "student",
+        answerKey: false,
+        locked: false,
+        objectiveIds: firstObjective,
+        title: input.lessonTitle,
+        body: `Explication adaptée au niveau ${input.gradeLevel}. ${input.lessonSummary}`.trim(),
+        epistemic: "fact",
+        citations,
+      });
+      blocks.push({
+        id: nextId(),
+        type: "example",
+        audience: "student",
+        answerKey: false,
+        locked: false,
+        objectiveIds: firstObjective,
+        prompt: `Exemple appliqué à « ${input.lessonTitle} ».`,
+        worked: "Étape par étape, résolution guidée.",
+        citations,
+      });
+      blocks.push({
+        id: nextId(),
+        type: "exercise",
+        audience: "student",
+        answerKey: false,
+        locked: false,
+        objectiveIds: firstObjective,
+        title: "Application",
+        category: "application",
+        difficulty: 2,
+        statement: `Exercice sur « ${input.lessonTitle} ».`,
+        citations,
+      });
+      break;
+    }
+    case "presentation": {
+      blocks.push({
+        id: nextId(),
+        type: "slide",
+        audience: "both",
+        answerKey: false,
+        locked: false,
+        objectiveIds,
+        title: input.lessonTitle,
+        bullets: input.objectives.map((o) => o.title),
+        speakerNotes: "Diapositive d'introduction.",
+      });
+      input.objectives.forEach((o) => {
+        blocks.push({
+          id: nextId(),
+          type: "slide",
+          audience: "both",
+          answerKey: false,
+          locked: false,
+          objectiveIds: [o.id],
+          title: o.title,
+          bullets: ["Point clé 1", "Point clé 2"],
+        });
+      });
+      break;
+    }
+    case "exercise_set": {
+      input.objectives.forEach((o, i) => {
+        blocks.push({
+          id: nextId(),
+          type: "exercise",
+          audience: "student",
+          answerKey: false,
+          locked: false,
+          objectiveIds: [o.id],
+          title: `Exercice ${i + 1}`,
+          category: i === 0 ? "comprehension" : "application",
+          difficulty: Math.min(5, i + 1),
+          statement: `Exercice ${i + 1} sur « ${o.title} ».`,
+          citations,
+        });
+        blocks.push({
+          id: nextId(),
+          type: "expected_answer",
+          audience: "teacher",
+          answerKey: true,
+          locked: false,
+          objectiveIds: [o.id],
+          answer: `Corrigé de l'exercice ${i + 1}.`,
+          acceptableVariations: [],
+          epistemic: "fact",
+          citations,
+        });
+      });
+      break;
+    }
+    case "assessment": {
+      blocks.push(objectivesBlock);
+      input.objectives.forEach((o, i) => {
+        blocks.push({
+          id: nextId(),
+          type: "assessment_question",
+          audience: "both",
+          answerKey: false,
+          locked: false,
+          objectiveIds: [o.id],
+          orderIndex: i,
+          statement: `Question ${i + 1} — ${o.title}.`,
+          points: 5,
+          difficulty: Math.min(5, i + 2),
+          expectedAnswer: `Réponse attendue à la question ${i + 1}.`,
+          gradingCriteria: ["Exactitude", "Justification"],
+        });
+      });
+      break;
+    }
+  }
+
+  return MaterialContentSchema.parse({
+    kind: input.kind,
+    title: `${input.lessonTitle} — ${input.kind}`,
+    blocks,
+    citations,
+    notes: "Support généré automatiquement (MockAIProvider) — à réviser et valider.",
+  });
+}
+
+/**
+ * Applique une retouche déterministe à un bloc unique (édition par intentions).
+ * Conserve `id`, `type`, `audience` et `answerKey` ; annote le champ textuel
+ * principal avec l'instruction pour un mock reproductible et vérifiable.
+ */
+export function buildMockBlockEdit(
+  input: z.infer<typeof MaterialEditInputSchema>,
+): Block {
+  const { block, instruction } = input;
+  const tag = `[retouché : ${instruction}]`;
+  switch (block.type) {
+    case "explanation":
+      return { ...block, body: `${block.body} ${tag}` };
+    case "example":
+      return { ...block, worked: `${block.worked} ${tag}` };
+    case "exercise":
+      return { ...block, statement: `${block.statement} ${tag}` };
+    case "assessment_question":
+      return { ...block, statement: `${block.statement} ${tag}` };
+    case "discussion_question":
+      return { ...block, question: `${block.question} ${tag}` };
+    case "summary":
+      return { ...block, points: [...block.points, tag] };
+    case "slide":
+      return { ...block, bullets: [...block.bullets, tag] };
+    case "misconception":
+      return { ...block, description: `${block.description} ${tag}` };
+    default:
+      // Types sans champ textuel évident : retour inchangé (mock).
+      return block;
+  }
+}
+
+/**
+ * Fournisseur IA factice : déterministe, sans réseau ni coût, utilisé en CI et
+ * en développement (ADR-0004). Gère la structure de séquence, la génération de
+ * supports par blocs et la retouche d'un bloc ; tout autre prompt échoue
+ * proprement.
  */
 export class MockAIProvider implements AIProvider {
   readonly name = "mock";
@@ -118,37 +357,43 @@ export class MockAIProvider implements AIProvider {
       model: this.model,
       tier: request.modelTier ?? ("standard" as const),
     };
+    const fail = (
+      status: "provider_failed" | "schema_failed",
+      error: string,
+      raw?: unknown,
+    ): StructuredGenerationResult<T> => ({
+      ...base,
+      status,
+      error,
+      raw,
+      durationMs: Date.now() - start,
+    });
 
-    if (request.promptName !== PROMPT_NAME) {
-      return {
-        ...base,
-        status: "provider_failed",
-        error: `MockAIProvider ne gère pas le prompt « ${request.promptName} ».`,
-        durationMs: Date.now() - start,
-      };
+    let raw: unknown;
+    if (request.promptName === sequenceStructurePromptV1.PROMPT_NAME) {
+      const parsed = SequenceStructureInputSchema.safeParse(request.context);
+      if (!parsed.success)
+        return fail("provider_failed", "Contexte de génération invalide.");
+      raw = buildMockSequenceStructure(parsed.data);
+    } else if (request.promptName === materialPromptV1.PROMPT_NAME) {
+      const parsed = MaterialGenerationInputSchema.safeParse(request.context);
+      if (!parsed.success)
+        return fail("provider_failed", "Contexte de support invalide.");
+      raw = buildMockMaterial(parsed.data);
+    } else if (request.promptName === materialEditPromptV1.PROMPT_NAME) {
+      const parsed = MaterialEditInputSchema.safeParse(request.context);
+      if (!parsed.success)
+        return fail("provider_failed", "Contexte de retouche invalide.");
+      raw = buildMockBlockEdit(parsed.data);
+    } else {
+      return fail(
+        "provider_failed",
+        `MockAIProvider ne gère pas le prompt « ${request.promptName} ».`,
+      );
     }
 
-    const parsedInput = SequenceStructureInputSchema.safeParse(request.context);
-    if (!parsedInput.success) {
-      return {
-        ...base,
-        status: "provider_failed",
-        error: "Contexte de génération invalide.",
-        durationMs: Date.now() - start,
-      };
-    }
-
-    const raw = buildMockSequenceStructure(parsedInput.data);
     const validated = request.schema.safeParse(raw);
-    if (!validated.success) {
-      return {
-        ...base,
-        status: "schema_failed",
-        raw,
-        error: validated.error.message,
-        durationMs: Date.now() - start,
-      };
-    }
+    if (!validated.success) return fail("schema_failed", validated.error.message, raw);
 
     return {
       ...base,
