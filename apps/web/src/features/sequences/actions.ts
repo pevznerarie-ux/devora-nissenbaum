@@ -10,6 +10,7 @@ import {
 } from "@pedagoos/pedagogy";
 import {
   SequenceStructureInputSchema,
+  generateSequenceStructure,
   sequenceStructurePromptV1,
   type SequenceStructureInput,
 } from "@pedagoos/ai";
@@ -211,24 +212,33 @@ export async function generateStructureAction(
       sourceExcerpts,
     } satisfies SequenceStructureInput);
 
+    // Capacité (ADR-0014) : le routeur choisit le niveau, l'escalade gère les
+    // échecs de schéma. Le code métier ne nomme jamais de modèle.
     const provider = getAIProvider();
-    const result = await provider.generateStructured({
-      schema: LessonSequenceSchema,
-      promptName: sequenceStructurePromptV1.PROMPT_NAME,
-      promptVersion: sequenceStructurePromptV1.PROMPT_VERSION,
-      system: sequenceStructurePromptV1.buildSystemPrompt(),
-      user: sequenceStructurePromptV1.buildUserPrompt(input),
-      context: input,
+    const totalChars = sourceExcerpts.reduce((n, s) => n + s.excerpt.length, 0);
+    const outcome = await generateSequenceStructure(provider, input, {
+      documentChars: totalChars,
+      difficulty: seq.difficulty as "easier" | "standard" | "harder",
+      materialCount: seq.session_count as number,
     });
+    const result = outcome.final;
 
     await logAiGeneration({
       organizationId: seq.organization_id as string,
       requestedBy: user.id,
       provider: result.provider,
       model: result.model,
+      tier: result.tier,
+      capability: "GenerateSequenceStructure",
+      engine: "curriculum",
       promptName: sequenceStructurePromptV1.PROMPT_NAME,
       promptVersion: sequenceStructurePromptV1.PROMPT_VERSION,
-      parameters: { difficulty: seq.difficulty, sessionCount: seq.session_count },
+      parameters: {
+        difficulty: seq.difficulty,
+        sessionCount: seq.session_count,
+        escalated: outcome.escalated,
+        attempts: outcome.attempts.length,
+      },
       targetType: "sequence_structure",
       targetId: parsed.data.sequenceId,
       sourceDocumentIds: wizard.sourceIds,
@@ -237,6 +247,9 @@ export async function generateStructureAction(
       status: result.status,
       ...(result.error ? { error: result.error } : {}),
       durationMs: result.durationMs,
+      ...(result.usage ? { usage: result.usage } : {}),
+      ...(result.cacheHit !== undefined ? { cacheHit: result.cacheHit } : {}),
+      ...(result.costEstimate !== undefined ? { costEstimate: result.costEstimate } : {}),
     });
 
     if (result.status !== "succeeded" || !result.data) {

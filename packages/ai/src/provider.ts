@@ -1,11 +1,23 @@
 import type { z } from "zod";
 
 /**
- * Couche d'abstraction IA (ADR-0004). La logique métier ne dépend jamais d'un
- * fournisseur précis : elle passe par `AIProvider`. Toute génération produit
- * une sortie STRUCTURÉE validée par un schéma Zod ; une sortie invalide est
- * une erreur enregistrée, jamais silencieusement corrigée (CLAUDE.md §6.5).
+ * Couche d'abstraction IA (ADR-0004, ADR-0014). La logique métier ne dépend
+ * jamais d'un fournisseur ni d'un modèle précis : elle passe par une capacité,
+ * le routeur choisit un NIVEAU, et le provider résout niveau → modèle. Toute
+ * génération produit une sortie STRUCTURÉE validée par un schéma Zod ; une
+ * sortie invalide est une erreur enregistrée, jamais corrigée silencieusement.
  */
+
+/** Niveau de modèle (ADR-0014). Le code métier ne nomme jamais de modèle. */
+export type ModelTier = "economy" | "standard" | "premium";
+
+/** Nombre de tokens consommés (monitoring — ADR-0014 §7). */
+export interface TokenUsage {
+  input: number;
+  output: number;
+  cacheRead: number;
+  cacheCreation: number;
+}
 
 export interface StructuredGenerationRequest<T> {
   /** Schéma cible : la sortie brute du modèle est parsée puis validée. */
@@ -15,7 +27,8 @@ export interface StructuredGenerationRequest<T> {
   promptVersion: string;
   system: string;
   user: string;
-  temperature?: number;
+  /** Niveau demandé ; le provider le résout en modèle concret (config). */
+  modelTier?: ModelTier;
   maxTokens?: number;
   /**
    * Contexte structuré de la demande (entrées de l'assistant, extraits de
@@ -35,8 +48,11 @@ export interface StructuredGenerationResult<T> {
   error?: string;
   provider: string;
   model: string;
+  tier: ModelTier;
   durationMs: number;
-  /** Estimation de coût si le fournisseur la fournit (jamais pour le mock). */
+  usage?: TokenUsage;
+  cacheHit?: boolean;
+  /** Estimation de coût (USD) si calculable ; jamais pour le mock. */
   costEstimate?: number;
 }
 

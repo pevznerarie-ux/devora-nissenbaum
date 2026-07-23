@@ -113,7 +113,11 @@ export class MockAIProvider implements AIProvider {
     request: StructuredGenerationRequest<T>,
   ): Promise<StructuredGenerationResult<T>> {
     const start = Date.now();
-    const base = { provider: this.name, model: this.model };
+    const base = {
+      provider: this.name,
+      model: this.model,
+      tier: request.modelTier ?? ("standard" as const),
+    };
 
     if (request.promptName !== PROMPT_NAME) {
       return {

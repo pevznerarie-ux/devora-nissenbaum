@@ -101,6 +101,9 @@ importers:
 
   packages/ai:
     dependencies:
+      "@anthropic-ai/sdk":
+        specifier: ^0.68.0
+        version: 0.68.0(zod@4.4.3)
       "@pedagoos/pedagogy":
         specifier: workspace:*
         version: link:../pedagogy
@@ -170,6 +173,25 @@ packages:
         integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==,
       }
     engines: { node: ">=10" }
+
+  "@anthropic-ai/sdk@0.68.0":
+    resolution:
+      {
+        integrity: sha512-SMYAmbbiprG8k1EjEPMTwaTqssDT7Ae+jxcR5kWXiqTlbwMR2AthXtscEVWOHkRfyAV5+y3PFYTJRNa3OJWIEw==,
+      }
+    hasBin: true
+    peerDependencies:
+      zod: ^3.25.0 || ^4.0.0
+    peerDependenciesMeta:
+      zod:
+        optional: true
+
+  "@babel/runtime@7.29.7":
+    resolution:
+      {
+        integrity: sha512-Nq8OhGWiZIZGV6hLHoyAKLLcJihP/xFeBMGJoUrxTX2psI8dCifzLhZISFb+VWS3wFMRDmCGw5R+dOySCqPLhw==,
+      }
+    engines: { node: ">=6.9.0" }
 
   "@emnapi/runtime@1.11.2":
     resolution:
@@ -2371,6 +2393,13 @@ packages:
         integrity: sha512-4bV5BfR2mqfQTJm+V5tPPdf+ZpuhiIvTuAB5g8kcrXOZpTT/QwwVRWBywX1ozr6lEuPdbHxwaJlm9G6mI2sfSQ==,
       }
 
+  json-schema-to-ts@3.1.1:
+    resolution:
+      {
+        integrity: sha512-+DWg8jCJG2TEnpy7kOm/7/AxaYoaRbjVB4LFZLySZlWn8exGs3A4OLJR966cVvU26N7X9TWxl+Jsw7dzAqKT6g==,
+      }
+    engines: { node: ">=16" }
+
   json-schema-traverse@0.4.1:
     resolution:
       {
@@ -3018,6 +3047,12 @@ packages:
       }
     engines: { node: ">=14.0.0" }
 
+  ts-algebra@2.0.0:
+    resolution:
+      {
+        integrity: sha512-FPAhNPFMrkwz76P7cdjdmiShwMynZYN6SgOujD1urY4oNm80Ou9oMdmbR45LotcKOXoy7wSmHkRFE6Mxbrhefw==,
+      }
+
   ts-api-utils@2.5.0:
     resolution:
       {
@@ -3235,6 +3270,14 @@ packages:
 
 snapshots:
   "@alloc/quick-lru@5.2.0": {}
+
+  "@anthropic-ai/sdk@0.68.0(zod@4.4.3)":
+    dependencies:
+      json-schema-to-ts: 3.1.1
+    optionalDependencies:
+      zod: 4.4.3
+
+  "@babel/runtime@7.29.7": {}
 
   "@emnapi/runtime@1.11.2":
     dependencies:
@@ -4331,6 +4374,11 @@ snapshots:
 
   json-buffer@3.0.1: {}
 
+  json-schema-to-ts@3.1.1:
+    dependencies:
+      "@babel/runtime": 7.29.7
+      ts-algebra: 2.0.0
+
   json-schema-traverse@0.4.1: {}
 
   json-stable-stringify-without-jsonify@1.0.1: {}
@@ -4712,6 +4760,8 @@ snapshots:
   tinyrainbow@2.0.0: {}
 
   tinyspy@4.0.4: {}
+
+  ts-algebra@2.0.0: {}
 
   ts-api-utils@2.5.0(typescript@5.9.3):
     dependencies:
