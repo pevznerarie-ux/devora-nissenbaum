@@ -22,8 +22,11 @@ additional_redirect_urls = ["http://localhost:3000/auth/callback"]
 jwt_expiry = 3600
 enable_signup = false
 
+# Fournisseur email ACTIF (connexions par mot de passe) ; l'inscription
+# publique reste fermée via [auth].enable_signup — les comptes naissent par
+# invitation (admin API). Ne pas remettre enable_signup=false ici : cela
+# désactiverait tout le fournisseur email (erreur email_provider_disabled).
 [auth.email]
-enable_signup = false
 enable_confirmations = false
 
 [storage]
