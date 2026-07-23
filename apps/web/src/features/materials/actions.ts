@@ -156,12 +156,10 @@ async function recordDependencies(
       dependent_object_id: materialId,
     })),
   ];
-  await supabase
-    .from("pedagogical_dependencies")
-    .upsert(rows, {
-      onConflict: "source_object_id,dependent_object_id",
-      ignoreDuplicates: true,
-    });
+  await supabase.from("pedagogical_dependencies").upsert(rows, {
+    onConflict: "source_object_id,dependent_object_id",
+    ignoreDuplicates: true,
+  });
 }
 
 /** Exécute la génération IA d'un support et journalise l'appel (ai_generations). */
