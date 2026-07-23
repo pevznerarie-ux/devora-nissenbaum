@@ -415,3 +415,12 @@ transférable.
 `draft → structure_proposed → structure_validated → preview_ready
 → materials_generated → published → archived`. Le contrôle qualité (Review +
 Quality engines) s'exécute entre `materials_generated` et `published`.
+
+## 12. Monitoring IA — champs ajoutés à `ai_generations` (ADR-0014)
+
+Extension de `ai_generations` (§7) pour le pilotage plateforme : `capability`
+(text), `engine` (text), `token_input` (int), `token_output` (int),
+`token_cache_read` (int), `token_cache_creation` (int), `cache_hit` (boolean),
+`response_time_ms` (int), `school_id` (uuid nullable → schools). Permet le suivi
+des coûts par établissement, par capacité et par niveau de modèle, le taux de
+cache et le taux d'escalade. RLS : lecture org_admin (comme aujourd'hui).

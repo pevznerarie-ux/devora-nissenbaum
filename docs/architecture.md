@@ -238,3 +238,26 @@ charte, schéma vectoriel (SVG). Au MVP : interfaces + specs + `MockImageProvide
 Les fournisseurs réels (banque photo, générateur IA, moteur SVG) et leurs
 licences sont branchés plus tard (D-10, D-11). Aucun secret de fournisseur
 d'images côté client ; production serveur uniquement.
+
+## 12. Runtime IA — capacités, routeur, niveaux de modèle (ADR-0014)
+
+Empilement : **code métier → capacité → moteur (ADR-0012) → routeur → couche
+fournisseur (`AIProvider`, ADR-0004) → Anthropic (V1)**. Le code métier demande
+une **capacité** (`GenerateLesson`, `GenerateAssessment`, `Translate`,
+`GenerateSlides`, `ReviewLesson`, `GenerateIllustrationSpecification`…) et ne
+nomme jamais un modèle.
+
+- **Routeur** (`packages/ai/src/router/`) : choisit le **niveau** (Standard=
+  Sonnet par défaut, Économique=Haiku, Premium=Opus jamais par défaut) selon
+  taille des documents, difficulté, niveau scolaire, nombre de langues/supports,
+  coût estimé, temps souhaité. Modèles = configuration, jamais en dur.
+- **Couche fournisseur** (`AIProvider`) : auth, appels, erreurs, retries, rate
+  limiting, **prompt caching** (préfixe stable : système, règles, schémas,
+  exemples, référentiels), **batch** (non-interactif), logs, métriques, coût.
+- **Sorties structurées + escalade** : validation Zod obligatoire ; sur échec :
+  réparation bornée → régénération → escalade de niveau → échec journalisé.
+- **Monitoring** : chaque appel écrit dans `ai_generations` (fournisseur, modèle,
+  capacité, moteur, tokens entrée/sortie/cache, cache hit, coût, temps,
+  succès/erreur, utilisateur, `school_id`, organisation).
+- **Multi-fournisseurs** : OpenAI/Gemini/Mistral/DeepSeek/local ajoutables par
+  configuration derrière la même interface, sans toucher au métier.
