@@ -149,6 +149,9 @@ importers:
 
   packages/ui:
     dependencies:
+      "@pedagoos/pedagogy":
+        specifier: workspace:*
+        version: link:../pedagogy
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1

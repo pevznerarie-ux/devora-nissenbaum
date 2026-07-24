@@ -357,6 +357,7 @@
       "google": "Google",
       "generated_svg": "Generated SVG",
       "teacher": "Teacher"
-    }
+    },
+    "preview": "Preview diagram"
   }
 }
