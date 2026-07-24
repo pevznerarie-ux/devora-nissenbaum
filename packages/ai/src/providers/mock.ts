@@ -4,10 +4,12 @@ import {
   type BloomLevel,
   type LessonSequence,
   type MaterialContent,
+  type DiagramSpecification,
   type PedagogicalPurpose,
   type PreferredSource,
   type RecommendedVisualType,
   type VisualRequest,
+  DiagramSpecificationSchema,
   MaterialContentSchema,
   SourceCitationSchema,
   VisualRequestSchema,
@@ -27,9 +29,11 @@ import * as sequenceStructurePromptV1 from "../prompts/sequence-structure/v1";
 import * as materialPromptV1 from "../prompts/material/v1";
 import * as materialEditPromptV1 from "../prompts/material-edit/v1";
 import * as visualDirectorPromptV1 from "../prompts/visual-director/v1";
+import * as diagramPromptV1 from "../prompts/diagram/v1";
 import { SequenceStructureInputSchema } from "../sequence-structure";
 import { MaterialEditInputSchema, MaterialGenerationInputSchema } from "../material";
 import { VisualDirectorInputSchema } from "../visual/director";
+import { DiagramDesignInputSchema } from "../visual/diagram";
 
 /** Générateur d'UUID DÉTERMINISTE (mock reproductible — ADR-0004). */
 function deterministicUuid(seed: number): string {
@@ -424,11 +428,47 @@ export function buildMockVisualRequest(
   });
 }
 
+/** Types de schémas dont les arêtes relient les éléments consécutifs. */
+const SEQUENTIAL_DIAGRAMS = new Set(["cycle", "process", "flowchart", "cause_effect"]);
+
+/**
+ * Construit une DiagramSpecification plausible et déterministe (Diagram Engine
+ * mock, ADR-0016). Crée les nœuds à partir des éléments, relie les étapes pour
+ * les schémas séquentiels, et fournit toujours une description d'accessibilité.
+ */
+export function buildMockDiagram(
+  input: z.infer<typeof DiagramDesignInputSchema>,
+): DiagramSpecification {
+  const labels = input.items.length > 0 ? input.items : [input.concept];
+  const nodes = labels.map((label, i) => ({
+    id: `n${i}`,
+    label,
+    ...(input.values[i] !== undefined ? { value: input.values[i] } : {}),
+  }));
+  const edges = SEQUENTIAL_DIAGRAMS.has(input.type)
+    ? nodes
+        .slice(0, -1)
+        .map((n, i) => ({ from: n.id, to: nodes[i + 1]!.id, directed: true }))
+    : [];
+  // Un cycle boucle sur le premier nœud.
+  if (input.type === "cycle" && nodes.length > 1) {
+    edges.push({ from: nodes[nodes.length - 1]!.id, to: nodes[0]!.id, directed: true });
+  }
+
+  return DiagramSpecificationSchema.parse({
+    type: input.type,
+    title: input.title,
+    nodes,
+    edges,
+    accessibilityDescription: `${input.title} — ${input.type} : ${labels.join(", ")}.`,
+  });
+}
+
 /**
  * Fournisseur IA factice : déterministe, sans réseau ni coût, utilisé en CI et
  * en développement (ADR-0004). Gère la structure de séquence, la génération de
- * supports par blocs, la retouche d'un bloc et l'analyse visuelle (Director) ;
- * tout autre prompt échoue proprement.
+ * supports par blocs, la retouche d'un bloc, l'analyse visuelle (Director) et la
+ * conception de schémas ; tout autre prompt échoue proprement.
  */
 export class MockAIProvider implements AIProvider {
   readonly name = "mock";
@@ -476,6 +516,10 @@ export class MockAIProvider implements AIProvider {
       if (!parsed.success)
         return fail("provider_failed", "Contexte d'analyse visuelle invalide.");
       raw = buildMockVisualRequest(parsed.data);
+    } else if (request.promptName === diagramPromptV1.PROMPT_NAME) {
+      const parsed = DiagramDesignInputSchema.safeParse(request.context);
+      if (!parsed.success) return fail("provider_failed", "Contexte de schéma invalide.");
+      raw = buildMockDiagram(parsed.data);
     } else {
       return fail(
         "provider_failed",

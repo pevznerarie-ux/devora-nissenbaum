@@ -110,3 +110,40 @@ describe("MockImageProvider", () => {
     expect(variations).toHaveLength(3);
   });
 });
+
+describe("designDiagram (mock)", () => {
+  it("relie les étapes d'un cycle et fournit une description d'accessibilité", async () => {
+    const { designDiagram } = await import("../src/index");
+    const { DiagramSpecificationSchema } = await import("@pedagoos/pedagogy");
+    const outcome = await designDiagram(provider, {
+      type: "cycle",
+      title: "Le cycle de l'eau",
+      concept: "cycle de l'eau",
+      language: "fr",
+      items: ["évaporation", "condensation", "précipitations", "ruissellement"],
+      values: [],
+    });
+    expect(outcome.final.status).toBe("succeeded");
+    const spec = DiagramSpecificationSchema.parse(outcome.final.data);
+    expect(spec.nodes).toHaveLength(4);
+    // Cycle : 4 arêtes (dont le bouclage sur le premier nœud).
+    expect(spec.edges).toHaveLength(4);
+    expect(spec.accessibilityDescription.length).toBeGreaterThan(0);
+  });
+
+  it("un graphique à barres porte les valeurs sans arêtes", async () => {
+    const { designDiagram } = await import("../src/index");
+    const { DiagramSpecificationSchema } = await import("@pedagoos/pedagogy");
+    const outcome = await designDiagram(provider, {
+      type: "bar_chart",
+      title: "Population",
+      concept: "population par ville",
+      language: "fr",
+      items: ["Paris", "Lyon"],
+      values: [2, 1],
+    });
+    const spec = DiagramSpecificationSchema.parse(outcome.final.data);
+    expect(spec.edges).toHaveLength(0);
+    expect(spec.nodes[0]!.value).toBe(2);
+  });
+});
