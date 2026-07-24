@@ -1,0 +1,4 @@
+-- Seed de développement local. AUCUNE donnée réelle.
+-- Les organisations et utilisateurs de démonstration sont créés par les tests
+-- RLS (packages/database/tests/rls) via l'API admin, pas ici : la création
+-- d'utilisateurs auth passe par GoTrue, pas par du SQL brut.

@@ -99,12 +99,13 @@ Règles de dépendance (vérifiées par lint) :
 ## 3. Couches applicatives
 
 **Lecture** : React Server Components → requêtes via `packages/database` avec le
-client Supabase *au nom de l'utilisateur* (RLS active).
+client Supabase _au nom de l'utilisateur_ (RLS active).
 
 **Écriture** : Server Actions uniquement, chacune suit le même contrat :
+
 1. validation Zod de l'entrée ; 2. vérification d'autorisation applicative
-(rôle + appartenance) ; 3. opération DB (RLS en dernier rempart) ;
-4. écriture `audit_logs` si sensible ; 5. retour typé `{ ok } | { error }`.
+   (rôle + appartenance) ; 3. opération DB (RLS en dernier rempart) ;
+2. écriture `audit_logs` si sensible ; 5. retour typé `{ ok } | { error }`.
 
 **Tâches longues** (extraction de texte, générations IA, exports) : exécutées
 côté serveur avec suivi d'état en base (`pending/processing/ready/failed`) et
@@ -127,13 +128,15 @@ lectures métier d'une requête utilisateur.
 - Autorisation à deux niveaux : vérification applicative explicite dans chaque
   server action **et** RLS en base. Les politiques RLS s'appuient sur des
   fonctions SQL `security definer` (`is_member_of(org_id)`, `has_role(org_id,
-  role)`, `teaches_class(class_id)`) pour rester lisibles et testables.
+role)`, `teaches_class(class_id)`) pour rester lisibles et testables.
 
 ## 5. Couche IA (`packages/ai`)
 
 ```ts
 interface AIProvider {
-  generateStructured<T>(req: StructuredGenerationRequest<T>): Promise<StructuredGenerationResult<T>>;
+  generateStructured<T>(
+    req: StructuredGenerationRequest<T>,
+  ): Promise<StructuredGenerationResult<T>>;
   analyzeDocument(req: DocumentAnalysisRequest): Promise<DocumentAnalysisResult>;
   analyzeImage(req: ImageAnalysisRequest): Promise<ImageAnalysisResult>;
 }
@@ -202,3 +205,59 @@ Au MVP : interfaces TypeScript (`ScanJob`, `ScannedPage`, `AnswerSegment`,
 `docs/scan-architecture.md`. Le service FastAPI n'est créé qu'au moment du
 module réel. L'OCR réel (Google Cloud Vision / Document AI) restera derrière
 l'interface `OCRProvider`.
+
+## 11. Couche moteurs IA et sous-système d'illustrations (ADR-0010 à 0013)
+
+### 11.1 Moteurs spécialisés (`packages/ai/src/engines/`)
+
+Au-dessus de `AIProvider`, une couche « moteurs » orchestre les tâches :
+Curriculum, Lesson, Assessment, Illustration, Photo Selection, Diagram,
+Translation, Citation, Review, Quality. Chaque moteur : prompt(s) versionné(s),
+schéma de sortie Zod, politique de modèle (routage D-4), journalisation
+`ai_generations`. Les moteurs ne connaissent pas la base ; ils passent par les
+abstractions fournisseurs. Ajouter un moteur n'impacte pas les autres.
+
+### 11.2 Flux preview-first et régénération incrémentale
+
+- **Blueprint** (structure validée) → **Aperçu interactif** (échantillons
+  réalistes bon marché) → validation → **génération complète** → **contrôle
+  qualité** (Review + Quality) → export.
+- Chaque objet pédagogique porte `id/version/status/locked/dependencies`. Un
+  **planificateur de régénération** calcule la fermeture transitive des
+  dépendants non verrouillés et ne régénère qu'eux (graphe explicite persisté).
+- Édition par **EditIntent** `{ targetObjectId, instruction, quickAction? }`,
+  validé Zod, borné à un objet — jamais une interface chat générique.
+
+### 11.3 Abstraction `ImageProvider` (`packages/ai` ou package dédié)
+
+Parallèle à `AIProvider`/`OCRProvider` : `selectPhoto(spec)`,
+`generateIllustration(spec)`, `renderDiagram(spec)`. Le moteur de décision
+visuelle produit une **spécification JSON** (validée Zod), puis un
+`ImageProvider` la rend. Trois types : photo sous licence, illustration IA sous
+charte, schéma vectoriel (SVG). Au MVP : interfaces + specs + `MockImageProvider`.
+Les fournisseurs réels (banque photo, générateur IA, moteur SVG) et leurs
+licences sont branchés plus tard (D-10, D-11). Aucun secret de fournisseur
+d'images côté client ; production serveur uniquement.
+
+## 12. Runtime IA — capacités, routeur, niveaux de modèle (ADR-0014)
+
+Empilement : **code métier → capacité → moteur (ADR-0012) → routeur → couche
+fournisseur (`AIProvider`, ADR-0004) → Anthropic (V1)**. Le code métier demande
+une **capacité** (`GenerateLesson`, `GenerateAssessment`, `Translate`,
+`GenerateSlides`, `ReviewLesson`, `GenerateIllustrationSpecification`…) et ne
+nomme jamais un modèle.
+
+- **Routeur** (`packages/ai/src/router/`) : choisit le **niveau** (Standard=
+  Sonnet par défaut, Économique=Haiku, Premium=Opus jamais par défaut) selon
+  taille des documents, difficulté, niveau scolaire, nombre de langues/supports,
+  coût estimé, temps souhaité. Modèles = configuration, jamais en dur.
+- **Couche fournisseur** (`AIProvider`) : auth, appels, erreurs, retries, rate
+  limiting, **prompt caching** (préfixe stable : système, règles, schémas,
+  exemples, référentiels), **batch** (non-interactif), logs, métriques, coût.
+- **Sorties structurées + escalade** : validation Zod obligatoire ; sur échec :
+  réparation bornée → régénération → escalade de niveau → échec journalisé.
+- **Monitoring** : chaque appel écrit dans `ai_generations` (fournisseur, modèle,
+  capacité, moteur, tokens entrée/sortie/cache, cache hit, coût, temps,
+  succès/erreur, utilisateur, `school_id`, organisation).
+- **Multi-fournisseurs** : OpenAI/Gemini/Mistral/DeepSeek/local ajoutables par
+  configuration derrière la même interface, sans toucher au métier.

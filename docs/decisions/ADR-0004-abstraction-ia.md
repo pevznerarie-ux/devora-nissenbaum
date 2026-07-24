@@ -3,16 +3,20 @@
 Statut : acceptée · Date : 2026-07-23
 
 ## Contexte
+
 Toute la valeur pédagogique passe par des générations IA, mais la logique
 métier ne doit dépendre d'aucun fournisseur, les sorties doivent être des
 données structurées fiables, et chaque appel doit être traçable.
 
 ## Décision
+
 - Package indépendant `packages/ai` exposant :
 
 ```ts
 interface AIProvider {
-  generateStructured<T>(req: StructuredGenerationRequest<T>): Promise<StructuredGenerationResult<T>>;
+  generateStructured<T>(
+    req: StructuredGenerationRequest<T>,
+  ): Promise<StructuredGenerationResult<T>>;
   analyzeDocument(req: DocumentAnalysisRequest): Promise<DocumentAnalysisResult>;
   analyzeImage(req: ImageAnalysisRequest): Promise<ImageAnalysisResult>;
 }
@@ -35,5 +39,6 @@ interface AIProvider {
   progression et alignement cours ↔ évaluation.
 
 ## Conséquences
+
 - Changement de fournisseur par configuration ; tests sans réseau ni coût.
 - Les sorties brutes volumineuses vivent dans Storage (`ai-raw`), pas en table.

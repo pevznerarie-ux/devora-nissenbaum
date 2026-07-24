@@ -3,12 +3,14 @@
 Statut : acceptée · Date : 2026-07-23
 
 ## Contexte
+
 Le scan et la correction de copies exigent du traitement d'image (OpenCV :
 redressement, nettoyage, séparation de pages) et de l'OCR manuscrit (Google
 Cloud Vision / Document AI). La commande impose de **ne pas** développer le
 module complet au premier sprint, mais de préparer le terrain.
 
 ## Décision
+
 - Au MVP : uniquement (1) les interfaces TypeScript (`OCRProvider`, `ScanJob`,
   `ScannedPage`, `AnswerSegment`, `TranscriptionResult`, `ProposedGrade`),
   (2) les tables `scan_batches`, `scanned_copies`, `copy_pages`,
@@ -28,5 +30,6 @@ module complet au premier sprint, mais de préparer le terrain.
   (`proposed_grades.reviewed_by` obligatoire pour finaliser).
 
 ## Conséquences
+
 - Le modèle de données et l'UI du MVP anticipent le scan sans en payer le coût.
 - Le seul microservice du système reste optionnel et remplaçable.

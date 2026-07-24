@@ -1,0 +1,23 @@
+{
+  "name": "@pedagoos/database",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "lint": "eslint src tests",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run tests/unit",
+    "test:rls": "vitest run tests/rls"
+  },
+  "dependencies": {
+    "@supabase/ssr": "^0.6.1",
+    "@supabase/supabase-js": "^2.50.0",
+    "@pedagoos/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "vitest": "^3.2.0"
+  }
+}

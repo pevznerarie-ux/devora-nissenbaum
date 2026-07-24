@@ -3,11 +3,13 @@
 Statut : acceptée · Date : 2026-07-23
 
 ## Contexte
+
 Exports exigés : impression, PDF, PPTX, DOCX « si raisonnablement réalisable »,
 en variantes professeur/élève/avec/sans corrigé, avec impression A4 correcte et
 support RTL (hébreu).
 
 ## Décision
+
 - **PDF** : templates React « print » dédiés (CSS `@page`, A4, en-têtes/pieds),
   rendus dans Chromium piloté par Playwright (`page.pdf()`), côté serveur.
   Le même HTML sert à l'aperçu impression navigateur.
@@ -24,6 +26,7 @@ support RTL (hébreu).
   la table `exports`, servis par URL signée.
 
 ## Conséquences
+
 - Une seule source de vérité (les blocs) pour écran, impression et exports.
 - Chromium requis côté serveur (déjà disponible dans l'environnement de dev ;
   en production, exécution dans un runtime Node avec Chromium provisionné).

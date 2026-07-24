@@ -1,0 +1,22 @@
+{
+  "name": "@pedagoos/ai",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "lint": "eslint src tests",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.68.0",
+    "@pedagoos/pedagogy": "workspace:*",
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "vitest": "^3.2.0"
+  }
+}

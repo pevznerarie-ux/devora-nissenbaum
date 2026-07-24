@@ -3,9 +3,11 @@
 Statut : acceptée (imposée par la commande) · Date : 2026-07-23
 
 ## Contexte
+
 La stack impose Supabase PostgreSQL, Supabase Auth, Supabase Storage et la RLS.
 
 ## Décision
+
 - PostgreSQL Supabase comme unique base de données ; migrations SQL versionnées
   dans `supabase/migrations`, appliquées par la CLI Supabase ; stack locale
   (`supabase start`) pour le développement et les tests RLS.
@@ -19,6 +21,7 @@ La stack impose Supabase PostgreSQL, Supabase Auth, Supabase Storage et la RLS.
   serveur (invitations, jobs).
 
 ## Conséquences
+
 - La RLS devient le socle de sécurité : chaque table exige des politiques
   explicites et testées (voir ADR-0003 et `docs/data-model.md` §9).
 - Dépendance à un fournisseur ; atténuée par du SQL standard et des migrations
