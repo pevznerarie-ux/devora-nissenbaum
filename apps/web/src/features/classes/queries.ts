@@ -1,6 +1,11 @@
 import "server-only";
 import { createClient } from "@/lib/supabase/server";
-import { DEMO_CLASS_ID, demoClassDetail, demoClasses, demoTeachers } from "@/lib/demo-data";
+import {
+  DEMO_CLASS_ID,
+  demoClassDetail,
+  demoClasses,
+  demoTeachers,
+} from "@/lib/demo-data";
 
 export interface ClassListItem {
   id: string;

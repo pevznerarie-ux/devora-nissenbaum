@@ -316,7 +316,14 @@
       "document_ref": "Reference",
       "answer_space": "Answer space",
       "slide": "Slide"
-    }
+    },
+    "print": "Print / PDF",
+    "variantStudent": "Student handout",
+    "variantTeacher": "Teacher guide (with answers)",
+    "exportTitle": "Export / Print",
+    "exportStudent": "Student handout (no answers)",
+    "exportTeacher": "Teacher guide (with answers)",
+    "exportHint": "Opens a clean page → Print → Save as PDF."
   },
   "visuals": {
     "title": "Visual",

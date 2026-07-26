@@ -316,7 +316,14 @@
       "document_ref": "Référence",
       "answer_space": "Espace de réponse",
       "slide": "Diapositive"
-    }
+    },
+    "print": "Imprimer / PDF",
+    "variantStudent": "Support élève",
+    "variantTeacher": "Fiche professeur (avec corrigé)",
+    "exportTitle": "Exporter / Imprimer",
+    "exportStudent": "Support élève (sans corrigé)",
+    "exportTeacher": "Fiche professeur (avec corrigé)",
+    "exportHint": "Ouvre une page propre → Imprimer → Enregistrer en PDF."
   },
   "visuals": {
     "title": "Visuel",

@@ -148,6 +148,17 @@ describe.runIf(configured)("RLS — isolation inter-organisations", () => {
     expect(licenses ?? []).toHaveLength(0);
   });
 
+  it("un visiteur anonyme ne voit ni demandes visuelles ni chartes globales", async () => {
+    const anonClient = createClient(url ?? "", anonKey ?? "");
+    const { data: requests } = await anonClient.from("visual_requests").select("id");
+    // Les chartes globales (org null) ne sont lisibles que par un utilisateur authentifié.
+    const { data: kits } = await anonClient.from("visual_style_kits").select("id");
+    const { data: jobs } = await anonClient.from("visual_generation_jobs").select("id");
+    expect(requests ?? []).toHaveLength(0);
+    expect(kits ?? []).toHaveLength(0);
+    expect(jobs ?? []).toHaveLength(0);
+  });
+
   it("un membre ne voit pas les générations IA d'une autre organisation", async () => {
     const { data: created } = await admin
       .from("ai_generations")

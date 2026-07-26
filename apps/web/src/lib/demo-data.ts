@@ -10,12 +10,42 @@ export const demoTeachers = [
 ];
 
 export const demoStudents = [
-  { id: "8fa85f64-5717-4562-b3fc-2c963f66afa6", first_name: "Lina", last_name: "Amar", schools: { name: "Ecole Devora Nissenbaum" } },
-  { id: "9fa85f64-5717-4562-b3fc-2c963f66afa6", first_name: "Noam", last_name: "Bensimon", schools: { name: "Ecole Devora Nissenbaum" } },
-  { id: "10a85f64-5717-4562-b3fc-2c963f66afa6", first_name: "Maya", last_name: "Elbaz", schools: { name: "Ecole Devora Nissenbaum" } },
-  { id: "11a85f64-5717-4562-b3fc-2c963f66afa6", first_name: "Ethan", last_name: "Lévy", schools: { name: "Ecole Devora Nissenbaum" } },
-  { id: "12a85f64-5717-4562-b3fc-2c963f66afa6", first_name: "Rachel", last_name: "Ohayon", schools: { name: "Ecole Devora Nissenbaum" } },
-  { id: "13a85f64-5717-4562-b3fc-2c963f66afa6", first_name: "Gabriel", last_name: "Saada", schools: { name: "Ecole Devora Nissenbaum" } },
+  {
+    id: "8fa85f64-5717-4562-b3fc-2c963f66afa6",
+    first_name: "Lina",
+    last_name: "Amar",
+    schools: { name: "Ecole Devora Nissenbaum" },
+  },
+  {
+    id: "9fa85f64-5717-4562-b3fc-2c963f66afa6",
+    first_name: "Noam",
+    last_name: "Bensimon",
+    schools: { name: "Ecole Devora Nissenbaum" },
+  },
+  {
+    id: "10a85f64-5717-4562-b3fc-2c963f66afa6",
+    first_name: "Maya",
+    last_name: "Elbaz",
+    schools: { name: "Ecole Devora Nissenbaum" },
+  },
+  {
+    id: "11a85f64-5717-4562-b3fc-2c963f66afa6",
+    first_name: "Ethan",
+    last_name: "Lévy",
+    schools: { name: "Ecole Devora Nissenbaum" },
+  },
+  {
+    id: "12a85f64-5717-4562-b3fc-2c963f66afa6",
+    first_name: "Rachel",
+    last_name: "Ohayon",
+    schools: { name: "Ecole Devora Nissenbaum" },
+  },
+  {
+    id: "13a85f64-5717-4562-b3fc-2c963f66afa6",
+    first_name: "Gabriel",
+    last_name: "Saada",
+    schools: { name: "Ecole Devora Nissenbaum" },
+  },
 ];
 
 export const demoClasses = [
@@ -103,13 +133,15 @@ const lessonThree = "24a85f64-5717-4562-b3fc-2c963f66afa6";
 
 export const demoLessonSequence: LessonSequence = {
   title: "Paris au XIXe siècle : transformations et vie quotidienne",
-  theme: "Comprendre comment une ville se transforme et comment cela change la vie des habitants",
+  theme:
+    "Comprendre comment une ville se transforme et comment cela change la vie des habitants",
   language: "fr",
   objectives: [
     {
       id: objectiveUnderstand,
       title: "Identifier les grandes transformations d'une ville",
-      description: "Repérer les changements visibles dans les rues, les transports et les lieux de vie.",
+      description:
+        "Repérer les changements visibles dans les rues, les transports et les lieux de vie.",
       bloomLevel: "understand",
       competencyIds: [],
       citations: [],
@@ -117,7 +149,8 @@ export const demoLessonSequence: LessonSequence = {
     {
       id: objectiveAnalyze,
       title: "Comparer deux documents historiques",
-      description: "Décrire les différences entre une carte ancienne, une photographie et un témoignage.",
+      description:
+        "Décrire les différences entre une carte ancienne, une photographie et un témoignage.",
       bloomLevel: "analyze",
       competencyIds: [],
       citations: [],
@@ -168,7 +201,8 @@ export const demoLessonSequence: LessonSequence = {
     },
   ],
   citations: [],
-  notes: "Démo : structure proposée pour montrer le parcours pédagogique de l'application.",
+  notes:
+    "Démo : structure proposée pour montrer le parcours pédagogique de l'application.",
 };
 
 export const demoSequences = [
@@ -208,18 +242,21 @@ export const demoSequenceDetail = {
     prerequisites: demoLessonSequence.prerequisites.map((item) => item.label),
     constraints: ["Classe hétérogène", "Prévoir une trace écrite courte"],
     learningType: "Enquête documentaire guidée",
-    differentiation: "Groupes de soutien avec documents annotés ; défi de synthèse pour les élèves avancés.",
+    differentiation:
+      "Groupes de soutien avec documents annotés ; défi de synthèse pour les élèves avancés.",
     sourceIds: [demoSources[0]!.id, demoSources[2]!.id],
   },
   structure: demoLessonSequence,
 };
 
 export const demoMaterials = demoLessonSequence.lessons.flatMap((lesson, lessonIndex) =>
-  ([
-    ["teacher_guide", "Fiche professeur"],
-    ["student_handout", "Support élève"],
-    ["exercise_set", "Exercices"],
-  ] as [MaterialKind, string][]).map(([kind, label], index) => ({
+  (
+    [
+      ["teacher_guide", "Fiche professeur"],
+      ["student_handout", "Support élève"],
+      ["exercise_set", "Exercices"],
+    ] as [MaterialKind, string][]
+  ).map(([kind, label], index) => ({
     id: `${lessonIndex + 3}${index + 1}a85f64-5717-4562-b3fc-2c963f66afa6`,
     lesson_id: lesson.id,
     kind,
