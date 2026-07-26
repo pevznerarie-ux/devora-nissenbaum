@@ -316,7 +316,14 @@
       "document_ref": "הפניה",
       "answer_space": "מקום לתשובה",
       "slide": "שקופית"
-    }
+    },
+    "print": "הדפסה / PDF",
+    "variantStudent": "דף לתלמיד",
+    "variantTeacher": "מדריך למורה (עם פתרונות)",
+    "exportTitle": "ייצוא / הדפסה",
+    "exportStudent": "דף לתלמיד (ללא פתרונות)",
+    "exportTeacher": "מדריך למורה (עם פתרונות)",
+    "exportHint": "נפתח דף נקי → הדפסה → שמירה כ-PDF."
   },
   "visuals": {
     "title": "חזותי",

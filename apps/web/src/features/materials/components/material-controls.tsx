@@ -39,8 +39,36 @@ export function MaterialControls({
     });
   }
 
+  const linkClass =
+    "inline-flex h-9 items-center justify-center rounded-md border px-3 text-sm hover:bg-secondary";
+
   return (
     <div className="flex flex-col gap-4">
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">{t("materials.exportTitle")}</CardTitle>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-2">
+          <a
+            className={linkClass}
+            href={`/materials/${materialId}/print?variant=student`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {t("materials.exportStudent")}
+          </a>
+          <a
+            className={linkClass}
+            href={`/materials/${materialId}/print?variant=teacher`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {t("materials.exportTeacher")}
+          </a>
+          <p className="text-xs text-muted-foreground">{t("materials.exportHint")}</p>
+        </CardContent>
+      </Card>
+
       <Card>
         <CardHeader>
           <CardTitle className="text-base">{t("materials.publishTitle")}</CardTitle>
