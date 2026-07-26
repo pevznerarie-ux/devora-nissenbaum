@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { PRODUCT_NAME } from "@pedagoos/shared";
+import { createClient } from "@/lib/supabase/server";
+import { signOutAction } from "@/features/auth/actions";
 
 const NAV_ITEMS = [
   { href: "/", key: "home" },
@@ -17,6 +19,14 @@ export default async function DashboardLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   const t = await getTranslations();
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const authLinkClass =
+    "block rounded-md px-3 py-2 text-sm hover:bg-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring";
+
   return (
     <div className="flex min-h-dvh">
       <aside className="flex w-60 shrink-0 flex-col border-e bg-card">
@@ -37,6 +47,32 @@ export default async function DashboardLayout({
             ))}
           </ul>
         </nav>
+        <div className="border-t p-2">
+          {user ? (
+            <div className="flex flex-col gap-1">
+              <span
+                dir="ltr"
+                className="truncate px-3 py-1 text-xs text-muted-foreground"
+              >
+                {user.email}
+              </span>
+              <form action={signOutAction}>
+                <button type="submit" className={`${authLinkClass} w-full text-start`}>
+                  {t("auth.signOut")}
+                </button>
+              </form>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-0.5">
+              <Link href="/login" className={authLinkClass}>
+                {t("auth.signInLink")}
+              </Link>
+              <Link href="/signup" className={`${authLinkClass} font-medium`}>
+                {t("auth.signUpLink")}
+              </Link>
+            </div>
+          )}
+        </div>
       </aside>
       <main className="flex-1 p-6">{children}</main>
     </div>

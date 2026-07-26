@@ -12,10 +12,23 @@
   },
   "auth": {
     "signInTitle": "התחברות",
+    "signInSubtitle": "היכנסו למרחב ההוראה שלכם.",
+    "signUpTitle": "יצירת חשבון",
+    "signUpSubtitle": "התחילו להכין את השיעורים שלכם.",
+    "fullName": "שם מלא",
+    "signUp": "יצירת החשבון שלי",
+    "signUpError": "לא ניתן ליצור את החשבון. בדקו את הפרטים.",
+    "accountExists": "כבר קיים חשבון לכתובת זו. התחברו במקום זאת.",
+    "passwordHint": "לפחות 8 תווים.",
+    "noAccount": "אין עדיין חשבון?",
+    "signUpLink": "יצירת חשבון",
+    "haveAccount": "כבר יש לכם חשבון?",
+    "signInLink": "התחברות",
     "email": "כתובת אימייל",
     "password": "סיסמה",
     "signIn": "התחברות",
-    "invalidCredentials": "פרטי התחברות שגויים."
+    "invalidCredentials": "פרטי התחברות שגויים.",
+    "signOut": "התנתקות"
   },
   "nav": {
     "home": "דף הבית",

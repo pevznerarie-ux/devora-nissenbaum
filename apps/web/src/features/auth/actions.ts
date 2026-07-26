@@ -3,13 +3,24 @@
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 const credentialsSchema = z.object({
   email: z.email(),
   password: z.string().min(1),
 });
 
+const signUpSchema = z.object({
+  fullName: z.string().trim().min(2).max(120),
+  email: z.email().transform((v) => v.toLowerCase()),
+  password: z.string().min(8).max(200),
+});
+
 export interface SignInState {
+  error: string | null;
+}
+
+export interface SignUpState {
   error: string | null;
 }
 
@@ -32,6 +43,45 @@ export async function signInAction(
     return { error: "invalid" };
   }
   redirect("/");
+}
+
+/**
+ * Inscription publique. Crée le compte via le client système (`email_confirm`
+ * sans SMTP, comme l'acceptation d'invitation), puis connecte l'utilisateur.
+ * Le trigger `handle_new_user` crée le profil (nom complet). L'organisation est
+ * créée ensuite dans /administration (cas « connecté sans organisation »).
+ */
+export async function signUpAction(
+  _prevState: SignUpState,
+  formData: FormData,
+): Promise<SignUpState> {
+  const parsed = signUpSchema.safeParse({
+    fullName: formData.get("fullName"),
+    email: formData.get("email"),
+    password: formData.get("password"),
+  });
+  if (!parsed.success) {
+    return { error: "signUpError" };
+  }
+
+  const admin = createAdminClient();
+  const { data: created, error } = await admin.auth.admin.createUser({
+    email: parsed.data.email,
+    password: parsed.data.password,
+    email_confirm: true,
+    user_metadata: { full_name: parsed.data.fullName },
+  });
+  if (error || !created.user) {
+    // Email déjà enregistré : orienter vers la connexion, sans autre détail.
+    return { error: "accountExists" };
+  }
+
+  const supabase = await createClient();
+  await supabase.auth.signInWithPassword({
+    email: parsed.data.email,
+    password: parsed.data.password,
+  });
+  redirect("/administration");
 }
 
 export async function signOutAction(): Promise<void> {
