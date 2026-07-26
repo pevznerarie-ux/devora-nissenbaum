@@ -25,8 +25,8 @@ export default async function HomePage() {
       <div className="flex flex-col gap-2">
         <h1 className="text-2xl font-semibold">Tableau de bord</h1>
         <p className="max-w-3xl text-sm text-muted-foreground">
-          Démo PedagoOS : un espace de pilotage pour préparer une séquence,
-          organiser les classes et suivre les supports pédagogiques.
+          Démo PedagoOS : un espace de pilotage pour préparer une séquence, organiser les
+          classes et suivre les supports pédagogiques.
         </p>
       </div>
 
@@ -70,8 +70,8 @@ export default async function HomePage() {
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground">
-            Le mode démo montre l'expérience cible. La prochaine étape sera de
-            connecter ce parcours aux vraies données Supabase et aux comptes école.
+            Le mode démo montre l'expérience cible. La prochaine étape sera de connecter
+            ce parcours aux vraies données Supabase et aux comptes école.
           </p>
         </CardContent>
       </Card>

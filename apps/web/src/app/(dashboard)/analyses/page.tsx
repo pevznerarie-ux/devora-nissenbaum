@@ -27,8 +27,8 @@ export default function Page() {
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground">
-            La démo illustre le tableau de bord attendu : l'enseignant voit les
-            objectifs couverts, les points à reprendre et les supports déjà prêts.
+            La démo illustre le tableau de bord attendu : l'enseignant voit les objectifs
+            couverts, les points à reprendre et les supports déjà prêts.
           </p>
         </CardContent>
       </Card>
