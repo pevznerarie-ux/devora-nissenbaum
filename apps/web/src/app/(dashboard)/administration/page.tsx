@@ -13,7 +13,12 @@ export default async function AdministrationPage() {
   const context = await getAdminContext();
 
   if (context.kind === "unauthenticated") {
-    return null; // Le layout du dashboard redirige déjà vers /login.
+    return (
+      <div className="flex flex-col gap-4">
+        <h1 className="text-2xl font-semibold">{t("nav.administration")}</h1>
+        <p className="text-sm text-muted-foreground">{t("admin.notAdmin")}</p>
+      </div>
+    );
   }
 
   if (context.kind === "no_org") {
@@ -81,9 +86,7 @@ export default async function AdministrationPage() {
               {context.years.map((year) => (
                 <li key={year.id} className="rounded-full border px-3 py-1">
                   {year.label}
-                  {year.hebrew_label ? (
-                    <span dir="rtl"> · {year.hebrew_label}</span>
-                  ) : null}
+                  {year.hebrew_label ? <span dir="rtl"> · {year.hebrew_label}</span> : null}
                   {year.is_current ? ` · ${t("adminYears.isCurrent")}` : ""}
                 </li>
               ))}
