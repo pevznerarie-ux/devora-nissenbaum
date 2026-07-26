@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { Card, CardContent, CardHeader, CardTitle } from "@pedagoos/ui";
+import { DEMO_SEQUENCE_ID } from "@/lib/demo-data";
 import { getNewSequenceFormData, listSequences } from "@/features/sequences/queries";
 import { NewSequenceForm } from "@/features/sequences/components/new-sequence-form";
 
@@ -10,6 +11,7 @@ export default async function SequencesPage() {
     listSequences(),
     getNewSequenceFormData(),
   ]);
+  const isDemo = sequences.some((sequence) => sequence.id === DEMO_SEQUENCE_ID);
 
   return (
     <div className="flex flex-col gap-6">
@@ -40,7 +42,12 @@ export default async function SequencesPage() {
           <CardTitle>{t("sequences.newTitle")}</CardTitle>
         </CardHeader>
         <CardContent>
-          {formData === null ? (
+          {isDemo ? (
+            <p className="text-sm text-muted-foreground">
+              La démo contient déjà une séquence complète. Ouvrez-la pour voir la
+              structure, les objectifs et les supports pédagogiques.
+            </p>
+          ) : formData === null ? (
             <p className="text-sm text-muted-foreground">{t("sequences.needClass")}</p>
           ) : (
             <NewSequenceForm formData={formData} />

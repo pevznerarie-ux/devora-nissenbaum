@@ -1,6 +1,7 @@
 import "server-only";
 import { BlockSchema, type Block, type MaterialKind } from "@pedagoos/pedagogy";
 import { createClient } from "@/lib/supabase/server";
+import { DEMO_SEQUENCE_ID, demoMaterials } from "@/lib/demo-data";
 
 export interface MaterialListItem {
   id: string;
@@ -46,6 +47,10 @@ function parseBlocks(raw: unknown): Block[] {
 }
 
 export async function listMaterials(sequenceId: string): Promise<MaterialListItem[]> {
+  if (sequenceId === DEMO_SEQUENCE_ID) {
+    return demoMaterials;
+  }
+
   const supabase = await createClient();
   const { data } = await supabase
     .from("materials")

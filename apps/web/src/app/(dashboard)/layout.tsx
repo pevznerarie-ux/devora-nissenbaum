@@ -1,10 +1,6 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { PRODUCT_NAME } from "@pedagoos/shared";
-import { Button } from "@pedagoos/ui";
-import { createClient } from "@/lib/supabase/server";
-import { signOutAction } from "@/features/auth/actions";
 
 const NAV_ITEMS = [
   { href: "/", key: "home" },
@@ -20,14 +16,6 @@ const NAV_ITEMS = [
 export default async function DashboardLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) {
-    redirect("/login");
-  }
-
   const t = await getTranslations();
   return (
     <div className="flex min-h-dvh">
@@ -49,18 +37,6 @@ export default async function DashboardLayout({
             ))}
           </ul>
         </nav>
-        <div className="border-t p-2">
-          <form action={signOutAction}>
-            <Button
-              type="submit"
-              variant="ghost"
-              size="sm"
-              className="w-full justify-start"
-            >
-              {t("common.signOut")}
-            </Button>
-          </form>
-        </div>
       </aside>
       <main className="flex-1 p-6">{children}</main>
     </div>

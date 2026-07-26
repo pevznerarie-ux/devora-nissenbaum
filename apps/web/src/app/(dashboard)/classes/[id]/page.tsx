@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 import { Card, CardContent, CardHeader, CardTitle } from "@pedagoos/ui";
+import { DEMO_ORG_ID } from "@/lib/demo-data";
 import { getClassDetail, listOrgTeachers } from "@/features/classes/queries";
 import {
   AddStudentForm,
@@ -30,6 +31,7 @@ export default async function ClassDetailPage({
   }
 
   const isArchived = detail.archived_at !== null;
+  const isDemo = detail.organization_id === DEMO_ORG_ID;
   const orgTeachers = isArchived ? [] : await listOrgTeachers(detail.organization_id);
   const assignedIds = new Set(detail.teachers.map((teacher) => teacher.profile_id));
   const assignableTeachers = orgTeachers.filter(
@@ -47,7 +49,7 @@ export default async function ClassDetailPage({
             {detail.subjects ? ` · ${detail.subjects.name}` : ""}
           </p>
         </div>
-        {!isArchived && <ArchiveClassButton classId={detail.id} />}
+        {!isArchived && !isDemo && <ArchiveClassButton classId={detail.id} />}
       </div>
 
       {isArchived && (
@@ -72,7 +74,7 @@ export default async function ClassDetailPage({
               ))}
             </ul>
           )}
-          {!isArchived && (
+          {!isArchived && !isDemo && (
             <AddTeacherForm classId={detail.id} teachers={assignableTeachers} />
           )}
         </CardContent>
@@ -94,7 +96,7 @@ export default async function ClassDetailPage({
               ))}
             </ul>
           )}
-          {!isArchived && (
+          {!isArchived && !isDemo && (
             <>
               <AddStudentForm classId={detail.id} />
               <ImportCsvForm classId={detail.id} />

@@ -1,6 +1,13 @@
 import "server-only";
 import { LessonSequenceSchema, type LessonSequence } from "@pedagoos/pedagogy";
 import { createClient } from "@/lib/supabase/server";
+import {
+  DEMO_ORG_ID,
+  DEMO_SEQUENCE_ID,
+  demoSequenceDetail,
+  demoSequences,
+  demoSources,
+} from "@/lib/demo-data";
 import { wizardStateSchema, type WizardState } from "./schemas";
 
 export interface SequenceListItem {
@@ -37,6 +44,13 @@ export interface NewSequenceFormData {
 
 export async function listSequences(): Promise<SequenceListItem[]> {
   const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    return demoSequences as unknown as SequenceListItem[];
+  }
+
   const { data } = await supabase
     .from("lesson_sequences")
     .select("id, title, theme, status, created_at, classes(name)")
@@ -48,6 +62,11 @@ export async function listSequences(): Promise<SequenceListItem[]> {
 
 export async function getNewSequenceFormData(): Promise<NewSequenceFormData | null> {
   const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return null;
+
   const { data: classes } = await supabase
     .from("classes")
     .select("id, grade_level, name, organization_id")
@@ -76,6 +95,21 @@ export async function getNewSequenceFormData(): Promise<NewSequenceFormData | nu
 export async function getSequenceDetail(
   sequenceId: string,
 ): Promise<SequenceDetail | null> {
+  if (sequenceId === DEMO_SEQUENCE_ID) {
+    return demoSequenceDetail as unknown as SequenceDetail;
+  }
+  if (sequenceId === demoSequences[1]?.id) {
+    return {
+      ...demoSequenceDetail,
+      id: sequenceId,
+      title: demoSequences[1].title,
+      theme: demoSequences[1].theme,
+      status: demoSequences[1].status,
+      subject_name: "Français",
+      grade_level_hint: "sixieme",
+    } as unknown as SequenceDetail;
+  }
+
   const supabase = await createClient();
   const { data } = await supabase
     .from("lesson_sequences")
@@ -115,6 +149,10 @@ export async function getSequenceDetail(
 export async function listSelectableSources(
   organizationId: string,
 ): Promise<{ id: string; title: string }[]> {
+  if (organizationId === DEMO_ORG_ID) {
+    return demoSources.map((source) => ({ id: source.id, title: source.title }));
+  }
+
   const supabase = await createClient();
   const { data } = await supabase
     .from("source_documents")
