@@ -379,5 +379,18 @@
       "teacher": "Teacher"
     },
     "preview": "Preview diagram"
+  },
+  "home": {
+    "onboardingTitle": "Welcome! Create your organization",
+    "onboardingHelp": "To get started, create your organization. You can then add schools, classes and students.",
+    "nextStepsTitle": "Next steps",
+    "step1": "Create your organization below.",
+    "step2": "In Administration, create a school then an academic year.",
+    "step3": "In My classes, create a class and add your students.",
+    "dashboardTitle": "Dashboard",
+    "dashboardIntro": "Your control center: classes, sequences and materials.",
+    "activeClasses": "active classes",
+    "quickStartTitle": "Quick access",
+    "setupHint": "To create classes, you first need a school and an academic year (in Administration)."
   }
 }

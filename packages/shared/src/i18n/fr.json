@@ -379,5 +379,18 @@
       "teacher": "Professeur"
     },
     "preview": "Prévisualiser le schéma"
+  },
+  "home": {
+    "onboardingTitle": "Bienvenue ! Créez votre organisation",
+    "onboardingHelp": "Pour commencer, créez votre organisation. Vous pourrez ensuite ajouter des établissements, des classes et des élèves.",
+    "nextStepsTitle": "Prochaines étapes",
+    "step1": "Créez votre organisation ci-dessous.",
+    "step2": "Dans Administration, créez un établissement puis une année scolaire.",
+    "step3": "Dans Mes classes, créez une classe et ajoutez vos élèves.",
+    "dashboardTitle": "Tableau de bord",
+    "dashboardIntro": "Votre espace de pilotage : classes, séquences et supports.",
+    "activeClasses": "classes actives",
+    "quickStartTitle": "Accès rapide",
+    "setupHint": "Pour créer des classes, il faut d'abord un établissement et une année scolaire (dans Administration)."
   }
 }
