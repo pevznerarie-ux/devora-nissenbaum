@@ -12,10 +12,23 @@
   },
   "auth": {
     "signInTitle": "Connexion",
+    "signInSubtitle": "Accédez à votre espace pédagogique.",
+    "signUpTitle": "Créer un compte",
+    "signUpSubtitle": "Commencez à préparer vos cours.",
+    "fullName": "Nom complet",
+    "signUp": "Créer mon compte",
+    "signUpError": "Création impossible. Vérifiez vos informations.",
+    "accountExists": "Un compte existe déjà pour cette adresse. Connectez-vous.",
+    "passwordHint": "8 caractères minimum.",
+    "noAccount": "Pas encore de compte ?",
+    "signUpLink": "Créer un compte",
+    "haveAccount": "Déjà un compte ?",
+    "signInLink": "Se connecter",
     "email": "Adresse email",
     "password": "Mot de passe",
     "signIn": "Se connecter",
-    "invalidCredentials": "Identifiants invalides."
+    "invalidCredentials": "Identifiants invalides.",
+    "signOut": "Se déconnecter"
   },
   "nav": {
     "home": "Accueil",

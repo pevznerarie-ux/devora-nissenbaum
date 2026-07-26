@@ -12,10 +12,23 @@
   },
   "auth": {
     "signInTitle": "Sign in",
+    "signInSubtitle": "Access your teaching workspace.",
+    "signUpTitle": "Create an account",
+    "signUpSubtitle": "Start preparing your lessons.",
+    "fullName": "Full name",
+    "signUp": "Create my account",
+    "signUpError": "Could not create the account. Check your details.",
+    "accountExists": "An account already exists for this address. Sign in instead.",
+    "passwordHint": "At least 8 characters.",
+    "noAccount": "No account yet?",
+    "signUpLink": "Create an account",
+    "haveAccount": "Already have an account?",
+    "signInLink": "Sign in",
     "email": "Email address",
     "password": "Password",
     "signIn": "Sign in",
-    "invalidCredentials": "Invalid credentials."
+    "invalidCredentials": "Invalid credentials.",
+    "signOut": "Sign out"
   },
   "nav": {
     "home": "Home",
