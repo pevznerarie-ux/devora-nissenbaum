@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 import { Card, CardContent, CardHeader, CardTitle } from "@pedagoos/ui";
+import { DEMO_ORG_ID, demoMaterials } from "@/lib/demo-data";
 import { getSequenceDetail, listSelectableSources } from "@/features/sequences/queries";
 import { WizardStepper } from "@/features/sequences/components/wizard-stepper";
 import {
@@ -50,6 +51,10 @@ export default async function SequenceWizardPage({
   const difficultyLabel = t(
     `sequences.difficulty${detail.difficulty === "easier" ? "Easier" : detail.difficulty === "harder" ? "Harder" : "Standard"}`,
   );
+  const isDemo = detail.organization_id === DEMO_ORG_ID;
+  const sortedLessons = detail.structure
+    ? [...detail.structure.lessons].sort((a, b) => a.orderIndex - b.orderIndex)
+    : [];
 
   return (
     <div className="flex flex-col gap-6">
@@ -70,7 +75,63 @@ export default async function SequenceWizardPage({
 
       <WizardStepper current={step} />
 
-      {detail.status === "draft" && (
+      {isDemo && detail.structure && (
+        <>
+          <Card>
+            <CardHeader>
+              <CardTitle>{t("sequences.objectivesTitle")}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ul className="grid gap-2 text-sm md:grid-cols-3">
+                {detail.structure.objectives.map((objective) => (
+                  <li key={objective.id} className="rounded-md border p-3">
+                    <p className="font-medium">{objective.title}</p>
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      {t(`sequences.bloom.${objective.bloomLevel}`)}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>{t("sequences.lessonsTitle")}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ol className="flex flex-col gap-2 text-sm">
+                {sortedLessons.map((lesson) => (
+                  <li key={lesson.id} className="rounded-md border p-3">
+                    <p className="font-medium">{lesson.title}</p>
+                    <p className="mt-1 text-muted-foreground">{lesson.summary}</p>
+                  </li>
+                ))}
+              </ol>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>{t("sequences.materialsTitle")}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ul className="grid gap-2 text-sm md:grid-cols-3">
+                {demoMaterials.slice(0, 9).map((material) => (
+                  <li key={material.id} className="rounded-md border p-3">
+                    <p className="font-medium">{t(`materials.kind.${material.kind}`)}</p>
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      {t(`materials.status.${material.status}`)}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>
+        </>
+      )}
+
+      {!isDemo && detail.status === "draft" && (
         <>
           <Card>
             <CardHeader>
@@ -108,7 +169,7 @@ export default async function SequenceWizardPage({
         </>
       )}
 
-      {detail.status === "structure_proposed" && detail.structure && (
+      {!isDemo && detail.status === "structure_proposed" && detail.structure && (
         <Card>
           <CardHeader>
             <CardTitle>{t("sequences.reviewTitle")}</CardTitle>
@@ -120,7 +181,7 @@ export default async function SequenceWizardPage({
         </Card>
       )}
 
-      {step === 6 && detail.structure && (
+      {!isDemo && step === 6 && detail.structure && (
         <>
           <p className="rounded-md border bg-secondary p-3 text-sm">
             {t("sequences.validatedBanner")}

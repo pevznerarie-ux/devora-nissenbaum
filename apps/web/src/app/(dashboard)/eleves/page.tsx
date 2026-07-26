@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
+import { demoStudents } from "@/lib/demo-data";
 
 interface StudentRow {
   id: string;
@@ -9,17 +10,26 @@ interface StudentRow {
 }
 
 export default async function StudentsPage() {
-  const t = await getTranslations();
   const supabase = await createClient();
-  // La RLS restreint aux élèves des classes accessibles à l'utilisateur.
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    return <StudentsTable students={demoStudents as StudentRow[]} />;
+  }
+
   const { data } = await supabase
     .from("students")
     .select("id, first_name, last_name, schools(name)")
     .is("archived_at", null)
     .order("last_name")
     .limit(500);
-  const students = (data ?? []) as unknown as StudentRow[];
 
+  return <StudentsTable students={(data ?? []) as unknown as StudentRow[]} />;
+}
+
+async function StudentsTable({ students }: { students: StudentRow[] }) {
+  const t = await getTranslations();
   return (
     <div className="flex flex-col gap-6">
       <h1 className="text-2xl font-semibold">{t("nav.students")}</h1>

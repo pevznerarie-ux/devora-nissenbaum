@@ -1,5 +1,6 @@
 import "server-only";
 import { createClient } from "@/lib/supabase/server";
+import { demoSources } from "@/lib/demo-data";
 
 export interface SourceDocumentRow {
   id: string;
@@ -23,6 +24,24 @@ export interface LibraryFormData {
 /** Documents visibles (RLS : éducateurs, périmètre org/école). */
 export async function listSources(query: string | null): Promise<SourceDocumentRow[]> {
   const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    const trimmed = query?.trim().toLowerCase() ?? "";
+    const sources =
+      trimmed.length === 0
+        ? demoSources
+        : demoSources.filter((source) =>
+            [source.title, source.subjects?.name, source.tags.join(" ")]
+              .filter(Boolean)
+              .join(" ")
+              .toLowerCase()
+              .includes(trimmed),
+          );
+    return sources as SourceDocumentRow[];
+  }
+
   let request = supabase
     .from("source_documents")
     .select(

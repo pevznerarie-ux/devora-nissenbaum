@@ -1,5 +1,6 @@
 import "server-only";
 import { createClient } from "@/lib/supabase/server";
+import { DEMO_CLASS_ID, demoClassDetail, demoClasses, demoTeachers } from "@/lib/demo-data";
 
 export interface ClassListItem {
   id: string;
@@ -34,6 +35,13 @@ export interface ClassDetail {
 /** Classes visibles par l'utilisateur (la RLS fait le filtrage). */
 export async function listClasses(): Promise<ClassListItem[]> {
   const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    return demoClasses as unknown as ClassListItem[];
+  }
+
   const { data } = await supabase
     .from("classes")
     .select(
@@ -92,6 +100,10 @@ export async function getClassFormData(): Promise<ClassFormData | null> {
 }
 
 export async function getClassDetail(classId: string): Promise<ClassDetail | null> {
+  if (classId === DEMO_CLASS_ID) {
+    return demoClassDetail as unknown as ClassDetail;
+  }
+
   const supabase = await createClient();
   const { data } = await supabase
     .from("classes")
@@ -138,6 +150,10 @@ export async function getClassDetail(classId: string): Promise<ClassDetail | nul
 export async function listOrgTeachers(
   organizationId: string,
 ): Promise<{ profile_id: string; full_name: string }[]> {
+  if (organizationId === demoClassDetail.organization_id) {
+    return demoTeachers;
+  }
+
   const supabase = await createClient();
   const { data } = await supabase
     .from("memberships")
