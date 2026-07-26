@@ -36,10 +36,14 @@ export async function signInAction(
     return { error: "invalid" };
   }
 
-  const supabase = await createClient();
-  const { error } = await supabase.auth.signInWithPassword(parsed.data);
-  if (error) {
-    // Message générique : ne jamais révéler si l'email existe.
+  try {
+    const supabase = await createClient();
+    const { error } = await supabase.auth.signInWithPassword(parsed.data);
+    if (error) {
+      // Message générique : ne jamais révéler si l'email existe.
+      return { error: "invalid" };
+    }
+  } catch {
     return { error: "invalid" };
   }
   redirect("/");
@@ -64,23 +68,32 @@ export async function signUpAction(
     return { error: "signUpError" };
   }
 
-  const admin = createAdminClient();
-  const { data: created, error } = await admin.auth.admin.createUser({
-    email: parsed.data.email,
-    password: parsed.data.password,
-    email_confirm: true,
-    user_metadata: { full_name: parsed.data.fullName },
-  });
-  if (error || !created.user) {
-    // Email déjà enregistré : orienter vers la connexion, sans autre détail.
-    return { error: "accountExists" };
+  // Toute l'orchestration est protégée : une clé service_role manquante, une
+  // base injoignable ou un schéma non migré doivent produire une erreur propre
+  // (jamais d'exception brute vers le client — apps/web/CLAUDE.md). Le redirect
+  // final reste hors du try (il fonctionne en levant une exception dédiée).
+  try {
+    const admin = createAdminClient();
+    const { data: created, error } = await admin.auth.admin.createUser({
+      email: parsed.data.email,
+      password: parsed.data.password,
+      email_confirm: true,
+      user_metadata: { full_name: parsed.data.fullName },
+    });
+    if (error || !created.user) {
+      // Email déjà enregistré, ou création refusée : message générique.
+      return { error: "accountExists" };
+    }
+
+    const supabase = await createClient();
+    await supabase.auth.signInWithPassword({
+      email: parsed.data.email,
+      password: parsed.data.password,
+    });
+  } catch {
+    return { error: "signUpError" };
   }
 
-  const supabase = await createClient();
-  await supabase.auth.signInWithPassword({
-    email: parsed.data.email,
-    password: parsed.data.password,
-  });
   redirect("/administration");
 }
 
