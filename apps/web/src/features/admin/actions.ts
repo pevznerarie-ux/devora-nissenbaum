@@ -104,6 +104,7 @@ export async function createOrganizationAction(
       entityId: org.id,
     });
     revalidatePath("/administration");
+    revalidatePath("/");
     return { ok: true, data: { organizationId: org.id } };
   } catch (error) {
     return toActionError(error);
