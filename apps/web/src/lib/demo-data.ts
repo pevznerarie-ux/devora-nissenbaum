@@ -1,4 +1,4 @@
-import type { LessonSequence, MaterialKind } from "@pedagoos/pedagogy";
+import type { Block, LessonSequence, MaterialKind } from "@pedagoos/pedagogy";
 
 export const DEMO_ORG_ID = "3fa85f64-5717-4562-b3fc-2c963f66afa6";
 export const DEMO_CLASS_ID = "4fa85f64-5717-4562-b3fc-2c963f66afa6";
@@ -267,3 +267,207 @@ export const demoMaterials = demoLessonSequence.lessons.flatMap((lesson, lessonI
     updated_at: "2026-07-22T11:00:00.000Z",
   })),
 );
+
+function blockId(seed: number): string {
+  return `${String(seed).padStart(8, "0")}-0000-4000-8000-${String(seed).padStart(12, "0")}`;
+}
+
+function buildDemoBlocks(lessonIndex: number, kind: MaterialKind): Block[] {
+  const lesson = demoLessonSequence.lessons[lessonIndex]!;
+  const objectiveIds = lesson.objectiveIds;
+  const objectiveItems = demoLessonSequence.objectives
+    .filter((objective) => objectiveIds.includes(objective.id))
+    .map((objective) => ({ objectiveId: objective.id, label: objective.title }));
+  const base = (offset: number) => lessonIndex * 100 + offset;
+
+  if (kind === "teacher_guide") {
+    return [
+      {
+        id: blockId(base(1)),
+        type: "objectives",
+        audience: "both",
+        answerKey: false,
+        objectiveIds,
+        locked: true,
+        items: objectiveItems,
+      },
+      {
+        id: blockId(base(2)),
+        type: "timeline_step",
+        audience: "teacher",
+        answerKey: false,
+        objectiveIds,
+        locked: true,
+        index: 0,
+        title: "Mise en route",
+        durationMinutes: 10,
+        teacherNote:
+          "Afficher une image ou une carte de Paris, puis demander aux élèves ce qu'ils remarquent avant toute explication.",
+        studentNote: "Observe le document et note deux détails importants.",
+      },
+      {
+        id: blockId(base(3)),
+        type: "timeline_step",
+        audience: "teacher",
+        answerKey: false,
+        objectiveIds,
+        locked: true,
+        index: 1,
+        title: "Recherche guidée",
+        durationMinutes: 30,
+        teacherNote:
+          "Faire travailler les élèves en binômes. Circuler avec une grille simple : lieu, changement observé, preuve dans le document.",
+        studentNote: "Travaille avec ton binôme et complète la fiche d'observation.",
+      },
+      {
+        id: blockId(base(4)),
+        type: "differentiation",
+        audience: "teacher",
+        answerKey: false,
+        objectiveIds,
+        locked: true,
+        level: "support",
+        description:
+          "Pour les élèves fragiles, donner trois mots-clés et une phrase à compléter. Pour les élèves avancés, demander une comparaison avec leur ville actuelle.",
+      },
+      {
+        id: blockId(base(5)),
+        type: "expected_answer",
+        audience: "teacher",
+        answerKey: true,
+        objectiveIds,
+        locked: true,
+        answer:
+          "On attend une réponse qui cite au moins un changement visible, l'appuie sur un document et explique une conséquence sur la vie quotidienne.",
+        acceptableVariations: [
+          "Réponse orale structurée",
+          "Phrase écrite courte avec exemple",
+        ],
+        epistemic: "fact",
+        citations: [],
+      },
+    ];
+  }
+
+  if (kind === "student_handout") {
+    return [
+      {
+        id: blockId(base(21)),
+        type: "objectives",
+        audience: "student",
+        answerKey: false,
+        objectiveIds,
+        locked: false,
+        items: objectiveItems,
+      },
+      {
+        id: blockId(base(22)),
+        type: "explanation",
+        audience: "student",
+        answerKey: false,
+        objectiveIds,
+        locked: false,
+        title: "Ce que je dois comprendre",
+        body:
+          "Une ville change avec le temps. Les rues, les bâtiments, les transports et les habitudes des habitants peuvent être transformés par des décisions politiques, économiques ou sociales.",
+        epistemic: "fact",
+        citations: [],
+      },
+      {
+        id: blockId(base(23)),
+        type: "exercise",
+        audience: "student",
+        answerKey: false,
+        objectiveIds,
+        locked: false,
+        title: "J'observe un document",
+        category: "analysis",
+        difficulty: 2,
+        statement:
+          "Regarde le document proposé par le professeur. Écris trois éléments que tu vois, puis indique ce qui te semble ancien ou nouveau.",
+        expectedAnswer:
+          "L'élève cite trois éléments visibles et justifie au moins une observation.",
+        citations: [],
+      },
+      {
+        id: blockId(base(24)),
+        type: "answer_space",
+        audience: "student",
+        answerKey: false,
+        objectiveIds,
+        locked: false,
+        label: "Ma réponse",
+        lines: 7,
+      },
+      {
+        id: blockId(base(25)),
+        type: "summary",
+        audience: "student",
+        answerKey: false,
+        objectiveIds,
+        locked: false,
+        points: [
+          "Je décris ce que je vois.",
+          "Je compare deux périodes.",
+          "J'explique une conséquence pour les habitants.",
+        ],
+      },
+    ];
+  }
+
+  return [
+    {
+      id: blockId(base(41)),
+      type: "exercise",
+      audience: "student",
+      answerKey: false,
+      objectiveIds,
+      locked: false,
+      title: "Exercice 1",
+      category: "comprehension",
+      difficulty: 2,
+      statement:
+        "Explique en deux phrases comment une transformation de la ville peut changer la vie des habitants.",
+      expectedAnswer:
+        "Une transformation modifie les déplacements, le logement ou les activités. Elle peut rendre la vie plus pratique, mais aussi déplacer certains habitants.",
+      citations: [],
+    },
+    {
+      id: blockId(base(42)),
+      type: "answer_space",
+      audience: "student",
+      answerKey: false,
+      objectiveIds,
+      locked: false,
+      label: "Réponse",
+      lines: 5,
+    },
+    {
+      id: blockId(base(43)),
+      type: "expected_answer",
+      audience: "teacher",
+      answerKey: true,
+      objectiveIds,
+      locked: false,
+      answer:
+        "La réponse doit relier un changement concret à une conséquence pour les habitants.",
+      acceptableVariations: [],
+      epistemic: "fact",
+      citations: [],
+    },
+  ];
+}
+
+export function getDemoMaterialDetail(materialId: string) {
+  const material = demoMaterials.find((item) => item.id === materialId);
+  if (!material) return null;
+  const lessonIndex = demoLessonSequence.lessons.findIndex(
+    (lesson) => lesson.id === material.lesson_id,
+  );
+  return {
+    ...material,
+    organization_id: DEMO_ORG_ID,
+    sequence_id: DEMO_SEQUENCE_ID,
+    blocks: buildDemoBlocks(Math.max(lessonIndex, 0), material.kind),
+  };
+}

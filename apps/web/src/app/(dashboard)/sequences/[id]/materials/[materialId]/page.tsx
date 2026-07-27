@@ -2,6 +2,7 @@ import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { z } from "zod";
 import { Card, CardContent, CardHeader, CardTitle } from "@pedagoos/ui";
+import { DEMO_ORG_ID } from "@/lib/demo-data";
 import { getMaterialDetail, listMaterialVersions } from "@/features/materials/queries";
 import { BlockEditor } from "@/features/materials/components/block-editor";
 import { MaterialControls } from "@/features/materials/components/material-controls";
@@ -25,8 +26,9 @@ export default async function MaterialEditorPage({
     );
   }
 
-  const versions = await listMaterialVersions(material.id);
-  const editable = !material.locked;
+  const isDemo = material.organization_id === DEMO_ORG_ID;
+  const versions = isDemo ? [] : await listMaterialVersions(material.id);
+  const editable = !isDemo && !material.locked;
 
   return (
     <div className="flex flex-col gap-6">

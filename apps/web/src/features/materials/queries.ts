@@ -1,7 +1,7 @@
 import "server-only";
 import { BlockSchema, type Block, type MaterialKind } from "@pedagoos/pedagogy";
 import { createClient } from "@/lib/supabase/server";
-import { DEMO_SEQUENCE_ID, demoMaterials } from "@/lib/demo-data";
+import { DEMO_SEQUENCE_ID, demoMaterials, getDemoMaterialDetail } from "@/lib/demo-data";
 
 export interface MaterialListItem {
   id: string;
@@ -63,6 +63,11 @@ export async function listMaterials(sequenceId: string): Promise<MaterialListIte
 export async function getMaterialDetail(
   materialId: string,
 ): Promise<MaterialDetail | null> {
+  const demoMaterial = getDemoMaterialDetail(materialId);
+  if (demoMaterial) {
+    return demoMaterial;
+  }
+
   const supabase = await createClient();
   const { data } = await supabase
     .from("materials")

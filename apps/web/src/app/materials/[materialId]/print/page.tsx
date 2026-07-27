@@ -1,4 +1,3 @@
-import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 import {
@@ -6,15 +5,13 @@ import {
   TEACHER_VARIANT,
   filterBlocksForVariant,
 } from "@pedagoos/pedagogy";
-import { createClient } from "@/lib/supabase/server";
 import { getMaterialDetail } from "@/features/materials/queries";
 import { BlockDocument } from "@/features/materials/components/block-document";
 import { PrintButton } from "@/features/materials/components/print-button";
 
 /**
- * Page d'impression / export PDF d'un support (ADR-0006), hors chrome du
- * dashboard pour une sortie propre. `variant=student` (sans corrigé) ou
- * `variant=teacher` (avec corrigé et notes). Le prof imprime → PDF.
+ * Page d'impression / PDF propre. La variante eleve cache les corriges ;
+ * la variante professeur inclut les notes et reponses attendues.
  */
 export default async function MaterialPrintPage({
   params,
@@ -26,12 +23,6 @@ export default async function MaterialPrintPage({
   const { materialId } = await params;
   const { variant } = await searchParams;
   const t = await getTranslations();
-
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) redirect("/login");
 
   const parsed = z.uuid().safeParse(materialId);
   const material = parsed.success ? await getMaterialDetail(parsed.data) : null;
@@ -49,24 +40,36 @@ export default async function MaterialPrintPage({
   const variantLabel = isTeacher
     ? t("materials.variantTeacher")
     : t("materials.variantStudent");
+  const today = new Intl.DateTimeFormat("fr-FR", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  }).format(new Date());
 
   return (
-    <main className="mx-auto max-w-3xl p-8 print:p-0">
-      <div className="mb-6 flex items-center justify-between gap-4 border-b pb-4">
+    <main className="mx-auto max-w-[820px] bg-white p-8 text-slate-950 print:max-w-none print:p-0">
+      <div className="mb-8 flex items-start justify-between gap-4 border-b-2 border-slate-900 pb-5 print:mb-6">
         <div>
-          <h1 className="text-xl font-semibold">{material.title}</h1>
-          <p className="text-sm text-muted-foreground">
-            {t(`materials.kind.${material.kind}`)} · {variantLabel}
+          <p className="mb-2 inline-flex rounded-sm bg-slate-900 px-2 py-1 text-xs font-semibold uppercase text-white">
+            {variantLabel}
+          </p>
+          <h1 className="text-2xl font-semibold leading-tight">{material.title}</h1>
+          <p className="mt-2 text-sm text-slate-600">
+            {t(`materials.kind.${material.kind}`)} · {today}
           </p>
         </div>
         <PrintButton />
       </div>
 
       {blocks.length === 0 ? (
-        <p className="text-sm text-muted-foreground">{t("materials.noBlocks")}</p>
+        <p className="text-sm text-slate-600">{t("materials.noBlocks")}</p>
       ) : (
         <BlockDocument blocks={blocks} showAnswers={exportVariant.includeAnswerKey} />
       )}
+
+      <footer className="mt-10 border-t pt-3 text-xs text-slate-500 print:mt-8">
+        {t("materials.printFooter")}
+      </footer>
     </main>
   );
 }

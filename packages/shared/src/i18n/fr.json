@@ -330,13 +330,14 @@
       "answer_space": "Espace de réponse",
       "slide": "Diapositive"
     },
-    "print": "Imprimer / PDF",
+    "print": "Télécharger / imprimer en PDF",
     "variantStudent": "Support élève",
     "variantTeacher": "Fiche professeur (avec corrigé)",
-    "exportTitle": "Exporter / Imprimer",
-    "exportStudent": "Support élève (sans corrigé)",
-    "exportTeacher": "Fiche professeur (avec corrigé)",
-    "exportHint": "Ouvre une page propre → Imprimer → Enregistrer en PDF."
+    "exportTitle": "Documents PDF",
+    "exportStudent": "Créer le PDF élève",
+    "exportTeacher": "Créer le PDF professeur",
+    "exportHint": "Ouvre un document A4 prêt à enregistrer en PDF depuis la fenêtre d'impression.",
+    "printFooter": "Document généré par PedagoOS - à relire et adapter par le professeur avant diffusion."
   },
   "visuals": {
     "title": "Visuel",

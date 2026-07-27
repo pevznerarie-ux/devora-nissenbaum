@@ -1,4 +1,5 @@
 import { getTranslations } from "next-intl/server";
+import Link from "next/link";
 import { z } from "zod";
 import { Card, CardContent, CardHeader, CardTitle } from "@pedagoos/ui";
 import { DEMO_ORG_ID, demoMaterials } from "@/lib/demo-data";
@@ -118,11 +119,18 @@ export default async function SequenceWizardPage({
             <CardContent>
               <ul className="grid gap-2 text-sm md:grid-cols-3">
                 {demoMaterials.slice(0, 9).map((material) => (
-                  <li key={material.id} className="rounded-md border p-3">
-                    <p className="font-medium">{t(`materials.kind.${material.kind}`)}</p>
-                    <p className="mt-1 text-xs text-muted-foreground">
-                      {t(`materials.status.${material.status}`)}
-                    </p>
+                  <li key={material.id}>
+                    <Link
+                      href={`/sequences/${id}/materials/${material.id}`}
+                      className="block rounded-md border p-3 hover:bg-secondary"
+                    >
+                      <p className="font-medium">
+                        {t(`materials.kind.${material.kind}`)}
+                      </p>
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        {t(`materials.status.${material.status}`)}
+                      </p>
+                    </Link>
                   </li>
                 ))}
               </ul>

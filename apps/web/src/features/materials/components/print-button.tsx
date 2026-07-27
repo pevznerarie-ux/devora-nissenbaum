@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl";
 import { Button } from "@pedagoos/ui";
 
-/** Déclenche l'impression navigateur (→ PDF). Masqué à l'impression. */
+/** Declenche l'impression navigateur, puis le prof peut enregistrer en PDF. */
 export function PrintButton() {
   const t = useTranslations();
   return (
