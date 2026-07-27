@@ -26,6 +26,12 @@ RUN pnpm install --frozen-lockfile
 # ---------- build ----------
 FROM base AS build
 COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/apps/web/node_modules ./apps/web/node_modules
+COPY --from=deps /app/packages/ai/node_modules ./packages/ai/node_modules
+COPY --from=deps /app/packages/database/node_modules ./packages/database/node_modules
+COPY --from=deps /app/packages/pedagogy/node_modules ./packages/pedagogy/node_modules
+COPY --from=deps /app/packages/shared/node_modules ./packages/shared/node_modules
+COPY --from=deps /app/packages/ui/node_modules ./packages/ui/node_modules
 COPY . .
 # Les variables NEXT_PUBLIC_* sont inlinées au build ; valeurs réelles fournies
 # à la construction de l'image (défauts locaux sinon — voir apps/web/src/lib/env.ts).
