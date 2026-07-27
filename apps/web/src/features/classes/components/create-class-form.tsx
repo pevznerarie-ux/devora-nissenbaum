@@ -73,7 +73,7 @@ export function CreateClassForm({ formData }: { formData: ClassFormData }) {
       </div>
       {state !== null && !state.ok && (
         <p role="alert" className="text-sm text-destructive">
-          {t("common.error")}
+          {state.message || t("common.error")}
         </p>
       )}
       <Button type="submit" disabled={pending}>

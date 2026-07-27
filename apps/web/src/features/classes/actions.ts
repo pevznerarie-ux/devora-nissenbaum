@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { AppError, toActionError, type ActionResult } from "@pedagoos/shared";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import { writeAuditLog } from "@/lib/audit";
 import {
@@ -21,6 +22,10 @@ async function requireUser() {
   return { supabase, user };
 }
 
+function sanitizeForLog(message: string): string {
+  return message.replace(/eyJ[A-Za-z0-9._-]{10,}/g, "[masqué]").slice(0, 300);
+}
+
 export async function createClassAction(
   formData: FormData,
 ): Promise<ActionResult<{ classId: string }>> {
@@ -34,11 +39,22 @@ export async function createClassAction(
       subjectId: formData.get("subjectId") ?? "",
     });
     if (!parsed.success) throw new AppError("validation_failed", "Entrée invalide.");
-    const { supabase, user } = await requireUser();
 
-    // Client utilisateur : la politique RLS classes_insert (org_admin ou
-    // direction de l'établissement) est l'autorisation effective.
-    const { data: created, error } = await supabase
+    const { supabase, user } = await requireUser();
+    const { data: membership } = await supabase
+      .from("memberships")
+      .select("id")
+      .eq("profile_id", user.id)
+      .eq("organization_id", parsed.data.organizationId)
+      .eq("status", "active")
+      .in("role", ["org_admin", "school_director"])
+      .maybeSingle();
+    if (!membership) {
+      throw new AppError("forbidden", "Vous n'avez pas le droit de créer une classe.");
+    }
+
+    const admin = createAdminClient();
+    const { data: created, error } = await admin
       .from("classes")
       .insert({
         organization_id: parsed.data.organizationId,
@@ -50,7 +66,13 @@ export async function createClassAction(
       })
       .select("id")
       .single();
-    if (error || !created) throw new AppError("forbidden", "Création refusée.");
+    if (error || !created) {
+      console.error(
+        "[class.create] insertion impossible:",
+        sanitizeForLog(error?.message ?? "Aucune classe retournée."),
+      );
+      throw new AppError("forbidden", "Création refusée.");
+    }
 
     await writeAuditLog({
       organizationId: parsed.data.organizationId,
@@ -116,7 +138,6 @@ export async function addTeacherAction(
       .maybeSingle();
     if (!cls) throw new AppError("not_found", "Classe introuvable.");
 
-    // RLS class_teachers_write : org_admin ou direction de l'établissement.
     const { error } = await supabase.from("class_teachers").upsert(
       {
         class_id: parsed.data.classId,
@@ -223,8 +244,6 @@ export async function importStudentsCsvAction(
         parsed.rows.map(({ line: _line, ...row }) => row),
       );
       created = report.created;
-      // La fonction SQL rapporte l'index (1-based) dans le lot envoyé ;
-      // on le retraduit en numéro de ligne du fichier d'origine.
       dbErrors = report.errors.map((e) => ({
         line: parsed.rows[e.line - 1]?.line ?? e.line,
         code: e.code,

@@ -6,6 +6,7 @@ import {
   demoClasses,
   demoTeachers,
 } from "@/lib/demo-data";
+import { ensureOrganizationDefaults } from "@/features/admin/onboarding-defaults";
 
 export interface ClassListItem {
   id: string;
@@ -76,6 +77,11 @@ export async function getClassFormData(): Promise<ClassFormData | null> {
     .in("role", ["org_admin", "school_director"]);
   const organizationId = memberships?.[0]?.organization_id as string | undefined;
   if (!organizationId) return null;
+  const canPrepareDefaults = memberships?.[0]?.role === "org_admin";
+
+  if (canPrepareDefaults) {
+    await ensureOrganizationDefaults(organizationId);
+  }
 
   const [{ data: schools }, { data: years }, { data: subjects }] = await Promise.all([
     supabase

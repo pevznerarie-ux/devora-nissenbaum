@@ -4,7 +4,6 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import {
   AppError,
-  DEFAULT_SUBJECTS,
   hebrewAcademicYearLabel,
   toActionError,
   type ActionResult,
@@ -26,6 +25,7 @@ import {
   generateInvitationToken,
   hashInvitationToken,
 } from "./token";
+import { ensureOrganizationDefaults } from "./onboarding-defaults";
 
 function slugify(name: string): string {
   const base = name
@@ -107,16 +107,7 @@ export async function createOrganizationAction(
       throw new AppError("internal", "Attribution du rôle impossible.");
     }
 
-    // Matières par défaut (A-005) — personnalisables ensuite dans Administration.
-    const { error: subjectsError } = await admin
-      .from("subjects")
-      .insert(DEFAULT_SUBJECTS.map((name) => ({ organization_id: org.id, name })));
-    if (subjectsError) {
-      console.error(
-        "[organization.create] matières par défaut non créées:",
-        sanitizeForLog(subjectsError.message),
-      );
-    }
+    await ensureOrganizationDefaults(org.id);
 
     await writeAuditLog({
       organizationId: org.id,
