@@ -44,9 +44,13 @@ RUN pnpm --filter web build
 FROM base AS runner
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
+ENV HOME=/home/nextjs
+ENV COREPACK_HOME=/tmp/corepack
 # Utilisateur non-root.
 RUN groupadd --system --gid 1001 nodejs \
-  && useradd --system --uid 1001 --gid nodejs nextjs
+  && useradd --system --uid 1001 --gid nodejs --home-dir /home/nextjs nextjs \
+  && mkdir -p /home/nextjs/.cache/node/corepack /tmp/corepack \
+  && chown -R nextjs:nodejs /home/nextjs /tmp/corepack
 # Sortie standalone : serveur + node_modules tracés + assets statiques.
 COPY --from=build --chown=nextjs:nodejs /app/apps/web/.next/standalone ./
 COPY --from=build --chown=nextjs:nodejs /app/apps/web/.next/static ./apps/web/.next/static
