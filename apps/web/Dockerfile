@@ -19,7 +19,9 @@ COPY packages/database/package.json packages/database/package.json
 COPY packages/pedagogy/package.json packages/pedagogy/package.json
 COPY packages/shared/package.json packages/shared/package.json
 COPY packages/ui/package.json packages/ui/package.json
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+# Pas de cache mount BuildKit ici : certains builders (dont Railway) rejettent
+# le format d'`id`. L'installation reste rapide et le build portable.
+RUN pnpm install --frozen-lockfile
 
 # ---------- build ----------
 FROM base AS build
