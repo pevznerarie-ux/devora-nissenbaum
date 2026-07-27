@@ -42,7 +42,7 @@ export function MaterialControls({
   }
 
   const linkClass =
-    "inline-flex h-9 items-center justify-center rounded-md border px-3 text-sm hover:bg-secondary";
+    "inline-flex min-h-10 w-full items-center justify-center rounded-md border px-3 py-2 text-center text-sm hover:bg-secondary";
 
   return (
     <div className="flex flex-col gap-4">

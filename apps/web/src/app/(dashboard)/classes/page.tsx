@@ -9,18 +9,18 @@ export default async function ClassesPage() {
   const [classes, formData] = await Promise.all([listClasses(), getClassFormData()]);
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-5">
       <h1 className="text-2xl font-semibold">{t("nav.classes")}</h1>
 
       {classes.length === 0 ? (
         <p className="text-sm text-muted-foreground">{t("classes.empty")}</p>
       ) : (
-        <ul className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+        <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
           {classes.map((cls) => (
             <li key={cls.id}>
               <Link
                 href={`/classes/${cls.id}`}
-                className="block rounded-lg border bg-card p-4 hover:bg-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                className="block rounded-md border bg-card p-4 hover:bg-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
               >
                 <p className="font-medium">
                   {cls.name}
@@ -30,7 +30,7 @@ export default async function ClassesPage() {
                     </span>
                   )}
                 </p>
-                <p className="text-sm text-muted-foreground">
+                <p className="mt-1 text-sm text-muted-foreground">
                   {t(`grades.${cls.grade_level}`)} · {cls.schools?.name} ·{" "}
                   {cls.academic_years?.label}
                   {cls.subjects ? ` · ${cls.subjects.name}` : ""}

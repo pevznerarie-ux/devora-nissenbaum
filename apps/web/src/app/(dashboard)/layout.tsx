@@ -25,23 +25,25 @@ export default async function DashboardLayout({
     data: { user },
   } = await supabase.auth.getUser();
 
+  const navLinkClass =
+    "block whitespace-nowrap rounded-md px-3 py-2 text-sm hover:bg-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring";
   const authLinkClass =
-    "block rounded-md px-3 py-2 text-sm hover:bg-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring";
+    "block whitespace-nowrap rounded-md px-3 py-2 text-sm hover:bg-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring";
 
   return (
-    <div className="flex min-h-dvh">
-      <aside className="flex w-60 shrink-0 flex-col border-e bg-card">
-        <div className="border-b p-4">
+    <div className="flex min-h-dvh flex-col md:flex-row">
+      <aside className="flex w-full shrink-0 flex-col border-b bg-card md:w-60 md:border-b-0 md:border-e">
+        <div className="border-b p-4 md:p-4">
           <span className="text-base font-semibold">{PRODUCT_NAME}</span>
         </div>
-        <nav aria-label={t("nav.home")} className="flex-1 p-2">
-          <ul className="flex flex-col gap-0.5">
+        <nav
+          aria-label={t("nav.home")}
+          className="overflow-x-auto p-2 md:flex-1 md:overflow-visible"
+        >
+          <ul className="flex gap-0.5 md:flex-col">
             {NAV_ITEMS.map((item) => (
               <li key={item.key}>
-                <Link
-                  href={item.href}
-                  className="block rounded-md px-3 py-2 text-sm hover:bg-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
-                >
+                <Link href={item.href} className={navLinkClass}>
                   {t(`nav.${item.key}`)}
                 </Link>
               </li>
@@ -50,10 +52,10 @@ export default async function DashboardLayout({
         </nav>
         <div className="border-t p-2">
           {user ? (
-            <div className="flex flex-col gap-1">
+            <div className="flex items-center gap-1 md:flex-col md:items-stretch">
               <span
                 dir="ltr"
-                className="truncate px-3 py-1 text-xs text-muted-foreground"
+                className="min-w-0 flex-1 truncate px-3 py-1 text-xs text-muted-foreground md:flex-none"
               >
                 {user.email}
               </span>
@@ -64,7 +66,7 @@ export default async function DashboardLayout({
               </form>
             </div>
           ) : (
-            <div className="flex flex-col gap-0.5">
+            <div className="flex gap-0.5 md:flex-col">
               <Link href="/login" className={authLinkClass}>
                 {t("auth.signInLink")}
               </Link>
@@ -75,7 +77,7 @@ export default async function DashboardLayout({
           )}
         </div>
       </aside>
-      <main className="flex-1 p-6">{children}</main>
+      <main className="min-w-0 flex-1 p-4 md:p-6">{children}</main>
     </div>
   );
 }

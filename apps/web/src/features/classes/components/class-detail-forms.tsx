@@ -33,7 +33,7 @@ export function AddTeacherForm({
   if (teachers.length === 0) return null;
 
   return (
-    <form action={action} className="flex max-w-md items-end gap-2">
+    <form action={action} className="flex max-w-md flex-col gap-2 sm:flex-row sm:items-end">
       <input type="hidden" name="classId" value={classId} />
       <div className="flex flex-1 flex-col gap-1.5">
         <Label htmlFor="teacher-select">{t("classes.selectTeacher")}</Label>
@@ -45,7 +45,7 @@ export function AddTeacherForm({
           ))}
         </select>
       </div>
-      <Button type="submit" variant="secondary" disabled={pending}>
+      <Button type="submit" variant="secondary" disabled={pending} className="w-full sm:w-auto">
         {t("classes.addTeacher")}
       </Button>
       {state !== null && !state.ok && (
@@ -66,7 +66,7 @@ export function AddStudentForm({ classId }: { classId: string }) {
   );
 
   return (
-    <form action={action} className="flex max-w-2xl flex-wrap items-end gap-2">
+    <form action={action} className="grid max-w-2xl gap-2 sm:grid-cols-2 lg:grid-cols-4 lg:items-end">
       <input type="hidden" name="classId" value={classId} />
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="student-first">{t("students.firstName")}</Label>
@@ -80,7 +80,7 @@ export function AddStudentForm({ classId }: { classId: string }) {
         <Label htmlFor="student-birth">{t("students.birthDate")}</Label>
         <Input id="student-birth" name="birthDate" type="date" />
       </div>
-      <Button type="submit" variant="secondary" disabled={pending}>
+      <Button type="submit" variant="secondary" disabled={pending} className="w-full">
         {t("students.add")}
       </Button>
       {state !== null && !state.ok && (
@@ -105,13 +105,13 @@ export function ImportCsvForm({ classId }: { classId: string }) {
 
   return (
     <div className="flex max-w-2xl flex-col gap-2">
-      <form action={action} className="flex flex-wrap items-end gap-2">
+      <form action={action} className="flex flex-col gap-2 sm:flex-row sm:items-end">
         <input type="hidden" name="classId" value={classId} />
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="csv-file">{t("students.importFile")}</Label>
           <Input id="csv-file" name="file" type="file" accept=".csv,text/csv" required />
         </div>
-        <Button type="submit" variant="outline" disabled={pending}>
+        <Button type="submit" variant="outline" disabled={pending} className="w-full sm:w-auto">
           {t("students.import")}
         </Button>
       </form>
@@ -163,7 +163,7 @@ export function AddStudentsTextForm({ classId }: { classId: string }) {
           placeholder={t("students.quickAddPlaceholder")}
         />
         <div className="flex items-center gap-3">
-          <Button type="submit" variant="secondary" disabled={pending}>
+          <Button type="submit" variant="secondary" disabled={pending} className="w-full sm:w-auto">
             {t("students.addMany")}
           </Button>
           <p className="text-xs text-muted-foreground">{t("students.quickAddHelp")}</p>
@@ -242,7 +242,7 @@ export function ArchiveClassButton({ classId }: { classId: string }) {
   return (
     <form action={action}>
       <input type="hidden" name="classId" value={classId} />
-      <Button type="submit" variant="destructive" size="sm" disabled={pending}>
+      <Button type="submit" variant="destructive" size="sm" disabled={pending} className="w-full sm:w-auto">
         {t("classes.archive")}
       </Button>
       {state !== null && !state.ok && (
