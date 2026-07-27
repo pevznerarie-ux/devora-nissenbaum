@@ -17,7 +17,7 @@ import { MaterialsPanel } from "@/features/materials/components/materials-panel"
 function currentStep(status: string): number {
   switch (status) {
     case "draft":
-      return 2; // cadre déjà saisi à la création → intentions
+      return 2;
     case "structure_proposed":
       return 5;
     case "structure_validated":
@@ -26,6 +26,21 @@ function currentStep(status: string): number {
       return 6;
     default:
       return 2;
+  }
+}
+
+function supportTone(kind: string): string {
+  switch (kind) {
+    case "teacher_guide":
+      return "border-sky-200 bg-sky-50 text-sky-950";
+    case "student_handout":
+      return "border-emerald-200 bg-emerald-50 text-emerald-950";
+    case "presentation":
+      return "border-violet-200 bg-violet-50 text-violet-950";
+    case "exercise_set":
+      return "border-amber-200 bg-amber-50 text-amber-950";
+    default:
+      return "border-slate-200 bg-slate-50 text-slate-950";
   }
 }
 
@@ -59,9 +74,9 @@ export default async function SequenceWizardPage({
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-1">
-        <h1 className="text-2xl font-semibold">{detail.title}</h1>
-        <p className="text-sm text-muted-foreground">
+      <div className="rounded-md border bg-card p-5">
+        <h1 className="text-2xl font-semibold leading-tight">{detail.title}</h1>
+        <p className="mt-2 text-sm text-muted-foreground">
           {detail.subject_name ? `${detail.subject_name} · ` : ""}
           {t("sequences.frameRecap", {
             grade: detail.grade_level_hint ? t(`grades.${detail.grade_level_hint}`) : "",
@@ -116,24 +131,64 @@ export default async function SequenceWizardPage({
             <CardHeader>
               <CardTitle>{t("sequences.materialsTitle")}</CardTitle>
             </CardHeader>
-            <CardContent>
-              <ul className="grid gap-2 text-sm md:grid-cols-3">
-                {demoMaterials.map((material) => (
-                  <li key={material.id}>
-                    <Link
-                      href={`/sequences/${id}/materials/${material.id}`}
-                      className="block rounded-md border p-3 hover:bg-secondary"
-                    >
-                      <p className="font-medium">
-                        {t(`materials.kind.${material.kind}`)}
+            <CardContent className="flex flex-col gap-4">
+              {sortedLessons.map((lesson) => {
+                const lessonMaterials = demoMaterials.filter(
+                  (material) => material.lesson_id === lesson.id,
+                );
+                return (
+                  <section key={lesson.id} className="rounded-md border p-3">
+                    <div className="mb-3">
+                      <p className="text-sm font-semibold">{lesson.title}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {lesson.durationMinutes} min
                       </p>
-                      <p className="mt-1 text-xs text-muted-foreground">
-                        {t(`materials.status.${material.status}`)}
-                      </p>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
+                    </div>
+                    <ul className="grid gap-3 lg:grid-cols-2">
+                      {lessonMaterials.map((material) => (
+                        <li
+                          key={material.id}
+                          className={`rounded-md border p-3 ${supportTone(material.kind)}`}
+                        >
+                          <div className="flex flex-col gap-3">
+                            <div>
+                              <p className="font-medium">
+                                {t(`materials.kind.${material.kind}`)}
+                              </p>
+                              <p className="text-xs opacity-75">
+                                {t(`materials.status.${material.status}`)}
+                              </p>
+                            </div>
+                            <div className="grid gap-2 sm:grid-cols-2">
+                              <Link
+                                href={`/sequences/${id}/materials/${material.id}`}
+                                className="inline-flex min-h-10 items-center justify-center rounded-md bg-white px-3 py-2 text-center text-sm font-medium text-slate-950 shadow-sm hover:bg-slate-100"
+                              >
+                                {t("materials.open")}
+                              </Link>
+                              {material.kind === "presentation" ? (
+                                <Link
+                                  href={`/materials/${material.id}/present`}
+                                  className="inline-flex min-h-10 items-center justify-center rounded-md bg-slate-950 px-3 py-2 text-center text-sm font-medium text-white shadow-sm hover:bg-slate-800"
+                                >
+                                  {t("materials.present")}
+                                </Link>
+                              ) : (
+                                <Link
+                                  href={`/materials/${material.id}/print?variant=teacher`}
+                                  className="inline-flex min-h-10 items-center justify-center rounded-md bg-slate-950 px-3 py-2 text-center text-sm font-medium text-white shadow-sm hover:bg-slate-800"
+                                >
+                                  {t("materials.exportTeacher")}
+                                </Link>
+                              )}
+                            </div>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
+                );
+              })}
             </CardContent>
           </Card>
         </>

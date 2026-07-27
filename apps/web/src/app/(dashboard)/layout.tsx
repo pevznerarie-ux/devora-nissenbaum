@@ -31,10 +31,11 @@ export default async function DashboardLayout({
     "block whitespace-nowrap rounded-md px-3 py-2 text-sm hover:bg-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring";
 
   return (
-    <div className="flex min-h-dvh flex-col md:flex-row">
-      <aside className="flex w-full shrink-0 flex-col border-b bg-card md:w-60 md:border-b-0 md:border-e">
-        <div className="border-b p-4 md:p-4">
-          <span className="text-base font-semibold">{PRODUCT_NAME}</span>
+    <div className="flex min-h-dvh flex-col bg-slate-50 md:flex-row">
+      <aside className="flex w-full shrink-0 flex-col border-b bg-white/95 shadow-sm md:sticky md:top-0 md:h-dvh md:w-64 md:border-b-0 md:border-e">
+        <div className="border-b p-4">
+          <span className="text-base font-semibold tracking-wide">{PRODUCT_NAME}</span>
+          <p className="mt-1 text-xs text-muted-foreground">Espace professeur</p>
         </div>
         <nav
           aria-label={t("nav.home")}
@@ -77,7 +78,9 @@ export default async function DashboardLayout({
           )}
         </div>
       </aside>
-      <main className="min-w-0 flex-1 p-4 md:p-6">{children}</main>
+      <main className="min-w-0 flex-1 p-4 md:p-6">
+        <div className="mx-auto w-full max-w-7xl">{children}</div>
+      </main>
     </div>
   );
 }

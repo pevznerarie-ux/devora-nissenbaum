@@ -285,6 +285,7 @@
     "unsavedChanges": "Modifications non enregistrées.",
     "saveStructure": "Enregistrer l'ordre",
     "sequenceHint": "Séquence",
+    "open": "Ouvrir",
     "regenerateAffected": "Régénérer les supports impactés",
     "regenerateDone": "{regenerated} régénéré(s), {skipped} verrouillé(s) conservé(s).",
     "publishTitle": "Publication",

@@ -6,17 +6,17 @@
  * propriétés logiques dans tout le code applicatif (ADR-0008).
  */
 @theme {
-  --color-background: oklch(0.99 0.002 90);
+  --color-background: oklch(0.975 0.006 230);
   --color-foreground: oklch(0.25 0.02 260);
   --color-card: oklch(1 0 0);
   --color-card-foreground: oklch(0.25 0.02 260);
-  --color-primary: oklch(0.45 0.1 255);
+  --color-primary: oklch(0.38 0.09 245);
   --color-primary-foreground: oklch(0.99 0.002 90);
-  --color-secondary: oklch(0.94 0.01 255);
+  --color-secondary: oklch(0.94 0.025 185);
   --color-secondary-foreground: oklch(0.3 0.03 260);
-  --color-muted: oklch(0.96 0.005 255);
+  --color-muted: oklch(0.95 0.006 230);
   --color-muted-foreground: oklch(0.5 0.02 260);
-  --color-accent: oklch(0.94 0.02 255);
+  --color-accent: oklch(0.94 0.025 185);
   --color-accent-foreground: oklch(0.3 0.03 260);
   --color-destructive: oklch(0.55 0.19 25);
   --color-destructive-foreground: oklch(0.99 0.002 90);
