@@ -38,6 +38,7 @@
     "assessments": "Évaluations",
     "students": "Élèves",
     "analytics": "Analyses",
+    "settings": "Paramètres",
     "administration": "Administration"
   },
   "dashboard": {
@@ -134,7 +135,15 @@
     "errorLine": "Ligne {line} : {message}",
     "errMissingName": "prénom ou nom manquant",
     "errInvalidDate": "date invalide",
-    "school": "Établissement"
+    "school": "Établissement",
+    "quickAdd": "Ajouter plusieurs élèves",
+    "quickAddPlaceholder": "AMAR Lina\nBENSIMON Noam\nELBAZ Maya",
+    "quickAddHelp": "Une ligne par élève. Format conseillé : NOM Prénom.",
+    "addMany": "Ajouter la liste",
+    "notePlaceholder": "Note privée sur cet élève : participation, attention, difficulté, parent à contacter...",
+    "saveNote": "Enregistrer la note",
+    "noteSaved": "Note enregistrée",
+    "hasNote": "note"
   },
   "adminYears": {
     "title": "Années scolaires",
@@ -337,7 +346,10 @@
     "exportStudent": "Créer le PDF élève",
     "exportTeacher": "Créer le PDF professeur",
     "exportHint": "Ouvre un document A4 prêt à enregistrer en PDF depuis la fenêtre d'impression.",
-    "printFooter": "Document généré par PedagoOS - à relire et adapter par le professeur avant diffusion."
+    "printFooter": "Document généré par PedagoOS - à relire et adapter par le professeur avant diffusion.",
+    "present": "Afficher en classe",
+    "classMode": "Mode classe",
+    "fullscreen": "Plein écran"
   },
   "visuals": {
     "title": "Visuel",
@@ -393,5 +405,26 @@
     "activeClasses": "classes actives",
     "quickStartTitle": "Accès rapide",
     "setupHint": "Pour créer des classes, il faut d'abord un établissement et une année scolaire (dans Administration)."
+  },
+  "settings": {
+    "title": "Paramètres",
+    "intro": "Votre espace prof : profil, abonnement, lieux d'enseignement et préférences de documents.",
+    "soon": "à connecter",
+    "profileTitle": "Profil",
+    "profileName": "Nom affiché sur les documents",
+    "profileEmail": "Email du compte",
+    "profileLanguage": "Langue de l'interface",
+    "subscriptionTitle": "Abonnement",
+    "subscriptionPlan": "Formule active",
+    "subscriptionPayment": "Moyen de paiement",
+    "subscriptionInvoices": "Factures",
+    "teachingTitle": "Enseignement",
+    "teachingSchools": "Écoles où j'enseigne",
+    "teachingSubjects": "Matières favorites",
+    "teachingClasses": "Classes actives",
+    "documentsTitle": "Documents générés",
+    "documentsLayout": "Style des fiches PDF",
+    "documentsLogo": "Logo / nom affiché",
+    "documentsLanguage": "Langue par défaut des supports"
   }
 }

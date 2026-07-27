@@ -118,7 +118,7 @@ export default async function SequenceWizardPage({
             </CardHeader>
             <CardContent>
               <ul className="grid gap-2 text-sm md:grid-cols-3">
-                {demoMaterials.slice(0, 9).map((material) => (
+                {demoMaterials.map((material) => (
                   <li key={material.id}>
                     <Link
                       href={`/sequences/${id}/materials/${material.id}`}

@@ -3,12 +3,14 @@
 import { useActionState } from "react";
 import { useTranslations } from "next-intl";
 import type { ActionResult } from "@pedagoos/shared";
-import { Button, Input, Label } from "@pedagoos/ui";
+import { Button, Input, Label, Textarea } from "@pedagoos/ui";
 import {
   addStudentAction,
+  addStudentsTextAction,
   addTeacherAction,
   archiveClassAction,
   importStudentsCsvAction,
+  saveStudentNoteAction,
   type ImportReport,
 } from "../actions";
 
@@ -138,6 +140,94 @@ export function ImportCsvForm({ classId }: { classId: string }) {
         </div>
       )}
     </div>
+  );
+}
+
+export function AddStudentsTextForm({ classId }: { classId: string }) {
+  const t = useTranslations();
+  const [state, action, pending] = useActionState(
+    async (_prev: ActionResult<ImportReport> | null, fd: FormData) =>
+      addStudentsTextAction(fd),
+    null,
+  );
+
+  return (
+    <div className="flex max-w-2xl flex-col gap-2">
+      <form action={action} className="flex flex-col gap-2">
+        <input type="hidden" name="classId" value={classId} />
+        <Label htmlFor="students-text">{t("students.quickAdd")}</Label>
+        <Textarea
+          id="students-text"
+          name="studentsText"
+          rows={6}
+          placeholder={t("students.quickAddPlaceholder")}
+        />
+        <div className="flex items-center gap-3">
+          <Button type="submit" variant="secondary" disabled={pending}>
+            {t("students.addMany")}
+          </Button>
+          <p className="text-xs text-muted-foreground">{t("students.quickAddHelp")}</p>
+        </div>
+      </form>
+      {state !== null && !state.ok && (
+        <p role="alert" className="text-sm text-destructive">
+          {t("common.error")}
+        </p>
+      )}
+      {state !== null && state.ok && (
+        <p className="text-sm text-muted-foreground" role="status">
+          {t("students.importResult", {
+            created: state.data.created,
+            errors: state.data.errors.length,
+          })}
+        </p>
+      )}
+    </div>
+  );
+}
+
+export function StudentNoteForm({
+  classId,
+  studentId,
+  note,
+}: {
+  classId: string;
+  studentId: string;
+  note: string;
+}) {
+  const t = useTranslations();
+  const [state, action, pending] = useActionState(
+    async (_prev: ActionResult<{ saved: true }> | null, fd: FormData) =>
+      saveStudentNoteAction(fd),
+    null,
+  );
+
+  return (
+    <form action={action} className="flex flex-col gap-2">
+      <input type="hidden" name="classId" value={classId} />
+      <input type="hidden" name="studentId" value={studentId} />
+      <Textarea
+        name="note"
+        defaultValue={note}
+        rows={3}
+        maxLength={4000}
+        placeholder={t("students.notePlaceholder")}
+        className="min-h-20"
+      />
+      <div className="flex items-center justify-between gap-2">
+        <Button type="submit" variant="secondary" size="sm" disabled={pending}>
+          {t("students.saveNote")}
+        </Button>
+        {state !== null && (
+          <span
+            role={state.ok ? "status" : "alert"}
+            className={`text-xs ${state.ok ? "text-muted-foreground" : "text-destructive"}`}
+          >
+            {state.ok ? t("students.noteSaved") : t("common.error")}
+          </span>
+        )}
+      </div>
+    </form>
   );
 }
 

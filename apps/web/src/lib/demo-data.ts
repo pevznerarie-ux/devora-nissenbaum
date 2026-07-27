@@ -254,6 +254,7 @@ export const demoMaterials = demoLessonSequence.lessons.flatMap((lesson, lessonI
     [
       ["teacher_guide", "Fiche professeur"],
       ["student_handout", "Support élève"],
+      ["presentation", "Slides"],
       ["exercise_set", "Exercices"],
     ] as [MaterialKind, string][]
   ).map(([kind, label], index) => ({
@@ -411,6 +412,58 @@ function buildDemoBlocks(lessonIndex: number, kind: MaterialKind): Block[] {
           "Je compare deux périodes.",
           "J'explique une conséquence pour les habitants.",
         ],
+      },
+    ];
+  }
+
+  if (kind === "presentation") {
+    return [
+      {
+        id: blockId(base(31)),
+        type: "slide",
+        audience: "both",
+        answerKey: false,
+        objectiveIds,
+        locked: false,
+        title: lesson.title,
+        bullets: [
+          "Question de départ : que voit-on dans le document ?",
+          "Objectif : repérer un changement important.",
+          "À la fin : chacun formule une phrase de synthèse.",
+        ],
+        speakerNotes:
+          "Lancer avec une observation silencieuse de 30 secondes avant les prises de parole.",
+      },
+      {
+        id: blockId(base(32)),
+        type: "slide",
+        audience: "both",
+        answerKey: false,
+        objectiveIds,
+        locked: false,
+        title: "Méthode d'observation",
+        bullets: [
+          "Je décris précisément ce que je vois.",
+          "Je compare avec ce que je connais.",
+          "Je justifie mon idée avec un détail du document.",
+        ],
+        speakerNotes: "Faire reformuler la méthode par un élève avant l'activité.",
+      },
+      {
+        id: blockId(base(33)),
+        type: "slide",
+        audience: "both",
+        answerKey: false,
+        objectiveIds,
+        locked: false,
+        title: "Trace écrite",
+        bullets: [
+          "Paris se transforme au XIXe siècle.",
+          "Les changements touchent les rues, les transports et les habitants.",
+          "Un historien explique avec des preuves.",
+        ],
+        speakerNotes:
+          "Garder cette diapositive affichée pendant la copie ou la reformulation.",
       },
     ];
   }

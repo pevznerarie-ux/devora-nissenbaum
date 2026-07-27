@@ -30,3 +30,14 @@ export const addStudentSchema = z.object({
     .optional()
     .or(z.literal("").transform(() => undefined)),
 });
+
+export const addStudentsTextSchema = z.object({
+  classId: z.uuid(),
+  studentsText: z.string().trim().min(1).max(20000),
+});
+
+export const saveStudentNoteSchema = z.object({
+  classId: z.uuid(),
+  studentId: z.uuid(),
+  note: z.string().trim().max(4000),
+});

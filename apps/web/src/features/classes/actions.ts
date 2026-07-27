@@ -7,9 +7,11 @@ import { createClient } from "@/lib/supabase/server";
 import { writeAuditLog } from "@/lib/audit";
 import {
   addStudentSchema,
+  addStudentsTextSchema,
   addTeacherSchema,
   classIdSchema,
   createClassSchema,
+  saveStudentNoteSchema,
 } from "./schemas";
 import { parseStudentsCsv, type CsvError } from "@/features/students/csv";
 
@@ -214,6 +216,111 @@ export async function addStudentAction(
     revalidatePath(`/classes/${parsed.data.classId}`);
     revalidatePath("/eleves");
     return { ok: true, data: { created: 1 } };
+  } catch (error) {
+    return toActionError(error);
+  }
+}
+
+function parseStudentsText(text: string): {
+  rows: { firstName: string; lastName: string }[];
+  errors: { line: number; code: string }[];
+} {
+  const rows: { firstName: string; lastName: string }[] = [];
+  const errors: { line: number; code: string }[] = [];
+
+  text
+    .split(/\r?\n/)
+    .map((line, index) => ({ line: line.trim(), index: index + 1 }))
+    .filter((item) => item.line.length > 0)
+    .forEach((item) => {
+      const parts = item.line.includes(",")
+        ? item.line.split(",").map((part) => part.trim())
+        : item.line.split(/\s+/).map((part) => part.trim());
+      const clean = parts.filter(Boolean);
+      if (clean.length < 2) {
+        errors.push({ line: item.index, code: "missing_name" });
+        return;
+      }
+      if (item.line.includes(",")) {
+        rows.push({ firstName: clean[0]!, lastName: clean.slice(1).join(" ") });
+      } else {
+        rows.push({ firstName: clean.slice(1).join(" "), lastName: clean[0]! });
+      }
+    });
+
+  return { rows, errors };
+}
+
+export async function addStudentsTextAction(
+  formData: FormData,
+): Promise<ActionResult<ImportReport>> {
+  try {
+    const parsed = addStudentsTextSchema.safeParse({
+      classId: formData.get("classId"),
+      studentsText: formData.get("studentsText"),
+    });
+    if (!parsed.success) throw new AppError("validation_failed", "Entrée invalide.");
+
+    const text = parseStudentsText(parsed.data.studentsText);
+    let created = 0;
+    let dbErrors: { line: number; code: string }[] = [];
+    if (text.rows.length > 0) {
+      const report = await callAddStudents(parsed.data.classId, text.rows);
+      created = report.created;
+      dbErrors = report.errors;
+    }
+
+    revalidatePath(`/classes/${parsed.data.classId}`);
+    revalidatePath("/eleves");
+    return { ok: true, data: { created, errors: [...text.errors, ...dbErrors] } };
+  } catch (error) {
+    return toActionError(error);
+  }
+}
+
+export async function saveStudentNoteAction(
+  formData: FormData,
+): Promise<ActionResult<{ saved: true }>> {
+  try {
+    const parsed = saveStudentNoteSchema.safeParse({
+      classId: formData.get("classId"),
+      studentId: formData.get("studentId"),
+      note: formData.get("note") ?? "",
+    });
+    if (!parsed.success) throw new AppError("validation_failed", "Entrée invalide.");
+    const { supabase, user } = await requireUser();
+
+    const { data: cls } = await supabase
+      .from("classes")
+      .select("id, organization_id")
+      .eq("id", parsed.data.classId)
+      .maybeSingle();
+    if (!cls) throw new AppError("forbidden", "Accès refusé à cette classe.");
+
+    const admin = createAdminClient();
+    const { error } = await admin.from("student_notes").upsert(
+      {
+        organization_id: cls.organization_id,
+        class_id: parsed.data.classId,
+        student_id: parsed.data.studentId,
+        author_id: user.id,
+        note: parsed.data.note,
+      },
+      { onConflict: "class_id,student_id,author_id" },
+    );
+    if (error) {
+      throw new AppError("internal", "Commentaire impossible.");
+    }
+
+    await writeAuditLog({
+      organizationId: cls.organization_id,
+      actorId: user.id,
+      action: "student.note",
+      entityType: "student",
+      entityId: parsed.data.studentId,
+    });
+    revalidatePath(`/classes/${parsed.data.classId}`);
+    return { ok: true, data: { saved: true } };
   } catch (error) {
     return toActionError(error);
   }

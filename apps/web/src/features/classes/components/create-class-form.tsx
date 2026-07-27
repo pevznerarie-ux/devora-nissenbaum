@@ -17,39 +17,53 @@ export function CreateClassForm({ formData }: { formData: ClassFormData }) {
       createClassAction(fd),
     null,
   );
+  const singleSchool = formData.schools.length === 1 ? formData.schools[0] : null;
+  const singleYear = formData.years.length === 1 ? formData.years[0] : null;
 
   return (
     <form action={action} className="flex max-w-md flex-col gap-4">
       <input type="hidden" name="organizationId" value={formData.organizationId} />
+      {singleSchool && <input type="hidden" name="schoolId" value={singleSchool.id} />}
+      {singleYear && (
+        <input type="hidden" name="academicYearId" value={singleYear.id} />
+      )}
+
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="class-name">{t("classes.name")}</Label>
         <Input id="class-name" name="name" required maxLength={120} />
       </div>
-      <div className="flex flex-col gap-1.5">
-        <Label htmlFor="class-school">{t("classes.school")}</Label>
-        <select id="class-school" name="schoolId" required className={selectClassName}>
-          {formData.schools.map((school) => (
-            <option key={school.id} value={school.id}>
-              {school.name}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="flex flex-col gap-1.5">
-        <Label htmlFor="class-year">{t("classes.year")}</Label>
-        <select
-          id="class-year"
-          name="academicYearId"
-          required
-          className={selectClassName}
-        >
-          {formData.years.map((year) => (
-            <option key={year.id} value={year.id}>
-              {year.hebrew_label ? `${year.label} · ${year.hebrew_label}` : year.label}
-            </option>
-          ))}
-        </select>
-      </div>
+
+      {!singleSchool && (
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor="class-school">{t("classes.school")}</Label>
+          <select id="class-school" name="schoolId" required className={selectClassName}>
+            {formData.schools.map((school) => (
+              <option key={school.id} value={school.id}>
+                {school.name}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
+
+      {!singleYear && (
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor="class-year">{t("classes.year")}</Label>
+          <select
+            id="class-year"
+            name="academicYearId"
+            required
+            className={selectClassName}
+          >
+            {formData.years.map((year) => (
+              <option key={year.id} value={year.id}>
+                {year.hebrew_label ? `${year.label} · ${year.hebrew_label}` : year.label}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
+
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="class-grade">{t("classes.grade")}</Label>
         <select id="class-grade" name="gradeLevel" required className={selectClassName}>
@@ -60,6 +74,7 @@ export function CreateClassForm({ formData }: { formData: ClassFormData }) {
           ))}
         </select>
       </div>
+
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="class-subject">{t("classes.subject")}</Label>
         <select id="class-subject" name="subjectId" className={selectClassName}>
@@ -71,6 +86,7 @@ export function CreateClassForm({ formData }: { formData: ClassFormData }) {
           ))}
         </select>
       </div>
+
       {state !== null && !state.ok && (
         <p role="alert" className="text-sm text-destructive">
           {state.message || t("common.error")}

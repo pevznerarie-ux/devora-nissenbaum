@@ -5,9 +5,11 @@ import { DEMO_ORG_ID } from "@/lib/demo-data";
 import { getClassDetail, listOrgTeachers } from "@/features/classes/queries";
 import {
   AddStudentForm,
+  AddStudentsTextForm,
   AddTeacherForm,
   ArchiveClassButton,
   ImportCsvForm,
+  StudentNoteForm,
 } from "@/features/classes/components/class-detail-forms";
 
 export default async function ClassDetailPage({
@@ -88,10 +90,26 @@ export default async function ClassDetailPage({
           {detail.students.length === 0 ? (
             <p className="text-sm text-muted-foreground">{t("classes.studentsEmpty")}</p>
           ) : (
-            <ul className="grid gap-1 text-sm md:grid-cols-2">
+            <ul className="grid gap-3 text-sm lg:grid-cols-2">
               {detail.students.map((student) => (
-                <li key={student.id} className="rounded-md border px-3 py-1.5">
-                  {student.last_name.toUpperCase()} {student.first_name}
+                <li key={student.id} className="rounded-md border p-3">
+                  <div className="mb-2 flex items-center justify-between gap-3">
+                    <p className="font-medium">
+                      {student.last_name.toUpperCase()} {student.first_name}
+                    </p>
+                    {student.note && (
+                      <span className="rounded-full bg-secondary px-2 py-0.5 text-xs text-muted-foreground">
+                        {t("students.hasNote")}
+                      </span>
+                    )}
+                  </div>
+                  {!isArchived && !isDemo && (
+                    <StudentNoteForm
+                      classId={detail.id}
+                      studentId={student.id}
+                      note={student.note}
+                    />
+                  )}
                 </li>
               ))}
             </ul>
@@ -99,6 +117,7 @@ export default async function ClassDetailPage({
           {!isArchived && !isDemo && (
             <>
               <AddStudentForm classId={detail.id} />
+              <AddStudentsTextForm classId={detail.id} />
               <ImportCsvForm classId={detail.id} />
             </>
           )}

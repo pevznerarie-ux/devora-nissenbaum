@@ -66,6 +66,7 @@ export default async function MaterialEditorPage({
 
         <MaterialControls
           materialId={material.id}
+          kind={material.kind}
           status={material.status}
           versions={versions}
         />

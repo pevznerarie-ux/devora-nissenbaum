@@ -35,7 +35,7 @@ export interface ClassDetail {
   academic_years: { label: string } | null;
   subjects: { name: string } | null;
   teachers: { profile_id: string; full_name: string }[];
-  students: { id: string; first_name: string; last_name: string }[];
+  students: { id: string; first_name: string; last_name: string; note: string }[];
 }
 
 /** Classes visibles par l'utilisateur (la RLS fait le filtrage). */
@@ -116,6 +116,9 @@ export async function getClassDetail(classId: string): Promise<ClassDetail | nul
   }
 
   const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   const { data } = await supabase
     .from("classes")
     .select(
@@ -144,6 +147,26 @@ export async function getClassDetail(classId: string): Promise<ClassDetail | nul
   const studentRows = (students ?? []) as unknown as {
     students: { id: string; first_name: string; last_name: string } | null;
   }[];
+  const baseStudents = studentRows
+    .flatMap((row) => (row.students ? [row.students] : []))
+    .sort((a, b) => a.last_name.localeCompare(b.last_name));
+  const studentIds = baseStudents.map((student) => student.id);
+  let notes = new Map<string, string>();
+
+  if (user && studentIds.length > 0) {
+    const { data: noteRows } = await supabase
+      .from("student_notes")
+      .select("student_id, note")
+      .eq("class_id", classId)
+      .eq("author_id", user.id)
+      .in("student_id", studentIds);
+
+    notes = new Map(
+      ((noteRows ?? []) as unknown as { student_id: string; note: string }[]).map(
+        (row) => [row.student_id, row.note],
+      ),
+    );
+  }
 
   return {
     ...(data as unknown as Omit<ClassDetail, "teachers" | "students">),
@@ -151,9 +174,10 @@ export async function getClassDetail(classId: string): Promise<ClassDetail | nul
       profile_id: row.profile_id,
       full_name: row.profiles?.full_name ?? "",
     })),
-    students: studentRows
-      .flatMap((row) => (row.students ? [row.students] : []))
-      .sort((a, b) => a.last_name.localeCompare(b.last_name)),
+    students: baseStudents.map((student) => ({
+      ...student,
+      note: notes.get(student.id) ?? "",
+    })),
   };
 }
 

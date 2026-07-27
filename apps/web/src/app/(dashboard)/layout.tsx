@@ -12,6 +12,7 @@ const NAV_ITEMS = [
   { href: "/evaluations", key: "assessments" },
   { href: "/eleves", key: "students" },
   { href: "/analyses", key: "analytics" },
+  { href: "/parametres", key: "settings" },
   { href: "/administration", key: "administration" },
 ] as const;
 

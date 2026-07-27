@@ -9,10 +9,12 @@ import type { MaterialVersionItem } from "../queries";
 
 export function MaterialControls({
   materialId,
+  kind,
   status,
   versions,
 }: {
   materialId: string;
+  kind: string;
   status: string;
   versions: MaterialVersionItem[];
 }) {
@@ -49,6 +51,16 @@ export function MaterialControls({
           <CardTitle className="text-base">{t("materials.exportTitle")}</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-2">
+          {kind === "presentation" && (
+            <a
+              className={linkClass}
+              href={`/materials/${materialId}/present`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {t("materials.present")}
+            </a>
+          )}
           <a
             className={linkClass}
             href={`/materials/${materialId}/print?variant=student`}
