@@ -39,6 +39,10 @@ function slugify(name: string): string {
   return base.length > 0 ? `${base}-${suffix}` : `org-${suffix}`;
 }
 
+function sanitizeForLog(message: string): string {
+  return message.replace(/eyJ[A-Za-z0-9._-]{10,}/g, "[masqué]").slice(0, 300);
+}
+
 async function requireUser() {
   const supabase = await createClient();
   const {
@@ -81,7 +85,13 @@ export async function createOrganizationAction(
       .insert({ name: parsed.data.name, slug: slugify(parsed.data.name) })
       .select("id")
       .single();
-    if (error || !org) throw new AppError("internal", "Création impossible.");
+    if (error || !org) {
+      console.error(
+        "[organization.create] insertion impossible:",
+        sanitizeForLog(error?.message ?? "Aucune organisation retournée."),
+      );
+      throw new AppError("internal", "Création impossible.");
+    }
 
     const { error: mError } = await admin.from("memberships").insert({
       profile_id: user.id,
@@ -89,12 +99,24 @@ export async function createOrganizationAction(
       role: "org_admin",
       status: "active",
     });
-    if (mError) throw new AppError("internal", "Attribution du rôle impossible.");
+    if (mError) {
+      console.error(
+        "[organization.create] attribution du rôle impossible:",
+        sanitizeForLog(mError.message),
+      );
+      throw new AppError("internal", "Attribution du rôle impossible.");
+    }
 
     // Matières par défaut (A-005) — personnalisables ensuite dans Administration.
-    await admin
+    const { error: subjectsError } = await admin
       .from("subjects")
       .insert(DEFAULT_SUBJECTS.map((name) => ({ organization_id: org.id, name })));
+    if (subjectsError) {
+      console.error(
+        "[organization.create] matières par défaut non créées:",
+        sanitizeForLog(subjectsError.message),
+      );
+    }
 
     await writeAuditLog({
       organizationId: org.id,
