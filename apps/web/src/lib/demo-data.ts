@@ -369,8 +369,7 @@ function buildDemoBlocks(lessonIndex: number, kind: MaterialKind): Block[] {
         objectiveIds,
         locked: false,
         title: "Ce que je dois comprendre",
-        body:
-          "Une ville change avec le temps. Les rues, les bâtiments, les transports et les habitudes des habitants peuvent être transformés par des décisions politiques, économiques ou sociales.",
+        body: "Une ville change avec le temps. Les rues, les bâtiments, les transports et les habitudes des habitants peuvent être transformés par des décisions politiques, économiques ou sociales.",
         epistemic: "fact",
         citations: [],
       },

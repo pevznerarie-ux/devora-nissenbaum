@@ -34,9 +34,7 @@ type T = Awaited<ReturnType<typeof getTranslations>>;
 
 function heading(text: string) {
   return (
-    <h3 className="mb-2 text-[0.78rem] font-semibold uppercase text-slate-700">
-      {text}
-    </h3>
+    <h3 className="mb-2 text-[0.78rem] font-semibold uppercase text-slate-700">{text}</h3>
   );
 }
 
@@ -168,9 +166,7 @@ function renderBlock(block: Block, showAnswers: boolean, t: T) {
         <>
           <h3 className="text-sm font-semibold">
             {block.orderIndex + 1}. {block.statement}{" "}
-            <span className="font-normal text-slate-500">
-              ({block.points} pts)
-            </span>
+            <span className="font-normal text-slate-500">({block.points} pts)</span>
           </h3>
           {showAnswers && answerLine(t("materials.answerKey"), block.expectedAnswer)}
           {showAnswers && block.gradingCriteria.length > 0 && (

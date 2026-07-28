@@ -89,7 +89,9 @@ export async function ensureOrganizationDefaults(organizationId: string) {
   if (!subjectsReadError && (subjects ?? []).length === 0) {
     const { error } = await admin
       .from("subjects")
-      .insert(DEFAULT_SUBJECTS.map((name) => ({ organization_id: organizationId, name })));
+      .insert(
+        DEFAULT_SUBJECTS.map((name) => ({ organization_id: organizationId, name })),
+      );
     if (error) {
       console.error(
         "[onboarding.defaults] création matières impossible:",

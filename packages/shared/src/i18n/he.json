@@ -38,7 +38,8 @@
     "assessments": "הערכות",
     "students": "תלמידים",
     "analytics": "ניתוחים",
-    "administration": "ניהול"
+    "administration": "ניהול",
+    "settings": "הגדרות"
   },
   "dashboard": {
     "title": "לוח בקרה",
@@ -134,7 +135,15 @@
     "errorLine": "שורה {line}: {message}",
     "errMissingName": "חסר שם פרטי או שם משפחה",
     "errInvalidDate": "תאריך לא תקין",
-    "school": "בית ספר"
+    "school": "בית ספר",
+    "noteSaved": "ההערה נשמרה",
+    "quickAddHelp": "שורה לכל תלמיד. פורמט מומלץ: שם משפחה שם פרטי.",
+    "addMany": "הוספת הרשימה",
+    "quickAddPlaceholder": "AMAR Lina\nBENSIMON Noam\nELBAZ Maya",
+    "quickAdd": "הוספת מספר תלמידים",
+    "hasNote": "הערה",
+    "notePlaceholder": "הערה פרטית על התלמיד: השתתפות, קשב, קושי, הורה ליצירת קשר...",
+    "saveNote": "שמירת ההערה"
   },
   "adminYears": {
     "title": "שנות לימודים",
@@ -336,7 +345,12 @@
     "exportTitle": "ייצוא / הדפסה",
     "exportStudent": "דף לתלמיד (ללא פתרונות)",
     "exportTeacher": "מדריך למורה (עם פתרונות)",
-    "exportHint": "נפתח דף נקי → הדפסה → שמירה כ-PDF."
+    "exportHint": "נפתח דף נקי → הדפסה → שמירה כ-PDF.",
+    "present": "הצגה בכיתה",
+    "printFooter": "מסמך שנוצר על ידי PedagoOS - יש לעבור עליו ולהתאים אותו על ידי המורה לפני הפצה.",
+    "classMode": "מצב כיתה",
+    "fullscreen": "מסך מלא",
+    "open": "פתיחה"
   },
   "visuals": {
     "title": "חזותי",
@@ -392,5 +406,26 @@
     "activeClasses": "כיתות פעילות",
     "quickStartTitle": "גישה מהירה",
     "setupHint": "כדי ליצור כיתות, צריך קודם בית ספר ושנת לימודים (בניהול)."
+  },
+  "settings": {
+    "title": "הגדרות",
+    "intro": "מרחב המורה שלך: פרופיל, מנוי, מקומות הוראה והעדפות מסמכים.",
+    "soon": "לחיבור",
+    "profileTitle": "פרופיל",
+    "profileName": "השם המוצג במסמכים",
+    "profileEmail": "אימייל החשבון",
+    "profileLanguage": "שפת הממשק",
+    "subscriptionTitle": "מנוי",
+    "subscriptionPlan": "תוכנית פעילה",
+    "subscriptionPayment": "אמצעי תשלום",
+    "subscriptionInvoices": "חשבוניות",
+    "teachingTitle": "הוראה",
+    "teachingSchools": "בתי ספר שבהם אני מלמד/ת",
+    "teachingSubjects": "מקצועות מועדפים",
+    "teachingClasses": "כיתות פעילות",
+    "documentsTitle": "מסמכים שנוצרו",
+    "documentsLayout": "סגנון דפי PDF",
+    "documentsLogo": "לוגו / שם מוצג",
+    "documentsLanguage": "שפת ברירת מחדל לחומרים"
   }
 }
