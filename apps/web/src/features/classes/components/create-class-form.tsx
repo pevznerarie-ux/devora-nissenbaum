@@ -24,9 +24,7 @@ export function CreateClassForm({ formData }: { formData: ClassFormData }) {
     <form action={action} className="flex max-w-md flex-col gap-4">
       <input type="hidden" name="organizationId" value={formData.organizationId} />
       {singleSchool && <input type="hidden" name="schoolId" value={singleSchool.id} />}
-      {singleYear && (
-        <input type="hidden" name="academicYearId" value={singleYear.id} />
-      )}
+      {singleYear && <input type="hidden" name="academicYearId" value={singleYear.id} />}
 
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="class-name">{t("classes.name")}</Label>
