@@ -13,3 +13,9 @@ export const previewDiagramSchema = z.object({
   blockId: z.uuid(),
   recommendedType: RecommendedVisualTypeSchema,
 });
+
+/** Recherche d'images libres pour illustrer un bloc (Visual Search — ADR-0016). */
+export const searchImagesSchema = z.object({
+  materialId: z.uuid(),
+  blockId: z.uuid(),
+});

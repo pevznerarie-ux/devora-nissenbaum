@@ -392,7 +392,14 @@
       "generated_svg": "Generated SVG",
       "teacher": "Teacher"
     },
-    "preview": "Preview diagram"
+    "preview": "Preview diagram",
+    "searchImages": "Find illustrations",
+    "imagesHint": "Free images — review and credit before sharing.",
+    "noImages": "No image found.",
+    "choose": "Choose",
+    "chosen": "Illustration chosen",
+    "publicDomain": "Public domain",
+    "mockNotice": "Preview unavailable in demo mode (enable real search on deployment)."
   },
   "home": {
     "onboardingTitle": "Welcome! Create your organization",

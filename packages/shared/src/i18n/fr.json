@@ -392,7 +392,14 @@
       "generated_svg": "SVG généré",
       "teacher": "Professeur"
     },
-    "preview": "Prévisualiser le schéma"
+    "preview": "Prévisualiser le schéma",
+    "searchImages": "Chercher des illustrations",
+    "imagesHint": "Images libres — à vérifier et créditer avant diffusion.",
+    "noImages": "Aucune image trouvée.",
+    "choose": "Choisir",
+    "chosen": "Illustration choisie",
+    "publicDomain": "Domaine public",
+    "mockNotice": "Aperçu indisponible en mode démo (active la recherche réelle au déploiement)."
   },
   "home": {
     "onboardingTitle": "Bienvenue ! Créez votre organisation",
