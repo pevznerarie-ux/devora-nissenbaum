@@ -12,7 +12,13 @@ import {
   type Block,
   type VisualRequest,
 } from "@pedagoos/pedagogy";
-import { analyzeVisualNeeds, designDiagram, visualDirectorPromptV1 } from "@pedagoos/ai";
+import {
+  analyzeVisualNeeds,
+  createVisualSearchProvider,
+  designDiagram,
+  visualDirectorPromptV1,
+  type VisualSearchResult,
+} from "@pedagoos/ai";
 import type {
   DiagramSpecification,
   DiagramType,
@@ -20,7 +26,11 @@ import type {
 } from "@pedagoos/pedagogy";
 import { createClient } from "@/lib/supabase/server";
 import { getAIProvider, logAiGeneration } from "@/lib/ai";
-import { previewDiagramSchema, recommendVisualSchema } from "./schemas";
+import {
+  previewDiagramSchema,
+  recommendVisualSchema,
+  searchImagesSchema,
+} from "./schemas";
 
 async function requireUser() {
   const supabase = await createClient();
@@ -200,6 +210,64 @@ export async function previewDiagramAction(
       throw new AppError("ai_provider_failed", "Schéma impossible.");
     }
     return { ok: true, data: outcome.final.data };
+  } catch (error) {
+    return toActionError(error);
+  }
+}
+
+/**
+ * Recherche des images libres (Wikimedia Commons) pour illustrer un bloc
+ * (Visual Search — ADR-0016). Les requêtes sont dérivées du CONTENU de la leçon
+ * (jamais de données élève). Aucune image n'est ajoutée automatiquement : les
+ * résultats sont proposés au professeur, qui choisit et garde la main. Le
+ * fournisseur réel (Commons) n'est activé que par le flag
+ * `visual_semantic_search` ; sinon un mock déterministe est renvoyé.
+ */
+export async function searchBlockImagesAction(
+  formData: FormData,
+): Promise<ActionResult<VisualSearchResult[]>> {
+  try {
+    if (!isFeatureEnabled("visual_director")) {
+      throw new AppError("forbidden", "Le moteur visuel est désactivé.");
+    }
+    const parsed = searchImagesSchema.safeParse({
+      materialId: formData.get("materialId"),
+      blockId: formData.get("blockId"),
+    });
+    if (!parsed.success) throw new AppError("validation_failed", "Entrée invalide.");
+    const { supabase } = await requireUser();
+
+    const { data: material } = await supabase
+      .from("materials")
+      .select("id, blocks")
+      .eq("id", parsed.data.materialId)
+      .maybeSingle();
+    if (!material) throw new AppError("not_found", "Support introuvable.");
+
+    const blocks = Array.isArray(material.blocks) ? (material.blocks as unknown[]) : [];
+    const rawBlock = blocks.find(
+      (b): b is Block =>
+        typeof b === "object" &&
+        b !== null &&
+        (b as { id?: unknown }).id === parsed.data.blockId,
+    );
+    const block = rawBlock ? BlockSchema.safeParse(rawBlock) : null;
+    if (!block || !block.success) throw new AppError("not_found", "Bloc introuvable.");
+
+    const signals = classifyBlockForVisual(block.data);
+    const concept = signals.concept.trim().slice(0, 120);
+    if (concept.length === 0) return { ok: true, data: [] };
+
+    const provider = createVisualSearchProvider({
+      real: isFeatureEnabled("visual_semantic_search"),
+    });
+    const results = await provider.search({
+      queries: [concept, `${concept} illustration`],
+      orientation: "landscape",
+      minimumWidth: 1000,
+      limit: 6,
+    });
+    return { ok: true, data: results };
   } catch (error) {
     return toActionError(error);
   }

@@ -3,8 +3,13 @@
 import { useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
 import type { DiagramSpecification, VisualRequest } from "@pedagoos/pedagogy";
+import type { VisualSearchResult } from "@pedagoos/ai";
 import { Button, DiagramView } from "@pedagoos/ui";
-import { previewDiagramAction, recommendVisualForBlockAction } from "../actions";
+import {
+  previewDiagramAction,
+  recommendVisualForBlockAction,
+  searchBlockImagesAction,
+} from "../actions";
 
 const DIAGRAM_TYPES = new Set(["vector_diagram", "timeline", "chart", "map"]);
 
@@ -25,6 +30,8 @@ export function VisualRecommendation({
   const [pending, startTransition] = useTransition();
   const [request, setRequest] = useState<VisualRequest | null>(null);
   const [diagram, setDiagram] = useState<DiagramSpecification | null>(null);
+  const [images, setImages] = useState<VisualSearchResult[] | null>(null);
+  const [chosen, setChosen] = useState<VisualSearchResult | null>(null);
   const [error, setError] = useState(false);
 
   function analyze() {
@@ -49,6 +56,20 @@ export function VisualRecommendation({
     startTransition(async () => {
       const result = await previewDiagramAction(fd);
       if (result.ok) setDiagram(result.data);
+      else setError(true);
+    });
+  }
+
+  function searchImages() {
+    setError(false);
+    setImages(null);
+    setChosen(null);
+    const fd = new FormData();
+    fd.set("materialId", materialId);
+    fd.set("blockId", blockId);
+    startTransition(async () => {
+      const result = await searchBlockImagesAction(fd);
+      if (result.ok) setImages(result.data);
       else setError(true);
     });
   }
@@ -116,6 +137,94 @@ export function VisualRecommendation({
                   </p>
                 </div>
               )}
+
+              <div className="mt-1 flex flex-col gap-2">
+                <div className="flex flex-wrap items-center gap-2">
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    size="sm"
+                    disabled={pending}
+                    onClick={searchImages}
+                  >
+                    {t("visuals.searchImages")}
+                  </Button>
+                  <span className="text-xs text-muted-foreground">
+                    {t("visuals.imagesHint")}
+                  </span>
+                </div>
+
+                {images && images.length === 0 && (
+                  <p className="text-xs text-muted-foreground">{t("visuals.noImages")}</p>
+                )}
+
+                {images && images.length > 0 && (
+                  <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                    {images.map((img) => (
+                      <li
+                        key={img.providerId}
+                        className="flex flex-col overflow-hidden rounded-md border"
+                      >
+                        {img.previewUrl.startsWith("http") ? (
+                          // Images externes dynamiques (Commons) : next/image
+                          // n'est pas adapté (domaines variables), <img> assumé.
+                          <img
+                            src={img.previewUrl}
+                            alt=""
+                            loading="lazy"
+                            className="h-24 w-full object-cover"
+                          />
+                        ) : (
+                          <div className="flex h-24 w-full items-center justify-center bg-muted px-2 text-center text-[10px] text-muted-foreground">
+                            {t("visuals.mockNotice")}
+                          </div>
+                        )}
+                        <div className="flex flex-col gap-1 p-2">
+                          <span className="truncate text-[11px] text-muted-foreground">
+                            {img.isPublicDomain
+                              ? t("visuals.publicDomain")
+                              : (img.licenseName ?? "")}
+                            {img.author ? ` · ${img.author}` : ""}
+                          </span>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setChosen(img)}
+                          >
+                            {t("visuals.choose")}
+                          </Button>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+
+                {chosen && (
+                  <div className="rounded-md border bg-background p-2 text-xs">
+                    <p className="font-medium">{t("visuals.chosen")}</p>
+                    <p className="text-muted-foreground">
+                      {chosen.isPublicDomain
+                        ? t("visuals.publicDomain")
+                        : (chosen.licenseName ?? "")}
+                      {chosen.author ? ` · ${chosen.author}` : ""}
+                      {chosen.sourceUrl ? (
+                        <>
+                          {" · "}
+                          <a
+                            href={chosen.sourceUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="underline"
+                          >
+                            {t("visuals.source")}
+                          </a>
+                        </>
+                      ) : null}
+                    </p>
+                  </div>
+                )}
+              </div>
             </>
           ) : (
             <p className="text-muted-foreground">{t("visuals.none")}</p>
