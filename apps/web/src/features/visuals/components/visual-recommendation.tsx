@@ -2,9 +2,14 @@
 
 import { useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
-import type { DiagramSpecification, VisualRequest } from "@pedagoos/pedagogy";
+import type {
+  BlockIllustration,
+  DiagramSpecification,
+  VisualRequest,
+} from "@pedagoos/pedagogy";
 import type { VisualSearchResult } from "@pedagoos/ai";
 import { Button, DiagramView } from "@pedagoos/ui";
+import { attachIllustrationAction } from "@/features/materials/actions";
 import {
   previewDiagramAction,
   recommendVisualForBlockAction,
@@ -22,9 +27,11 @@ const DIAGRAM_TYPES = new Set(["vector_diagram", "timeline", "chart", "map"]);
 export function VisualRecommendation({
   materialId,
   blockId,
+  illustration,
 }: {
   materialId: string;
   blockId: string;
+  illustration?: BlockIllustration | null;
 }) {
   const t = useTranslations();
   const [pending, startTransition] = useTransition();
@@ -32,6 +39,7 @@ export function VisualRecommendation({
   const [diagram, setDiagram] = useState<DiagramSpecification | null>(null);
   const [images, setImages] = useState<VisualSearchResult[] | null>(null);
   const [chosen, setChosen] = useState<VisualSearchResult | null>(null);
+  const [attached, setAttached] = useState(Boolean(illustration));
   const [error, setError] = useState(false);
 
   function analyze() {
@@ -71,6 +79,38 @@ export function VisualRecommendation({
       const result = await searchBlockImagesAction(fd);
       if (result.ok) setImages(result.data);
       else setError(true);
+    });
+  }
+
+  function choose(img: VisualSearchResult) {
+    setError(false);
+    const illustrationPayload = {
+      kind: "search",
+      previewUrl: img.previewUrl,
+      fileUrl: img.fileUrl,
+      width: img.width,
+      height: img.height,
+      author: img.author,
+      sourceName: img.sourceName,
+      sourceUrl: img.sourceUrl,
+      licenseName: img.licenseName,
+      licenseUrl: img.licenseUrl,
+      isPublicDomain: img.isPublicDomain,
+      attributionRequired: img.attributionRequired,
+      providerId: img.providerId,
+    };
+    const fd = new FormData();
+    fd.set("materialId", materialId);
+    fd.set("blockId", blockId);
+    fd.set("illustration", JSON.stringify(illustrationPayload));
+    startTransition(async () => {
+      const result = await attachIllustrationAction(fd);
+      if (result.ok) {
+        setChosen(img);
+        setAttached(true);
+      } else {
+        setError(true);
+      }
     });
   }
 
@@ -139,6 +179,11 @@ export function VisualRecommendation({
               )}
 
               <div className="mt-1 flex flex-col gap-2">
+                {attached && (
+                  <p className="text-xs font-medium text-emerald-700 dark:text-emerald-500">
+                    ✓ {t("visuals.attached")}
+                  </p>
+                )}
                 <div className="flex flex-wrap items-center gap-2">
                   <Button
                     type="button"
@@ -190,7 +235,8 @@ export function VisualRecommendation({
                             type="button"
                             variant="ghost"
                             size="sm"
-                            onClick={() => setChosen(img)}
+                            disabled={pending}
+                            onClick={() => choose(img)}
                           >
                             {t("visuals.choose")}
                           </Button>

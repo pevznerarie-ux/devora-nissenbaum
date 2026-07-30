@@ -55,3 +55,9 @@ export const restoreVersionSchema = z.object({
   materialId: z.uuid(),
   versionNumber: z.coerce.number().int().min(1),
 });
+
+/** Attache une illustration à un bloc (Media — ADR-0016). */
+export const attachIllustrationSchema = z.object({
+  materialId: z.uuid(),
+  blockId: z.uuid(),
+});

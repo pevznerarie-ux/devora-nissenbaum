@@ -399,7 +399,8 @@
     "choose": "Choisir",
     "chosen": "Illustration choisie",
     "publicDomain": "Domaine public",
-    "mockNotice": "Aperçu indisponible en mode démo (active la recherche réelle au déploiement)."
+    "mockNotice": "Aperçu indisponible en mode démo (active la recherche réelle au déploiement).",
+    "attached": "Illustration attachée"
   },
   "home": {
     "onboardingTitle": "Bienvenue ! Créez votre organisation",

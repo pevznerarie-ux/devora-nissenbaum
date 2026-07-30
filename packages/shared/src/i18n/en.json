@@ -399,7 +399,8 @@
     "choose": "Choose",
     "chosen": "Illustration chosen",
     "publicDomain": "Public domain",
-    "mockNotice": "Preview unavailable in demo mode (enable real search on deployment)."
+    "mockNotice": "Preview unavailable in demo mode (enable real search on deployment).",
+    "attached": "Illustration attached"
   },
   "home": {
     "onboardingTitle": "Welcome! Create your organization",
