@@ -8,6 +8,8 @@ export * from "./material";
 export * from "./visual/director";
 export * from "./visual/diagram";
 export * from "./providers/visual/search";
+export * from "./providers/visual/wikimedia";
+export * from "./providers/visual/factory";
 export * from "./providers/visual/image-gen";
 export {
   MockAIProvider,
