@@ -350,7 +350,9 @@
     "printFooter": "מסמך שנוצר על ידי PedagoOS - יש לעבור עליו ולהתאים אותו על ידי המורה לפני הפצה.",
     "classMode": "מצב כיתה",
     "fullscreen": "מסך מלא",
-    "open": "פתיחה"
+    "open": "פתיחה",
+    "presentPrev": "מסך קודם",
+    "presentNext": "מסך הבא"
   },
   "visuals": {
     "title": "חזותי",

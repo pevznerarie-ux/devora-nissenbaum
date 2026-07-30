@@ -350,7 +350,9 @@
     "printFooter": "Document généré par PedagoOS - à relire et adapter par le professeur avant diffusion.",
     "present": "Afficher en classe",
     "classMode": "Mode classe",
-    "fullscreen": "Plein écran"
+    "fullscreen": "Plein écran",
+    "presentPrev": "Écran précédent",
+    "presentNext": "Écran suivant"
   },
   "visuals": {
     "title": "Visuel",
