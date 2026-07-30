@@ -1,4 +1,4 @@
-import type { Block } from "@pedagoos/pedagogy";
+import type { Block, BlockIllustration } from "@pedagoos/pedagogy";
 import { getTranslations } from "next-intl/server";
 
 /**
@@ -24,6 +24,7 @@ export async function BlockDocument({
           className="break-inside-avoid rounded-md border border-slate-200 bg-white p-4 print:rounded-none print:border-slate-300 print:p-3"
         >
           {renderBlock(block, showAnswers, t)}
+          {block.illustration && renderIllustration(block.illustration, t)}
         </section>
       ))}
     </div>
@@ -31,6 +32,30 @@ export async function BlockDocument({
 }
 
 type T = Awaited<ReturnType<typeof getTranslations>>;
+
+/** Illustration attachée à un bloc, avec crédit (licence/auteur) à l'impression. */
+function renderIllustration(illustration: BlockIllustration, t: T) {
+  const license = illustration.isPublicDomain
+    ? t("visuals.publicDomain")
+    : illustration.licenseName;
+  const credit = [illustration.author, license, illustration.sourceName]
+    .filter((part): part is string => Boolean(part))
+    .join(" · ");
+  return (
+    <figure className="mt-3">
+      {illustration.fileUrl.startsWith("http") ? (
+        <img
+          src={illustration.fileUrl}
+          alt={illustration.alt ?? ""}
+          className="max-h-72 w-full rounded-md object-contain"
+        />
+      ) : null}
+      {credit.length > 0 && (
+        <figcaption className="mt-1 text-[0.7rem] text-slate-500">{credit}</figcaption>
+      )}
+    </figure>
+  );
+}
 
 function heading(text: string) {
   return (

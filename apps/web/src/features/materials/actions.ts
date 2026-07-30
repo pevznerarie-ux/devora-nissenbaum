@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { AppError, toActionError, type ActionResult } from "@pedagoos/shared";
 import {
+  BlockIllustrationSchema,
   LessonSequenceSchema,
   editIntentToInstruction,
   planRegeneration,
@@ -23,6 +24,7 @@ import { createClient } from "@/lib/supabase/server";
 import { writeAuditLog } from "@/lib/audit";
 import { getAIProvider, logAiGeneration } from "@/lib/ai";
 import {
+  attachIllustrationSchema,
   editIntentSchema,
   generateMaterialSchema,
   lockBlockSchema,
@@ -421,6 +423,67 @@ export async function lockBlockAction(
       .update({ blocks: nextBlocks })
       .eq("id", parsed.data.materialId);
     if (error) throw new AppError("forbidden", "Enregistrement refusé.");
+    revalidatePath(`/sequences/${material.sequence_id}/materials/${material.id}`);
+    return { ok: true, data: { saved: true } };
+  } catch (error) {
+    return toActionError(error);
+  }
+}
+
+/**
+ * Attache une illustration choisie par le professeur à un bloc (ADR-0016).
+ * L'illustration (référence + licence) est stockée dans le bloc lui-même : elle
+ * suit le versionnement du support et ressort à l'export. Le crédit est conservé.
+ */
+export async function attachIllustrationAction(
+  formData: FormData,
+): Promise<ActionResult<{ saved: true }>> {
+  try {
+    const parsed = attachIllustrationSchema.safeParse({
+      materialId: formData.get("materialId"),
+      blockId: formData.get("blockId"),
+    });
+    if (!parsed.success) throw new AppError("validation_failed", "Entrée invalide.");
+
+    const rawIllustration = formData.get("illustration");
+    if (typeof rawIllustration !== "string") {
+      throw new AppError("validation_failed", "Illustration invalide.");
+    }
+    let illustrationJson: unknown;
+    try {
+      illustrationJson = JSON.parse(rawIllustration);
+    } catch {
+      throw new AppError("validation_failed", "Illustration invalide.");
+    }
+    const illustration = BlockIllustrationSchema.safeParse(illustrationJson);
+    if (!illustration.success) {
+      throw new AppError("validation_failed", "Illustration invalide.");
+    }
+
+    const { supabase, user } = await requireUser();
+    const material = await loadMaterial(supabase, parsed.data.materialId);
+    const blocks = (material.blocks as Block[]) ?? [];
+    if (!blocks.some((b) => b.id === parsed.data.blockId)) {
+      throw new AppError("not_found", "Bloc introuvable.");
+    }
+    const nextBlocks = blocks.map((b) =>
+      b.id === parsed.data.blockId ? { ...b, illustration: illustration.data } : b,
+    );
+
+    const { error } = await supabase
+      .from("materials")
+      .update({ blocks: nextBlocks })
+      .eq("id", parsed.data.materialId);
+    if (error) throw new AppError("forbidden", "Enregistrement refusé.");
+
+    await writeAuditLog({
+      organizationId: material.organization_id as string,
+      actorId: user.id,
+      action: "material.attach_illustration",
+      entityType: "material",
+      entityId: material.id as string,
+      metadata: { blockId: parsed.data.blockId, source: illustration.data.kind },
+    });
     revalidatePath(`/sequences/${material.sequence_id}/materials/${material.id}`);
     return { ok: true, data: { saved: true } };
   } catch (error) {

@@ -116,3 +116,44 @@ describe("MaterialContentSchema", () => {
     expect(parsed.citations).toEqual([]);
   });
 });
+
+describe("illustration de bloc", () => {
+  const illustrated: Block = BlockSchema.parse({
+    id: id(9),
+    type: "explanation",
+    audience: "both",
+    body: "Une tarte partagée en parts égales.",
+    illustration: {
+      previewUrl: "https://upload.wikimedia.org/thumb/Tarte.jpg",
+      fileUrl: "https://upload.wikimedia.org/Tarte.jpg",
+      width: 1600,
+      height: 1066,
+      author: "Jane Doe",
+      licenseName: "CC BY-SA 4.0",
+      sourceName: "Wikimedia Commons",
+    },
+  });
+
+  it("applique les défauts (kind, isPublicDomain, attributionRequired)", () => {
+    expect(illustrated.illustration?.kind).toBe("search");
+    expect(illustrated.illustration?.isPublicDomain).toBe(false);
+    expect(illustrated.illustration?.attributionRequired).toBe(true);
+    expect(illustrated.illustration?.author).toBe("Jane Doe");
+  });
+
+  it("reste attachée après filtrage pour la variante élève", () => {
+    const filtered = filterBlocksForVariant([illustrated], STUDENT_VARIANT);
+    expect(filtered).toHaveLength(1);
+    expect(filtered[0]?.illustration?.fileUrl).toContain("Tarte.jpg");
+  });
+
+  it("rejette une illustration sans URL de fichier", () => {
+    const result = BlockSchema.safeParse({
+      id: id(10),
+      type: "explanation",
+      body: "x",
+      illustration: { previewUrl: "https://x", width: 100, height: 100 },
+    });
+    expect(result.success).toBe(false);
+  });
+});

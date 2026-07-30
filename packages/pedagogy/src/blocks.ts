@@ -51,6 +51,31 @@ export type BlockType = z.infer<typeof BlockTypeSchema>;
  * (réponse attendue, barème) exclu des variantes élève ; `audience` restreint
  * l'export au bon public.
  */
+/**
+ * Illustration attachée à un bloc : référence (source citée, licence) plus que
+ * l'image elle-même. Choisie par le professeur (recherche libre, schéma ou
+ * import), elle reste liée au bloc, suit le versionnement du support et ressort
+ * à l'export. Le crédit (licence/auteur) est conservé pour l'affichage.
+ */
+export const BlockIllustrationSchema = z.object({
+  kind: z.enum(["search", "diagram", "upload"]).default("search"),
+  previewUrl: z.string().min(1),
+  fileUrl: z.string().min(1),
+  width: z.number().int().positive(),
+  height: z.number().int().positive(),
+  alt: z.string().optional(),
+  author: z.string().optional(),
+  sourceName: z.string().optional(),
+  sourceUrl: z.string().optional(),
+  licenseName: z.string().optional(),
+  licenseUrl: z.string().optional(),
+  isPublicDomain: z.boolean().default(false),
+  attributionRequired: z.boolean().default(true),
+  /** Identifiant chez le fournisseur (déduplication, retour à la source). */
+  providerId: z.string().optional(),
+});
+export type BlockIllustration = z.infer<typeof BlockIllustrationSchema>;
+
 const blockCommon = {
   id: uuid,
   audience: BlockAudienceSchema.default("both"),
@@ -59,6 +84,8 @@ const blockCommon = {
   objectiveIds: z.array(uuid).default([]),
   /** Verrou d'édition : un bloc verrouillé n'est jamais régénéré (ADR-0011). */
   locked: z.boolean().default(false),
+  /** Illustration choisie par le professeur (optionnelle). */
+  illustration: BlockIllustrationSchema.optional(),
 };
 
 // -------------------------------------------------------------- blocs typés

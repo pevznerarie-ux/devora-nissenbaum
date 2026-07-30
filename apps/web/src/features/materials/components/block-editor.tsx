@@ -175,7 +175,11 @@ function BlockCard({
           </div>
         )}
 
-        <VisualRecommendation materialId={materialId} blockId={block.id} />
+        <VisualRecommendation
+          materialId={materialId}
+          blockId={block.id}
+          illustration={block.illustration ?? null}
+        />
       </CardContent>
     </Card>
   );
