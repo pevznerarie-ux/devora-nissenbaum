@@ -23,11 +23,41 @@
   --color-border: oklch(0.9 0.008 255);
   --color-input: oklch(0.87 0.01 255);
   --color-ring: oklch(0.45 0.1 255);
+
+  /* Typographie de la charte (self-hosted via next/font). */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-fraunces), Georgia, "Times New Roman", serif;
+
+  /*
+   * Palette sémantique de la charte pédagogique (contrastes WCAG AA vérifiés).
+   * Utilisée par les supports (brochures, présentation) — voir la charte de
+   * design. Une couleur = un rôle.
+   */
+  --color-brand-navy: #0f3b52; /* structure & concentration */
+  --color-brand-navy-2: #14506e;
+  --color-brand-terra: #a8481f; /* accent / attention (texte AA) */
+  --color-brand-terra-fill: #c2562b; /* accent (fonds, gros éléments) */
+  --color-brand-success: #2a7455; /* réponse / validation */
+  --color-brand-gold: #b9822e; /* note importante */
+  --color-brand-paper: #f7f4ee; /* surface chaude, moins d'éblouissement */
+  --color-brand-ink: #1b2733; /* texte courant */
+  --color-brand-line: #e3ddd2;
 }
 
 body {
   background-color: var(--color-background);
   color: var(--color-foreground);
+}
+
+/*
+ * Document « brochure » (supports imprimés/exportés) : titres en serif
+ * éditoriale et couleur de structure, hérités automatiquement par tous les
+ * blocs — la charte de design s'applique sans reclasser chaque titre.
+ */
+.brochure-doc h2,
+.brochure-doc h3 {
+  font-family: var(--font-serif);
+  color: var(--color-brand-navy);
 }
 
 @media print {

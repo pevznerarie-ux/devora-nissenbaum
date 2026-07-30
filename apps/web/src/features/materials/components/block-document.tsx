@@ -17,11 +17,11 @@ export async function BlockDocument({
   const t = await getTranslations();
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="brochure-doc flex flex-col gap-4">
       {blocks.map((block) => (
         <section
           key={block.id}
-          className="break-inside-avoid rounded-md border border-slate-200 bg-white p-4 print:rounded-none print:border-slate-300 print:p-3"
+          className="break-inside-avoid rounded-lg border border-brand-line bg-white p-4 print:rounded-none print:border-slate-300 print:p-3"
         >
           {renderBlock(block, showAnswers, t)}
           {block.illustration && renderIllustration(block.illustration, t)}
@@ -59,14 +59,17 @@ function renderIllustration(illustration: BlockIllustration, t: T) {
 
 function heading(text: string) {
   return (
-    <h3 className="mb-2 text-[0.78rem] font-semibold uppercase text-slate-700">{text}</h3>
+    <p className="mb-2 flex items-center gap-2 text-[0.72rem] font-bold uppercase tracking-[0.12em] text-brand-terra">
+      <span className="inline-block h-px w-4 bg-brand-terra" />
+      {text}
+    </p>
   );
 }
 
 function answerLine(label: string, value: string) {
   return (
-    <p className="mt-2 rounded-sm border border-emerald-200 bg-emerald-50 px-2 py-1.5 text-sm text-emerald-950">
-      <span className="font-medium">{label} : </span>
+    <p className="mt-2 rounded-md border-l-2 border-brand-success bg-brand-success/5 px-3 py-1.5 text-sm text-brand-ink">
+      <span className="font-semibold text-brand-success">{label} : </span>
       {value}
     </p>
   );
