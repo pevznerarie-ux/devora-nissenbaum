@@ -1,59 +1,90 @@
 import { getTranslations } from "next-intl/server";
 import { z } from "zod";
-import type { Block } from "@pedagoos/pedagogy";
+import { STUDENT_VARIANT, filterBlocksForVariant, type Block } from "@pedagoos/pedagogy";
 import { getMaterialDetail } from "@/features/materials/queries";
-import { PresentButton } from "@/features/materials/components/present-button";
+import {
+  PresentDeck,
+  type PresentSlide,
+} from "@/features/materials/components/present-deck";
 
-function slidesFromBlocks(blocks: Block[]) {
-  const slideBlocks = blocks.filter((block) => block.type === "slide");
-  if (slideBlocks.length > 0) {
-    return slideBlocks.map((block) => ({
-      id: block.id,
-      title: block.title,
-      bullets: block.bullets,
-      notes: block.speakerNotes,
-    }));
-  }
+type T = Awaited<ReturnType<typeof getTranslations>>;
 
-  return blocks.map((block, index) => {
+/**
+ * Construit les écrans de projection à partir des blocs (variante élève : aucun
+ * corrigé ni note professeur n'est projeté). Un bloc « slide » explicite prime ;
+ * sinon on dérive un écran par bloc porteur de sens.
+ */
+function slidesFromBlocks(blocks: Block[], t: T): PresentSlide[] {
+  const explicit = blocks.filter((b) => b.type === "slide");
+  const source = explicit.length > 0 ? explicit : blocks;
+  const slides: PresentSlide[] = [];
+
+  source.forEach((block, index) => {
     switch (block.type) {
+      case "slide":
+        slides.push({ id: block.id, title: block.title, bullets: block.bullets });
+        break;
       case "objectives":
-        return {
+        slides.push({
           id: block.id,
-          title: "Objectifs",
-          bullets: block.items.map((item) => item.label),
-          notes: undefined,
-        };
+          title: t("materials.blockType.objectives"),
+          bullets: block.items.map((i) => i.label),
+        });
+        break;
       case "summary":
-        return {
+        slides.push({
           id: block.id,
-          title: "Synthèse",
+          title: t("materials.blockType.summary"),
           bullets: block.points,
-          notes: undefined,
-        };
+        });
+        break;
+      case "vocabulary":
+        slides.push({
+          id: block.id,
+          title: t("materials.blockType.vocabulary"),
+          bullets: block.terms.map((term) => `${term.term} — ${term.definition}`),
+        });
+        break;
+      case "explanation":
+        slides.push({
+          id: block.id,
+          title: block.title ?? `${t("materials.blockType.explanation")} ${index + 1}`,
+          bullets: [block.body],
+        });
+        break;
+      case "example":
+        slides.push({
+          id: block.id,
+          title: t("materials.blockType.example"),
+          bullets: [block.prompt, block.worked],
+        });
+        break;
+      case "discussion_question":
+        slides.push({ id: block.id, title: block.question, bullets: [] });
+        break;
       case "exercise":
-        return {
+        slides.push({ id: block.id, title: block.title, bullets: [block.statement] });
+        break;
+      case "assessment_question":
+        slides.push({
+          id: block.id,
+          title: `${index + 1}. ${block.statement}`,
+          bullets: [],
+        });
+        break;
+      case "timeline_step":
+        slides.push({
           id: block.id,
           title: block.title,
-          bullets: [block.statement],
-          notes: block.expectedAnswer,
-        };
-      case "explanation":
-        return {
-          id: block.id,
-          title: block.title ?? `Point ${index + 1}`,
-          bullets: [block.body],
-          notes: undefined,
-        };
+          bullets: block.studentNote ? [block.studentNote] : [],
+        });
+        break;
       default:
-        return {
-          id: block.id,
-          title: `Diapositive ${index + 1}`,
-          bullets: [],
-          notes: undefined,
-        };
+        break; // answer_space, expected_answer, etc. : sans intérêt en projection
     }
   });
+
+  return slides.filter((s) => s.title.length > 0 || s.bullets.length > 0);
 }
 
 export default async function MaterialPresentPage({
@@ -68,56 +99,20 @@ export default async function MaterialPresentPage({
 
   if (!material) {
     return (
-      <main className="min-h-dvh bg-slate-950 p-8 text-white">
+      <main className="flex min-h-dvh items-center justify-center bg-brand-navy p-8 text-white">
         <p>{t("materials.notFound")}</p>
       </main>
     );
   }
 
-  const slides = slidesFromBlocks(material.blocks).filter(
-    (slide) => slide.title || slide.bullets.length > 0,
-  );
+  const blocks = filterBlocksForVariant(material.blocks, STUDENT_VARIANT);
+  const slides = slidesFromBlocks(blocks, t);
 
   return (
-    <main className="min-h-dvh bg-slate-950 text-white">
-      <header className="sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-white/15 bg-slate-950/95 px-6 py-3">
-        <div>
-          <p className="text-xs uppercase text-white/60">{t("materials.classMode")}</p>
-          <h1 className="text-base font-semibold">{material.title}</h1>
-        </div>
-        <PresentButton />
-      </header>
-
-      <div className="h-[calc(100dvh-73px)] snap-y snap-mandatory overflow-y-auto">
-        {slides.map((slide, index) => (
-          <section
-            key={slide.id}
-            className="flex min-h-[calc(100dvh-73px)] snap-start flex-col justify-center px-8 py-10 md:px-16"
-          >
-            <p className="mb-5 text-sm text-white/50">
-              {index + 1} / {slides.length}
-            </p>
-            <h2 className="max-w-5xl text-4xl font-semibold leading-tight md:text-6xl">
-              {slide.title}
-            </h2>
-            {slide.bullets.length > 0 && (
-              <ul className="mt-10 flex max-w-5xl flex-col gap-5 text-2xl leading-snug text-white/90 md:text-4xl">
-                {slide.bullets.map((bullet, bulletIndex) => (
-                  <li key={bulletIndex} className="flex gap-4">
-                    <span className="mt-3 h-3 w-3 shrink-0 rounded-full bg-cyan-300 md:mt-5" />
-                    <span>{bullet}</span>
-                  </li>
-                ))}
-              </ul>
-            )}
-            {slide.notes && (
-              <p className="mt-10 max-w-4xl border-t border-white/15 pt-4 text-sm text-white/45">
-                {slide.notes}
-              </p>
-            )}
-          </section>
-        ))}
-      </div>
-    </main>
+    <PresentDeck
+      title={material.title}
+      kindLabel={t(`materials.kind.${material.kind}`)}
+      slides={slides}
+    />
   );
 }
